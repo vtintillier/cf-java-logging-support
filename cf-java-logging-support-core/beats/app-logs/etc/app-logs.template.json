@@ -1,0 +1,121 @@
+{
+  "mappings": {
+    "_default_": {
+      "_all": {
+        "enabled": false
+      },
+      "dynamic_templates": [
+        {
+          "template1": {
+            "mapping": {
+              "doc_values": true,
+              "ignore_above": 4096,
+              "index": "not_analyzed",
+              "type": "{dynamic_type}"
+            },
+            "match": "*"
+          }
+        }
+      ],
+      "properties": {
+        "component_id": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "component_instance": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "component_name": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "component_type": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "container_id": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "correlation_id": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "layer": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "level": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "logger": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "msg": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "organization_id": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "organization_name": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "space_id": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "space_name": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "stacktrace": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "thread": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "type": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "written_at": {
+          "doc_values": true,
+          "type": "date"
+        },
+        "written_ts": {
+          "doc_values": true,
+          "type": "long"
+        }
+      }
+    }
+  },
+  "settings": {
+    "index.refresh_interval": "5s"
+  },
+  "template": "app-logs-*"
+}

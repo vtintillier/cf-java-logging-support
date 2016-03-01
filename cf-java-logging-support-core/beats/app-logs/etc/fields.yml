@@ -1,0 +1,239 @@
+version: 2.0
+
+defaults:
+  type: string
+  required: true
+  index: not_analyzed
+  doc_values: true
+  ignore_above: 4096
+
+sections:
+  - ["ctx", "Context"]
+  - ["app-logs", "Application log message fields"]
+
+summary: |
+  This is a specification of the "app-logs beat" message type that we use to store
+  "application logs" written via a proper logging infrastructure implementation.
+
+  NOTE: For Java applications running on CF, this is our logging support library, see
+  https://github.com/SAP/perfx/cf-java-logging-support
+
+  Field names follow the convention that we're not using camel case names, but
+  rather use "_" as a delimiter between parts.
+
+  For any field that actually represents a measure (or metric for that matter)
+  the name includes a descriptive suffix mnemonic that helps identifying the unit,
+  e.g.:
+
+    * "_ms" -> milliseconds
+    * "_b"  -> bytes
+    * "_p"  -> percent
+    * "_at" -> date with time
+    * "_ts" -> timestamp
+
+ctx:
+  type: group
+  description: |
+    This group contains context information for the given application log message
+    such that analytics can slice and dice information based on these criteria.
+
+  fields:
+    - name: "written_at"
+      type: date
+      required: true
+      description: |
+        The date when this log message was written.
+
+    - name: "written_ts"
+      type: long
+      required: true
+      example: 1456820553816849408
+      description: |
+        The timestamp in nano-second precision when this request metric message was written.
+
+    - name: "correlation_id"
+      type: string
+      required: true
+      example: "db2d002e-2702-41ec-66f5-c002a80a3d3f"
+      description: |
+        Should provide a unique identifier that can be used to correlate multiple
+        log messages into a logical unit (aka "business transaction")..
+
+        Currently, we use a UUID for that matter, but future versions may use
+        SAP passport for this.
+
+        "-" indicates that no proper value could be provided.
+
+        NOTE: As these type of messages can be written at any time and outside
+        a "request context" it may happen that this correlation id does not
+        match with any other. Logging implementations may provide a way to
+        inherit correlation ids from request processing layers further up in
+        the processing stack. If so, that id should be used.
+
+    - name: "component_id"
+      type: string
+      required: true
+      example: "9e6f3ecf-def0-4baf-8fac-9339e61d5645"
+      description: |
+        Uniquely identifies the software component that has processed the current
+        request. It may either be a "service" or an "application" that can be deployed to
+        a container or VM, but it may not yet fully identify the actual "running instance" of
+        that "component".
+
+        NOTE: For applications in CF, this is the "application_id", but we may have more than one
+        instance of that running.
+
+    - name: "component_name"
+      type: string
+      required: false
+      example: "my-fancy-component"
+      description: |
+        A human-friendly name representing the software component.
+
+        NOTE: Most likely NOT unique!
+
+    - name: "component_type"
+      type: string
+      required: true
+      example: "application"
+      description: |
+        Specifies the type of the sofware component that processed the current
+        request.
+
+        Either "application" or "service"
+
+    - name: "component_instance"
+      type: string
+      required: true
+      example: "7"
+      description: |
+        CF allows us to scale out horizontally by running several instances of the
+        same "component" (see above) in one container, this is identifying the instance.
+        Defaults to "0".
+
+    - name: "container_id"
+      type: string
+      required: false
+      format: ???
+      example: "???"
+      description: |
+        Will allow us to identify the "box" or "container" onto which the component
+        instance(s) were deployed.
+
+        NOTE: If security/privacy is not an issue, an IP address would be ok.
+
+        NOTE: CF sets an environment variable "INSTANCE_IP" that is currently used
+        for that purpose
+
+    - name: "organization_id"
+      type: string
+      required: true
+      example: "280437b3-dd8b-40b1-bbab-1f05a44345f8"
+      description: |
+        Uniquley identifies the CF organization to which the component belongs which
+        emitted this message.
+
+        "-" indicates that no proper value could be provided.
+
+    - name: "organization_name"
+      type: string
+      required: true
+      example: "acme"
+      description: |
+        A human-friendly name representing the CF organization.
+
+        NOTE: Most likely NOT unique!
+
+        "-" indicates that no proper value could be provided.
+
+    - name: "space_id"
+      type: string
+      required: true
+      example: "280437b3-dd8b-40b1-bbab-1f05a44345f8"
+      description: |
+        Uniquely identifies the CF space to which the component belongs which emitted this message.
+
+        "-" indicates that no proper value could be provided.
+
+    - name: "space_name"
+      type: string
+      required: true
+      example: "test"
+      description: |
+        A human-friendly name representing the CF space.
+
+        NOTE: Most likely NOT unique!
+
+    - name: "layer"
+      type: string
+      required: true
+      example: "[JAVA:BusinessLogicController]"
+      description: |
+        The execution layer in the overall setup that emitted the message.
+
+    - name: "type"
+      type: string
+      required: true
+      description: |
+        To make the message self-contained this is the type tag.
+        As we're talking about log messages, it's always "app-logs".
+
+app-logs:
+  type: group
+  description: |
+    The individual fields of a log message. Should be familiar to anyone who
+    ever used a logging library in Java...
+
+  fields:
+    - name: "logger"
+      type: string
+      required: true
+      example: "com.sap.demo.shine.OrderController"
+      description: |
+        The actual entity that wrote the log message.
+
+        NOTE: In Java, this is the name that was passed to the LoggerFactory
+        when instantiating a Logger.
+
+    - name: "thread"
+      type: string
+      required: false
+      example: "http-nio-4655"
+      description: |
+        Identifies the exedcution thread in which this log message has been written.
+
+        "-" indicates that no proper value could be provided.
+
+    - name: "level"
+      type: string
+      required: true
+      example: "INFO"
+      description: |
+        The log "level" indicating the severity of the log message.
+
+    - name: "msg"
+      type: string
+      required: true
+      example: "This is a log messasge"
+      description: |
+        The actual message string passed to the logger.
+
+    - name: "stacktrace"
+      type: string
+      required: false
+      description: |
+        Stacktrace information in case the message is reporting an exception.
+
+        NOTE: This MUST NOT contain NEWLINE or TAB characters!
+
+    - name: "custom_fields"
+      type: group
+      required: false
+      example: "cutom_fields: {\"some_key\": \"some_value\"}"
+      description: |
+        A JSON object representing the custom arguments passed to the logging
+        framework.
+
+        NOTE: In Java, arguments have to be of type CustomField.
+
+        NOTE: As this is "custom" there are no predefined fields here!

@@ -1,0 +1,50 @@
+package com.sap.hcp.cf.logging.common;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
+/**
+ * A {@link Value} implementation representing a <i>double</i> value.
+ * 
+ * @author d029740
+ *
+ */
+public class DoubleValue implements Value {
+
+	private double value;
+	
+	public DoubleValue(Object value) {
+		if (value != null && Double.class.isAssignableFrom(value.getClass())) {
+			this.value = ((Double) value).doubleValue();
+		}
+		else {
+			value = 0.0;
+		}
+	}
+	
+	public DoubleValue(double value) {
+		this.value = value;
+	}
+
+	@Override
+	public String toString() {
+		return new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(value);
+	}
+
+	public Object getValue() {
+		return Double.valueOf(value);
+	}
+
+	public long asLong() {
+		return (long) value;
+	}
+
+	public double asDouble() {
+		return value;
+	}
+
+	public String asString() {
+		return toString();
+	}
+}

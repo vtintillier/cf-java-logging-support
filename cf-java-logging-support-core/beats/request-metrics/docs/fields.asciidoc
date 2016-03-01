@@ -1,0 +1,570 @@
+
+////
+This file is generated! See etc/fields.yml and scripts/generate_field_docs.py
+////
+
+[[exported-fields]]
+== Exported Fields
+
+This document describes the fields that are exported by Request-Metrics. They are
+grouped in the following categories:
+
+* <<exported-fields-ctx>>
+* <<exported-fields-request-metrics>>
+
+=== Summary
+This is a specification of the "request metrics beat" message type that captures
+all relevant information for both incoming and outgoing requests that are
+shipped among and processed by "components" (i.e. applications or services)
+running in a Cloud Foundry (CF) landscape.
+
+While most of the time we're dealing with HTTP requests, we want to keep
+the terminology as much as possible "protocol-neutral". Actually, we also
+think about capturing "call stacks" within a component's runtime using that
+scheme.
+
+Field names follow the convention that we're not using camel case names, but
+rather use "_" as a delimiter between parts.
+
+For any field that actually represents a measure (or metric for that matter)
+the name includes a descriptive suffix mnemonic that helps identifying the unit,
+e.g.:
+
+  * "_ms" -> milliseconds
+  * "_b"  -> bytes
+  * "_p"  -> percent
+  * "_at" -> date with time
+  * "_ts" -> a timestamp value
+
+[[exported-fields-ctx]]
+=== Context Fields
+
+This group contains context information for the given request such that
+analytics can slice and dice information based on these criteria.
+It should also help establish correlations between multiple request that
+form something "bigger", often termed "(business) transaction".
+
+NOTE: Context information is most likely provided by CF itself, e.g. in
+the form of environment variables (or request headers).
+
+
+
+==== written_at
+
+type: date
+
+format: YYYY-MM-DDTHH:MM:SS.milliZ
+
+required: True
+
+The date when this request metrics message was written.
+
+
+==== written_ts
+
+type: long
+
+example: 1456820553816849408
+
+required: True
+
+The timestamp in nano-second precision when this request metric message was written.
+
+
+==== correlation_id
+
+type: string
+
+example: db2d002e-2702-41ec-66f5-c002a80a3d3f
+
+required: True
+
+Should provide a unique identifier that can be used to correlate multiple
+requests into a larger logical unit (aka "business transaction").
+
+"-" indicates that no proper value could be provided.
+
+
+==== request_id
+
+type: string
+
+example: 59d76883-8cdc-434b-73c4-1825313cd918
+
+required: True
+
+Unique identifier for a request instance.
+
+NOTE: As request processing most likely happens at various "layers"
+(see below), chances are high that there is more than one message that
+is tagged with this id.
+
+"-" indicates that no proper value could be provided.
+
+
+==== component_id
+
+type: string
+
+example: 9e6f3ecf-def0-4baf-8fac-9339e61d5645
+
+required: True
+
+Uniquely identifies the software component that has processed the current
+request. It may either be a "service" or an "application" that can be deployed to
+a container or VM, but it may not yet fully identify the actual "running instance" of
+that "component".
+
+NOTE: For applications in CF, this is the "application_id", but we may have more than one
+instance of that running.
+
+
+==== component_name
+
+type: string
+
+example: my-fancy-component
+
+required: False
+
+A human-friendly name representing the software component.
+
+NOTE: Most likely NOT unique!
+
+
+==== component_type
+
+type: string
+
+example: application
+
+required: True
+
+Specifies the type of the sofware component that processed the current
+request.
+
+Either "application" or "service"
+
+
+==== component_instance
+
+type: string
+
+example: 7
+
+required: True
+
+CF allows us to scale out horizontally by running several instances of the
+same "component" (see above) in one container, this is identifying the instance.
+Defaults to "0".
+
+
+==== container_id
+
+type: string
+
+example: ???
+
+format: ???
+
+required: False
+
+Will allow us to identify the "box" or "container" onto which the component
+instance(s) were deployed.
+
+NOTE: If security/privacy is not an issue, an IP address would be ok.
+
+NOTE: CF sets an environment variable "INSTANCE_IP" that is currently used
+for that purpose
+
+
+==== organization_id
+
+type: string
+
+example: 280437b3-dd8b-40b1-bbab-1f05a44345f8
+
+required: True
+
+Uniquley identifies the CF organization to which the component belongs which
+emitted this message.
+
+"-" indicates that no proper value could be provided.
+
+
+==== organization_name
+
+type: string
+
+example: acme
+
+required: True
+
+A human-friendly name representing the CF organization.
+
+NOTE: Most likely NOT unique!
+
+"-" indicates that no proper value could be provided.
+
+
+==== space_id
+
+type: string
+
+example: 280437b3-dd8b-40b1-bbab-1f05a44345f8
+
+required: True
+
+Uniquely identifies the CF space to which the component belongs which emitted this message.
+
+"-" indicates that no proper value could be provided.
+
+
+==== space_name
+
+type: string
+
+example: test
+
+required: True
+
+A human-friendly name representing the CF space.
+
+NOTE: Most likely NOT unique!
+
+
+==== layer
+
+type: string
+
+example: [CF/RTR]
+
+required: True
+
+The layer in the overall setup that emitted the request metrics message. E.g.,
+we often have "router" components which are placed in front of an application
+and which report request information they have forwarded to that
+application instance. From a logical point of view, they can be considered
+part of the overall application.
+
+
+==== type
+
+type: string
+
+required: True
+
+To make the message self-contained this is the type tag.
+As we're talking about request metrics messages, it's always "request-metrics".
+
+
+[[exported-fields-request-metrics]]
+=== Request Metrics Fields
+
+Reports metrics on a request that has been shipped/processed.
+
+We assume that we have a "client"/"server" or "consumer"/"producer" relationship,
+i.e. the client/consumer will send a request to a server/producer which will
+process that request and will send a response back to that client/consumer.
+
+Processing such a request may trigger additional outgoing requests where
+the original server/producer change roles and turns into a client/consumer.
+
+When it comes to request timings, we foresee something similar to what
+Finagle is doing, i.e. conceptually keep track of 4 timestamps in order
+to be able to detect (network) latencies.
+
+
+
+==== request
+
+type: string
+
+example: /get/api/v2
+
+required: True
+
+The actual request "command" that has been processed.
+
+"-" indicates that no proper value could be provided which is hopefully
+never the case.
+
+
+==== request_sent_at
+
+type: date
+
+example: 2015-01-24 14:06:05.071000
+
+format: YYYY-MM-DDTHH:MM:SS.milliZ
+
+required: False
+
+The date when the consumer sent an outgoing request to the producer.
+
+The precision is in milliseconds. The timezone is UTC.
+
+NOTE: Not available for incoming request at producer end unless
+shipped with the request (in the form of a header or meta data).
+
+
+==== request_received_at
+
+type: date
+
+example: 2015-01-24 14:06:05.071000
+
+format: YYYY-MM-DDTHH:MM:SS.milliZ
+
+required: False
+
+The date when an incoming request was received by the producer.
+
+The precision is in milliseconds. The timezone is UTC.
+
+NOTE: Not available for outcoming request at consumer end unless
+shipped with the response (in the form of a header or meta data).
+
+NOTE: Still open whether this is the point in time when the first byte
+of the request has been received by the producer or when the complete
+request has been received (preferred).
+
+
+==== response_sent_at
+
+type: date
+
+example: 2015-01-24 14:06:05.071000
+
+format: YYYY-MM-DDTHH:MM:SS.milliZ
+
+required: False
+
+The date when the response to an incoming request was sent to the
+consumer.
+
+The precision is in milliseconds. The timezone is UTC.
+
+NOTE: Still open whether this is the point in time when the first byte
+of the response has been sent (preferred) or when the complete response
+has been sent.
+
+
+==== response_received_at
+
+type: date
+
+example: 2015-01-24 14:06:05.071000
+
+format: YYYY-MM-DDTHH:MM:SS.milliZ
+
+required: False
+
+The date when an the response to an outgoing requests was received
+by the consumer.
+
+The precision is in milliseconds. The timezone is UTC.
+
+NOTE: Still open whether this is the point in time when the first byte
+of the response has been received (preferred) or when the complete
+response has been received.
+
+
+==== direction
+
+type: string
+
+example: IN
+
+required: True
+
+Specifies whether the message talks about an "incoming" ("IN") or
+an "outgoing" ("OUT") request.
+
+Default is "IN"
+
+
+==== response_time_ms
+
+type: float
+
+example: 43.476
+
+required: True
+
+How many milliseconds it took the producer to prepare the response.
+
+NOTE: If a consumer is reporting that for an outgoing requests, it's
+rather the time it took the consumer to wait until the (complete)
+response arrived.
+
+-1 indicates that the value could not be measured/determined
+
+
+==== protocol
+
+type: string
+
+example: HTTP/1.1
+
+required: True
+
+Which protocol was used to issue a request to a producer. In most cases,
+this will be HTTP (including a version specifier), but for outgoing
+requests reported by a producer it may contain other values. E.g. a
+database call via JDBC may report, e.g. "JDBC/1.2"
+
+"-" indicates that no proper value could be provided.
+
+
+==== method
+
+type: string
+
+example: GET
+
+required: True
+
+The corresponding protocol method.
+
+"-" indicates that no proper value could be provided.
+
+
+==== remote_ip
+
+type: string
+
+example: 192.168.0.1
+
+required: True
+
+* For incoming requests, it's the IP address of the consumer (might be
+  a proxy, might be the actual client).
+
+* For outgoing requests, it's the IP of the remote producer.
+
+"-" indicates that no proper value could be provided.
+
+
+==== remote_host
+
+type: string
+
+example: my.happy.host
+
+required: False
+
+* For incoming requests, it's the hostname of the consumer
+  (might be a proxy, might be the actual client).
+
+* For outgoing requests, it's the hostname of the remote producer.
+
+"-" indicates that no proper value could be provided.
+
+NOTE: Is that name a fully qualified name?
+Do we really need it?
+
+
+==== remote_port
+
+type: string
+
+example: 1234
+
+required: False
+
+Which TCP port is used by the consumer to establish a connection to the
+remote producer.
+
+NOTE: As this is not really a measure/metric, type is defined as string!
+
+
+==== remote_user
+
+type: string
+
+example: d058433
+
+required: False
+
+The username associated with the request.
+If empty, the request is not authenticated.
+
+
+==== request_size_b
+
+type: long
+
+example: 1234
+
+The size in bytes of the request entity or "body" (e.g., in case of POST
+requests).
+
+If the request contains no entity, the value is -1.
+
+
+==== response_status
+
+type: integer
+
+example: 200
+
+The status code of the response.
+
+-1 indicates that the value could not be determined
+
+NOTE: Need to be interpreted in the context of the specified request protocol.
+
+
+==== response_size_b
+
+type: long
+
+example: 1234
+
+The size in bytes of the response entity (e.g., in case of GET requests).
+
+If the response contains no entity, the value is -1
+
+
+==== response_content_type
+
+type: string
+
+example: application/json
+
+required: False
+
+The MIME type associated with the entity of the response if
+available/specfied.
+
+"-" indicates that no proper value could be provided.
+
+
+==== referer
+
+type: string
+
+example: /index.html
+
+required: False
+
+For HTTP requests, identifies the address of the webpage (i.e. the URI
+or IRI) that linked to the resource being requested.
+
+"-" indicates that no proper value could be provided.
+
+
+==== x_forwarded_for
+
+type: string
+
+example: 192.0.2.60,10.12.9.23
+
+required: False
+
+Comma-separated list of IP addresses, the left-most being the original
+client, followed by proxy server addresses that forwarded the client
+request.
+
+

@@ -1,0 +1,72 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>cf-java-logging-support-jersey</artifactId>
+  <packaging>jar</packaging>
+
+  <parent>
+  	<relativePath>../pom.xml</relativePath>
+  	<groupId>com.sap.hcp.cf.logging</groupId>
+  	<artifactId>cf-java-logging-support-parent</artifactId>
+  	<version>2.0.7</version>
+  </parent>
+
+  <name>cf-java-logging-support-jersey</name>
+
+  <properties>
+		<jersey.version>2.22.1</jersey.version>
+  </properties>
+
+  <dependencies>
+		<!-- Jersey - RESTful Web service -->
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.glassfish.jersey.core</groupId>
+			<artifactId>jersey-server</artifactId>
+			<version>${jersey.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		
+    <dependency>
+    	<groupId>com.sap.hcp.cf.logging</groupId>
+    	<artifactId>cf-java-logging-support-core</artifactId>
+    	<version>${project.version}</version>
+    	<scope>compile</scope>
+    </dependency>
+    
+    <!-- unit test related -->
+    <dependency>
+			<groupId>org.glassfish.jersey.test-framework</groupId>
+			<artifactId>jersey-test-framework-core</artifactId>
+			<version>${jersey.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.test-framework.providers</groupId>
+			<artifactId>jersey-test-framework-provider-grizzly2</artifactId>
+			<version>${jersey.version}</version>
+			<scope>test</scope>
+		</dependency>
+    <!-- we need our logback implementation for testing! -->
+    <dependency>
+    	<groupId>com.sap.hcp.cf.logging</groupId>
+    	<artifactId>cf-java-logging-support-logback</artifactId>
+    	<version>${project.version}</version>
+    	<scope>test</scope>
+    </dependency>    		
+    <dependency>
+    	<groupId>ch.qos.logback</groupId>
+    	<artifactId>logback-classic</artifactId>
+    	<version>${logback.version}</version>
+    	<scope>test</scope>
+    </dependency>    
+  </dependencies>
+</project>
