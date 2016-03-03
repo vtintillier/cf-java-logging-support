@@ -10,8 +10,6 @@ import java.util.TimeZone;
  * <p>
  * When serialized into a String, the value will be formatted using timezone "UTC" and format 
  * <code>"yyyy-MM-dd'T'HH:mm:ss.SSS'Z'"</code>.
- * 
- * @author d029740
  *
  */
 public class DateTimeValue implements Value {

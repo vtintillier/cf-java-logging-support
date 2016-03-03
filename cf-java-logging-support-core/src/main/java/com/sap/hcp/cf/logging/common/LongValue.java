@@ -2,8 +2,6 @@ package com.sap.hcp.cf.logging.common;
 
 /**
  * A {@link Value} implementation representing a <i>long</i> value.
- *  
- * @author d029740
  *
  */
 public class LongValue implements Value {

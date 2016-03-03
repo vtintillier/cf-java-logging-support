@@ -9,7 +9,7 @@ import java.io.IOException;
 /**
  *
  */
-public class PerfxHttpRequestWrapper extends HttpServletRequestWrapper {
+public class ContentLengthTrackingRequestWrapper extends HttpServletRequestWrapper {
 
   private final HttpServletRequest request;
   private WrappedInputReader wrappedReader = null;
@@ -21,7 +21,7 @@ public class PerfxHttpRequestWrapper extends HttpServletRequestWrapper {
    * @param request
    * @throws IllegalArgumentException if the request is null
    */
-  public PerfxHttpRequestWrapper(HttpServletRequest request) {
+  public ContentLengthTrackingRequestWrapper(HttpServletRequest request) {
     super(request);
     this.request = request;
   }

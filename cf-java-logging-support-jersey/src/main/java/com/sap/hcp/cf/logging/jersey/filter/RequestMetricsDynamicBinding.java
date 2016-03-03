@@ -6,11 +6,11 @@ import javax.ws.rs.core.FeatureContext;
 import javax.ws.rs.ext.Provider;
 
 @Provider
-public class PerfXDynamicBinding implements DynamicFeature {
+public class RequestMetricsDynamicBinding implements DynamicFeature {
 
 	public void configure(ResourceInfo resourceInfo, FeatureContext context) {
-		context.register(PerfXContainerRequestFilter.class);
-		context.register(PerfXContainerResponseFilter.class);
+		context.register(RequestMetricsContainerRequestFilter.class);
+		context.register(RequestMetricsContainerResponseFilter.class);
 	}
 
 }

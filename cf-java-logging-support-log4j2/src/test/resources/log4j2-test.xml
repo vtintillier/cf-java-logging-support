@@ -9,6 +9,6 @@
      <Root level="${LOG_ROOT_LEVEL:-WARN}">
         <AppenderRef ref="STDOUT-JSON" />
      </Root>
-     <Logger name="com.sap.hcp.cf" level="${LOG_PERFX_LEVEL:-INFO}"/>
+     <Logger name="com.sap.hcp.cf" level="INFO"/>
   </Loggers>
 </Configuration>      

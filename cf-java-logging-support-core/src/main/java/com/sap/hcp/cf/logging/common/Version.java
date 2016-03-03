@@ -7,7 +7,7 @@ import java.util.Properties;
 public class Version {
 
   public static final String UNKNOWN = "???";
-  private static final String POM_PROPS_PATH = "META-INF/maven/com.sap.hcp.perfx.logging/java-logging-support-core/pom.properties";
+  private static final String POM_PROPS_PATH = "META-INF/maven/com.sap.hcp.cf.logging/java-logging-support-core/pom.properties";
   private static final String KEY_VERSION = "version";
 
   public static final Version INSTANCE = new Version();

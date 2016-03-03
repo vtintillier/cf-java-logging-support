@@ -1,6 +1,6 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
-import static com.sap.hcp.cf.logging.jersey.filter.Utils.REQ_RECORD_KEY;
+import static com.sap.hcp.cf.logging.jersey.filter.Utils.REQ_METRICS_KEY;
 
 import java.io.IOException;
 
@@ -11,15 +11,15 @@ import javax.ws.rs.ext.Provider;
 
 @Provider
 @PreMatching
-public class PerfXContainerRequestFilter implements ContainerRequestFilter {
+public class RequestMetricsContainerRequestFilter implements ContainerRequestFilter {
 
 	private final RequestHandler handler;
 	
-	public PerfXContainerRequestFilter() {
+	public RequestMetricsContainerRequestFilter() {
 		this.handler =  new RequestHandler();
 	}
 	public void filter(ContainerRequestContext requestContext) throws IOException {
-		requestContext.setProperty(REQ_RECORD_KEY,  handler.handle(new ContainerRequestContextAdapter(requestContext)));
+		requestContext.setProperty(REQ_METRICS_KEY,  handler.handle(new ContainerRequestContextAdapter(requestContext)));
 	}
 
 }

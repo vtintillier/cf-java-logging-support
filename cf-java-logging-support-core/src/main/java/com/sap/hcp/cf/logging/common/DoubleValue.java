@@ -6,8 +6,6 @@ import java.util.Locale;
 
 /**
  * A {@link Value} implementation representing a <i>double</i> value.
- * 
- * @author d029740
  *
  */
 public class DoubleValue implements Value {
@@ -19,7 +17,7 @@ public class DoubleValue implements Value {
 			this.value = ((Double) value).doubleValue();
 		}
 		else {
-			value = 0.0;
+			this.value = 0.0;
 		}
 	}
 	

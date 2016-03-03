@@ -11,7 +11,7 @@ import com.sap.hcp.cf.logging.common.Fields;
  */
 public final class  LayoutPatterns {
 
-	public static enum PATTERN_KEY {
+	public enum PATTERN_KEY {
 		APPLICATION,
 		EXCEPTION,
 		REQUEST
@@ -67,11 +67,11 @@ public final class  LayoutPatterns {
 			"," + JSON_FIELD(Fields.STACKTRACE, "%stacktrace", false, false) +
 			COMMON_POSTFIX_PATTERN;
 	/*
-	 * -- if we write a request log/"beat" all we want/need is already in the massage (object), but
+	 * -- if we write a request log/"beat" all we want/need is already in the message (object), but
 	 * -- we need to flatten it as we don't want nested JSON objects.
 	 */
 	
-	private static final String REQUEST_LOG_PATTERN = 
+	private static final String REQUEST_METRICS_PATTERN =
 			COMMON_PREFIX_PATTERN +
 			JSON_FIELD(Fields.TYPE, Defaults.TYPE_REQUEST, true, true) +
 			"%jsonmsg{flatten}%ex{0}" +
@@ -80,7 +80,7 @@ public final class  LayoutPatterns {
 	public static String getPattern(PATTERN_KEY key) {
 		switch (key) {		
 		case REQUEST:
-			return REQUEST_LOG_PATTERN;
+			return REQUEST_METRICS_PATTERN;
 			
 		case EXCEPTION:
 			return APP_EX_LOG_PATTERN;

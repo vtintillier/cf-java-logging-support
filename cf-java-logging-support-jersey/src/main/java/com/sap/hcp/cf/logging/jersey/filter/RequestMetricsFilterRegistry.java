@@ -6,15 +6,15 @@ import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 
 
-public class PerfXFilterRegistry {
+public class RequestMetricsFilterRegistry {
 
 	public static void registerContainerFilters(Configurable<ResourceConfig> config) {
-		config.register(PerfXContainerRequestFilter.class);
-		config.register(PerfXContainerResponseFilter.class);		
+		config.register(RequestMetricsContainerRequestFilter.class);
+		config.register(RequestMetricsContainerResponseFilter.class);
 	}
 	
 	public static void registerClientFilters(ClientConfig clientConfig) {
-		clientConfig.register(PerfXClientRequestFilter.class);
-		clientConfig.register(PerfXClientResponseFilter.class);		 
+		clientConfig.register(RequestMetricsClientRequestFilter.class);
+		clientConfig.register(RequestMetricsClientResponseFilter.class);
 	}
 }

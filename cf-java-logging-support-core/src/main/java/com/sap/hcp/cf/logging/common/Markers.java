@@ -5,8 +5,6 @@ import org.slf4j.MarkerFactory;
 
 /**
  * Predefined {@link Marker} instances that are used in the layout pattern configuration.
- * 
- * @author d029740
  *
  */
 public class Markers {

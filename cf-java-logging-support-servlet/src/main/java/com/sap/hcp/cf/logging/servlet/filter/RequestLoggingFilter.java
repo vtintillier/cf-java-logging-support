@@ -25,8 +25,6 @@ import com.sap.hcp.cf.logging.common.RequestRecord;
 
 /**
  * A simple servlet filter that logs HTTP request processing info.
- * 
- * @author d029740
  *
  */
 public class RequestLoggingFilter implements Filter {
@@ -72,8 +70,8 @@ public class RequestLoggingFilter implements Filter {
 		LogContext.initializeContext(getCorrelationIdFromHeader(httpRequest));
 
 		RequestRecord lrec = new RequestRecord(LOG_PROVIDER);
-		PerfxHttpResponseWrapper responseWrapper = null;
-		PerfxHttpRequestWrapper requestWrapper = null;
+		ContentLengthTrackingResponseWrapper responseWrapper = null;
+		ContentLengthTrackingRequestWrapper requestWrapper = null;
 
 		/*
 		 * -- we essentially do three things here:
@@ -82,11 +80,11 @@ public class RequestLoggingFilter implements Filter {
 		 * --  b) inject a response wrapper to keep track of content length (hopefully) 
 		 */
 		if (wrapResponse) {
-			responseWrapper = new PerfxHttpResponseWrapper(httpResponse);
+			responseWrapper = new ContentLengthTrackingResponseWrapper(httpResponse);
 		}
 		if (wrapRequest) {
 
-			requestWrapper = new PerfxHttpRequestWrapper(httpRequest);
+			requestWrapper = new ContentLengthTrackingRequestWrapper(httpRequest);
 		}
 
 		addHeaders(httpRequest, lrec);

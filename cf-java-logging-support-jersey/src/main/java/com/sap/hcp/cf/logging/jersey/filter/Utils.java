@@ -1,5 +1,5 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
 public interface Utils {
-  public String REQ_RECORD_KEY = "PerfXRequestRecord";
+  String REQ_METRICS_KEY = "CFRequestMetrics";
 }

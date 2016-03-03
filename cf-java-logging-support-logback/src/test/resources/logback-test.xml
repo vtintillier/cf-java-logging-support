@@ -12,6 +12,6 @@
                 <appender-ref ref="STDOUT-JSON" />
         </root>
 
-        <logger name="com.sap.hcp.cf" level="${LOG_PERFX_LEVEL:-INFO}" />
+        <logger name="com.sap.hcp.cf" level="INFO" />
 
 </configuration>      
