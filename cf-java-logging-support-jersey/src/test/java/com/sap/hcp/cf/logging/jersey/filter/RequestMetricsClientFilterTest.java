@@ -2,10 +2,14 @@ package com.sap.hcp.cf.logging.jersey.filter;
 
 import static com.sap.hcp.cf.logging.common.LogContext.HTTP_HEADER_CORRELATION_ID;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
@@ -16,6 +20,7 @@ import org.junit.Test;
 
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
+import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
 
 
@@ -47,17 +52,28 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest   {
 
 	@Test
 	public void ChainedResourcePerformanceLogTest() {
-		/*
-		 * -- this is requesting a resource that itself issues another request
-		 * -- thus, we should see two log entries
-		 */
-		final Response response = target("testchainedresource").request().get();
+		final Response response = ClientRequestUtils.propagate(target("testchainedresource").request(), null).get();
+		final String CORRELATION_ID = LogContext.getCorrelationId();
 		if (response.hasEntity()) {
 			String res = response.readEntity(String.class);
 			res.length();
 		}
-		assertThat(getLogSize(), is(4));
+		/*
+		 * There should be at least two messages, but there might be more if LogContext reports correlation id generation
+		 * 
+		 */
+		assertThat(getLogSize(), greaterThanOrEqualTo(2));
 		assertThat(response.getStatus(), is(200));	
+		/*
+		 * -- correlation id should have been propagated
+		 */
+		Set<String> correlationIds = new HashSet<String>();
+		for (int i = 0; i < getLogSize(); i++) {
+			String id = getField(Fields.CORRELATION_ID, i);
+			assertThat(id, not(Defaults.UNKNOWN));
+			correlationIds.add(id);
+		}
+		assertThat(correlationIds.size(), is(1));
 	}
 
 	@Test

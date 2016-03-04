@@ -13,14 +13,20 @@ public class ResponseHandler {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(ResponseHandler.class);
 	
-	public void handle(ResponseContextAdapter responseContext, RequestRecord logRecord) {
-		if (logRecord != null) {
-			logRecord.addValue(Fields.RESPONSE_SIZE_B, new LongValue(responseContext.getLength()));
-			logRecord.addTag(Fields.RESPONSE_CONTENT_TYPE, responseContext.getHeader(HttpHeaders.CONTENT_TYPE));   
-			logRecord.addValue(Fields.RESPONSE_STATUS, new LongValue(responseContext.getStatus()));
-			logRecord.stop();
-			LOGGER.info(Markers.REQUEST_MARKER, logRecord.toString());
-			logRecord.resetContext();
+	public void handle(ResponseContextAdapter responseContext, RequestRecord rr) {
+		if (rr != null) {
+			rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(responseContext.getLength()));
+			rr.addTag(Fields.RESPONSE_CONTENT_TYPE, responseContext.getHeader(HttpHeaders.CONTENT_TYPE));   
+			rr.addValue(Fields.RESPONSE_STATUS, new LongValue(responseContext.getStatus()));
+			rr.stop();
+			LOGGER.info(Markers.REQUEST_MARKER, rr.toString());
+			/*
+			 * -- close this instance
+			 */
+			rr.close();
+		}
+		else {
+			LOGGER.error("No record found to handle response {}", responseContext);
 		}
 	}
 }

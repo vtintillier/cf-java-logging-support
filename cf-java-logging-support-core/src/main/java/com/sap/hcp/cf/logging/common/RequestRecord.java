@@ -88,6 +88,7 @@ public class RequestRecord {
 		addTag(Fields.DIRECTION, direction.toString());
 		setDefaults();
 		start();
+		RequestRecordHolder.add(this);
 	}
 	
 	/**
@@ -180,6 +181,10 @@ public class RequestRecord {
 		endNano = System.nanoTime();
 
 		return endMs;
+	}
+
+	public void close() {
+		RequestRecordHolder.remove(this);
 	}
 	
 	@Override

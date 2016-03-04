@@ -37,6 +37,15 @@ public abstract class AbstractFilterTest  extends JerseyTest {
 		}
 	}
 
+	protected String getField(String fieldName, int i) {
+		try {
+			return JSON.std.mapFrom(getLine(i)).get(fieldName).toString();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+	
 	protected int getLogSize() {
 		return this.outContent.toString().split("\n").length;
 	}
@@ -44,5 +53,10 @@ public abstract class AbstractFilterTest  extends JerseyTest {
 	private String getLastLine() {
 		String[] lines = this.outContent.toString().split("\n");
 		return lines[lines.length-1];
+	}
+	
+	public String getLine(int i) {
+		String[] lines = this.outContent.toString().split("\n");
+		return lines[i];
 	}
 }
