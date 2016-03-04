@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
+import java.net.URI;
+
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.HttpHeaders;
@@ -10,7 +12,22 @@ import com.sap.hcp.cf.logging.common.RequestRecord;
 public class RequestHandler {
 
 	public RequestRecord handle(RequestContextAdapter adapter) {
-        LogContext.initializeContext(getCorrelationIdFromHeader(adapter));
+		
+		/*
+		 * -- This might be an outgoing call and we may already have a correlation 
+		 * -- id in the LogContext
+		 */
+		String correlationId = LogContext.getCorrelationId();
+		if (correlationId == null) {
+			correlationId = getCorrelationIdFromHeader(adapter);
+			LogContext.initializeContext(correlationId);
+			/*
+			 * -- it was not in the header, then propagate
+			 */
+			if (correlationId == null) {
+				adapter.setHeader(HttpHeaders.CORRELATION_ID, LogContext.getCorrelationId());
+			}
+		}
 
         RequestRecord lrec = new RequestRecord(adapter.getName(), adapter.getDirection());
         lrec.start();
@@ -20,8 +37,9 @@ public class RequestHandler {
         return lrec;
 		
 	}
+	
     private void addHeaders(RequestContextAdapter adapter, RequestRecord lrec) {
-        lrec.addTag(Fields.REQUEST, getValue(adapter.getUri().getPath()));
+        lrec.addTag(Fields.REQUEST, getValue(getRequestUri(adapter)));
         lrec.addTag(Fields.METHOD,  getValue(adapter.getMethod()));           
         lrec.addTag(Fields.REMOTE_IP, getValue(adapter.getUri().getAuthority()));
         lrec.addTag(Fields.REMOTE_HOST, getValue(adapter.getUri().getHost()));    
@@ -50,5 +68,14 @@ public class RequestHandler {
 
     private String getHeader(RequestContextAdapter adapter, String headerName) {
         return getValue(adapter.getHeader(headerName));
+    }
+    
+    private String getRequestUri(RequestContextAdapter adapter) {
+    	URI uri = adapter.getUri();
+    	StringBuilder sb = new StringBuilder(uri.getPath());
+    	if (uri.getQuery() != null) {
+    		sb.append("?").append(uri.getQuery());
+    	}
+    	return sb.toString();
     }
 }

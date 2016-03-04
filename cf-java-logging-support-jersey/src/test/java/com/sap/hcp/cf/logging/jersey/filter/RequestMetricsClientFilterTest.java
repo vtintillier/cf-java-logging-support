@@ -7,6 +7,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
@@ -16,6 +17,7 @@ import org.junit.Test;
 
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
+import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
 
 
@@ -47,17 +49,20 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest   {
 
 	@Test
 	public void ChainedResourcePerformanceLogTest() {
-		/*
-		 * -- this is requesting a resource that itself issues another request
-		 * -- thus, we should see two log entries
-		 */
-		final Response response = target("testchainedresource").request().get();
+		final String CORRELATION_ID = "test-1234-5678";
+		final Response response = target("testchainedresource").request().header(HttpHeaders.CORRELATION_ID, CORRELATION_ID).get();
 		if (response.hasEntity()) {
 			String res = response.readEntity(String.class);
 			res.length();
 		}
-		assertThat(getLogSize(), is(4));
+		assertThat(getLogSize(), is(2));
 		assertThat(response.getStatus(), is(200));	
+		/*
+		 * -- correlation id should have been propagated
+		 */
+		for (int i = 0; i < getLogSize(); i++) {
+			assertThat(getField(Fields.CORRELATION_ID, i), is(CORRELATION_ID));
+		}
 	}
 
 	@Test

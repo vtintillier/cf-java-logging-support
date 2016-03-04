@@ -69,7 +69,7 @@ public class RequestLoggingFilter implements Filter {
 		 */
 		LogContext.initializeContext(getCorrelationIdFromHeader(httpRequest));
 
-		RequestRecord lrec = new RequestRecord(LOG_PROVIDER);
+		RequestRecord rr = new RequestRecord(LOG_PROVIDER);
 		ContentLengthTrackingResponseWrapper responseWrapper = null;
 		ContentLengthTrackingRequestWrapper requestWrapper = null;
 
@@ -87,40 +87,40 @@ public class RequestLoggingFilter implements Filter {
 			requestWrapper = new ContentLengthTrackingRequestWrapper(httpRequest);
 		}
 
-		addHeaders(httpRequest, lrec);
+		addHeaders(httpRequest, rr);
 
 		/* -- start measuring right before calling up the filter chain -- */
-		lrec.start();
+		rr.start();
 		if (chain != null) {
 			chain.doFilter(requestWrapper != null ? requestWrapper : httpRequest, responseWrapper != null ? responseWrapper : httpResponse);
 		}
-		lrec.stop();
+		rr.stop();
 
 		if (requestWrapper != null) {
-			lrec.addValue(Fields.REQUEST_SIZE_B, new LongValue(requestWrapper.getContentLength()));
+			rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(requestWrapper.getContentLength()));
 		}
 		else {
-			lrec.addValue(Fields.REQUEST_SIZE_B, new LongValue(httpRequest.getContentLength()));
+			rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(httpRequest.getContentLength()));
 		}
 	String headerValue = httpResponse.getHeader(HttpHeaders.CONTENT_LENGTH);
 		if (headerValue != null) {
-			lrec.addValue(Fields.RESPONSE_SIZE_B, new LongValue(Long.valueOf(headerValue)));
+			rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(Long.valueOf(headerValue)));
 		}
 		else {
 			if (responseWrapper != null) {
-				lrec.addValue(Fields.RESPONSE_SIZE_B, new LongValue(responseWrapper.getContentLength()));
+				rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(responseWrapper.getContentLength()));
 			}
 		}
-		lrec.addTag(Fields.RESPONSE_CONTENT_TYPE, getValue(httpResponse.getHeader(HttpHeaders.CONTENT_TYPE)));
-		lrec.addValue(Fields.RESPONSE_STATUS, new LongValue(httpResponse.getStatus()));
+		rr.addTag(Fields.RESPONSE_CONTENT_TYPE, getValue(httpResponse.getHeader(HttpHeaders.CONTENT_TYPE)));
+		rr.addValue(Fields.RESPONSE_STATUS, new LongValue(httpResponse.getStatus()));
 		/*
 		 * -- log info 
 		 */
-		logger.info(Markers.REQUEST_MARKER, lrec.toString());
+		logger.info(Markers.REQUEST_MARKER, rr.toString());
 		/*
-		 * -- reset log context info
+		 * -- close this
 		 */
-		lrec.resetContext();
+		rr.close();
 	}
 
 	private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {

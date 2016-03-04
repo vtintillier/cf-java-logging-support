@@ -10,6 +10,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
 import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.server.ContainerRequest;
 
 /**
  * Simple Test Resource 
@@ -20,7 +21,7 @@ import org.glassfish.jersey.client.ClientConfig;
 public class TestChainedResource {
 
 	@GET
-	public Response  getHello(@Context UriInfo ui) {
+	public Response  getHello(@Context UriInfo ui, @Context ContainerRequest req) {
 		
 		ClientConfig cfg = new ClientConfig();
 		cfg.register(RequestMetricsClientRequestFilter.class);
@@ -28,10 +29,10 @@ public class TestChainedResource {
 		
 		WebTarget wt = ClientBuilder.newClient(cfg).target(ui.getBaseUri() + "testresource");
 
-		return wt.request().get();
-//		return Response.status(200).build();
-
-		       
+		/*
+		 * -- As this may get executed in a different thread, propagate 
+		 */
+		return ClientRequestUtils.propagate(wt.request(), req).get();		       
 	}
 	
 }

@@ -39,7 +39,7 @@ public class ClientRequestContextAdapter implements RequestContextAdapter {
 
 	public void setHeader(String headerName, String headerValue) {
 		if (headerName != null && headerValue != null) {
-			MultivaluedMap<String, String > headers = ctx.getStringHeaders();
+			MultivaluedMap<String, Object > headers = ctx.getHeaders();
 			headers.add(headerName, headerValue);
 		}
 	}
