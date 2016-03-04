@@ -53,7 +53,6 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest   {
 	@Test
 	public void ChainedResourcePerformanceLogTest() {
 		final Response response = ClientRequestUtils.propagate(target("testchainedresource").request(), null).get();
-		final String CORRELATION_ID = LogContext.getCorrelationId();
 		if (response.hasEntity()) {
 			String res = response.readEntity(String.class);
 			res.length();
