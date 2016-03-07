@@ -1,0 +1,10 @@
+---
+applications:
+#
+# You may want/need to change these to avoid naming conflicts
+#
+- name: logging-sample-app
+  host: logging-sample-app
+  instances: 1
+  memory: 256M
+  path: target/logging-sample-app-2.0.8.war
