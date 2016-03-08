@@ -24,7 +24,8 @@ public final class LayoutPatterns {
 	 */
 	private static final String COMMON_PREFIX_PATTERN = 
 		"{ " +
-		JSON_FIELD(Fields.WRITTEN_AT, "%d{yyyy-MM-dd'T'HH:mm:ss.SSSX,UTC}", true, false) +
+		JSON_FIELD(Fields.WRITTEN_AT, "%d{yyyy-MM-dd'T'HH:mm:ss.SSSX,UTC}", true, true) +
+		JSON_FIELD(Fields.WRITTEN_TS, "%tstamp", false, false) +
 		"%replace(%ctxp){'(.+)', ',$1'},";
 	
 	/*
@@ -43,6 +44,7 @@ public final class LayoutPatterns {
 		JSON_FIELD(Fields.LOGGER, "%logger", true, true) +
 		JSON_FIELD(Fields.THREAD, "%thread", true, true) +
 		JSON_FIELD(Fields.LEVEL, "%p", true, true) +
+		JSON_FIELD(Fields.CATEGORIES, "%categories", false, true) +
 		JSON_FIELD(Fields.MSG, "%jsonmsg{escape}%replace(%args{custom_fields}){'(.+)', ',$1'}", false, false);
 
 	/*

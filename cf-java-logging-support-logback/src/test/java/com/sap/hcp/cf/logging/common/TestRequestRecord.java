@@ -4,6 +4,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
@@ -48,6 +49,7 @@ public class TestRequestRecord extends AbstractTest {
 		assertThat(getField(Fields.REFERER), is(nullValue()));
 		assertThat(getField(Fields.X_FORWARDED_FOR), is(nullValue()));
 		assertThat(getField(Fields.REMOTE_PORT), is(nullValue()));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
 
 	}
 
@@ -83,6 +85,7 @@ public class TestRequestRecord extends AbstractTest {
 		assertThat(getField(Fields.REFERER), is(nullValue()));
 		assertThat(getField(Fields.X_FORWARDED_FOR), is(nullValue()));
 		assertThat(getField(Fields.REMOTE_PORT), is(nullValue()));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
 	}
 
 	@Test
@@ -97,6 +100,7 @@ public class TestRequestRecord extends AbstractTest {
 		logger.info(Markers.REQUEST_MARKER, rrec.toString());
 		
 		assertThat(getField(Fields.REQUEST_ID),  is(reqId));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
 	}
 	
 	@Test
@@ -115,6 +119,7 @@ public class TestRequestRecord extends AbstractTest {
 		assertThat(Double.valueOf(getField(Fields.RESPONSE_TIME_MS)).longValue(), lessThanOrEqualTo(Double.valueOf(end - start).longValue()));
 		assertThat(getField(Fields.RESPONSE_SENT_AT), not(nullValue()));
 		assertThat(getField(Fields.REQUEST_RECEIVED_AT), not(nullValue()));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
 	}
 	
 	@Test
@@ -133,6 +138,7 @@ public class TestRequestRecord extends AbstractTest {
 		assertThat(Double.valueOf(getField(Fields.RESPONSE_TIME_MS)).longValue(), lessThanOrEqualTo(Double.valueOf(end - start).longValue()));
 		assertThat(getField(Fields.RESPONSE_RECEIVED_AT), not(nullValue()));
 		assertThat(getField(Fields.REQUEST_SENT_AT), not(nullValue()));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
 	}
 
 	private void doWait(long p) {

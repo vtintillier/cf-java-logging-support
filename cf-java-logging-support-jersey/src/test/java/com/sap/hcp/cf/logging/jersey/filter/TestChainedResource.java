@@ -6,6 +6,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 
@@ -21,7 +22,7 @@ import org.glassfish.jersey.server.ContainerRequest;
 public class TestChainedResource {
 
 	@GET
-	public Response  getHello(@Context UriInfo ui, @Context ContainerRequest req) {
+	public Response  getHello(@Context UriInfo ui, @Context HttpHeaders reqHeaders) {
 		
 		ClientConfig cfg = new ClientConfig();
 		cfg.register(RequestMetricsClientRequestFilter.class);
@@ -32,7 +33,7 @@ public class TestChainedResource {
 		/*
 		 * -- As this may get executed in a different thread, propagate 
 		 */
-		return ClientRequestUtils.propagate(wt.request(), req).get();		       
+		return ClientRequestUtils.propagate(wt.request(), reqHeaders).get();
 	}
 	
 }

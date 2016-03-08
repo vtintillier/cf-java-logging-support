@@ -28,6 +28,7 @@ public interface Fields {
   public String LEVEL = "level";
   public String MSG = "msg";
   public String STACKTRACE = "stacktrace";
+  public String CATEGORIES = "categories";
   public String CUSTOM_FIELDS = "custom_fields";
   public String REQUEST_ID = "request_id";
   public String REQUEST = "request";

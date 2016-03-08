@@ -3,12 +3,9 @@ package com.sap.hcp.cf.logback.encoder;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.sap.hcp.cf.logback.converter.*;
 import org.slf4j.Marker;
 
-import com.sap.hcp.cf.logback.converter.ArgsConverter;
-import com.sap.hcp.cf.logback.converter.ContextPropsConverter;
-import com.sap.hcp.cf.logback.converter.JsonMessageConverter;
-import com.sap.hcp.cf.logback.converter.StacktraceConverter;
 import com.sap.hcp.cf.logback.encoder.LayoutPatterns.PATTERN_KEY;
 import com.sap.hcp.cf.logging.common.Markers;
 
@@ -75,6 +72,8 @@ public class JsonEncoder extends LayoutWrappingEncoder<ILoggingEvent> {
 			PatternLayout.defaultConverterMap.put(JsonMessageConverter.WORD, JsonMessageConverter.class.getName());
 			PatternLayout.defaultConverterMap.put(ContextPropsConverter.WORD, ContextPropsConverter.class.getName());			
 			PatternLayout.defaultConverterMap.put(StacktraceConverter.WORD, StacktraceConverter.class.getName());
+			PatternLayout.defaultConverterMap.put(TimestampConverter.WORD, TimestampConverter.class.getName());
+			PatternLayout.defaultConverterMap.put(CategoriesConverter.WORD, CategoriesConverter.class.getName());
 		}
 		
 		private void initPatterns() {

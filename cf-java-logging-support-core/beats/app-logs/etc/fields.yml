@@ -226,6 +226,12 @@ app-logs:
 
         NOTE: This MUST NOT contain NEWLINE or TAB characters!
 
+    - name: "categories"
+      type: string
+      required: false
+      description: |
+        A list of names to further categorize this log message.
+
     - name: "custom_fields"
       type: group
       required: false

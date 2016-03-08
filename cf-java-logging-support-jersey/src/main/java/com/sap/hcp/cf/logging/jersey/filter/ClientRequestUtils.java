@@ -9,9 +9,9 @@ import com.sap.hcp.cf.logging.common.LogContext;
 
 public class ClientRequestUtils {
 	
-	public static Invocation.Builder propagate(Invocation.Builder builder, ContainerRequest req) {
+	public static Invocation.Builder propagate(Invocation.Builder builder, javax.ws.rs.core.HttpHeaders reqHeaders) {
 		if (LogContext.getCorrelationId() == null) {
-			LogContext.initializeContext(req != null ? req.getHeaderString(HttpHeaders.CORRELATION_ID) : null);
+			LogContext.initializeContext(reqHeaders != null ? reqHeaders.getHeaderString(HttpHeaders.CORRELATION_ID) : null);
 		}
 		builder.header(HttpHeaders.CORRELATION_ID, LogContext.getCorrelationId());
 		return builder;

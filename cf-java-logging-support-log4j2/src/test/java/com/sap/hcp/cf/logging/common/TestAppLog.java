@@ -1,13 +1,14 @@
 package com.sap.hcp.cf.logging.common;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
+import org.slf4j.*;
 
 public class TestAppLog extends AbstractTest {
 
@@ -22,6 +23,32 @@ public class TestAppLog extends AbstractTest {
 		assertThat(getField(Fields.COMPONENT_ID), is("-"));
 		assertThat(getField(Fields.COMPONENT_NAME), is("-"));
 		assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
+	}
+
+	@Test
+	public void testCategorties() {
+		logMsg = "Running testCategories()";
+		Marker cat0 = MarkerFactory.getMarker("cat0");
+
+		LOGGER.info(cat0, logMsg);
+		assertThat(getMessage(), is(logMsg));
+		assertThat(getField(Fields.COMPONENT_ID), is("-"));
+		assertThat(getField(Fields.COMPONENT_NAME), is("-"));
+		assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
+		assertThat(getList(Fields.CATEGORIES), contains(cat0.getName()));
+
+		Marker cat1 = MarkerFactory.getMarker("cat1");
+		cat1.add(cat0);
+
+		LOGGER.info(cat1, logMsg);
+		assertThat(getMessage(), is(logMsg));
+		assertThat(getField(Fields.COMPONENT_ID), is("-"));
+		assertThat(getField(Fields.COMPONENT_NAME), is("-"));
+		assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
+		assertThat(getList(Fields.CATEGORIES), contains(cat1.getName(), cat0.getName()));
 	}
 
 	@Test
@@ -29,11 +56,16 @@ public class TestAppLog extends AbstractTest {
 		MDC.put(SOME_KEY, SOME_VALUE);
 		MDC.put("testNumeric", "200");
 		logMsg = "Running testMDC()";
+		long beforeTS = System.nanoTime();
 		LOGGER.info(logMsg);
+		long afterTS = System.nanoTime();
 		assertThat(getMessage(), is(logMsg));
 		assertThat(getField(Fields.COMPONENT_ID), is("-"));
 		assertThat(getField(Fields.COMPONENT_NAME), is("-"));
 		assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
+		assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
+		assertThat(getField(Fields.WRITTEN_TS), greaterThanOrEqualTo(Long.toString(beforeTS)));
+		assertThat(Long.toString(afterTS), greaterThanOrEqualTo(getField(Fields.WRITTEN_TS)));
 	}
 
 	@Test
@@ -48,7 +80,8 @@ public class TestAppLog extends AbstractTest {
 			assertThat(getField(Fields.COMPONENT_ID), is("-"));
 			assertThat(getField(Fields.COMPONENT_NAME), is("-"));
 			assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
-			assertThat(getField(Fields.STACKTRACE), is(notNullValue())); 
+			assertThat(getField(Fields.STACKTRACE), is(notNullValue()));
+			assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
 		}
 	}
 	

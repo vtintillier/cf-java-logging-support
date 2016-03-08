@@ -51,30 +51,13 @@
 			<version>${slf4j.version}</version>
 		</dependency>
 
-		<!-- need these as xs-object-factory is referring to them with scope "provider" -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-core</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-annotations</artifactId>
-			<version>${jackson.version}</version>
-		</dependency>
-
 		<!-- We're using the Servlet Filter instrumentation -->
 		<dependency>
   		<groupId>com.sap.hcp.cf.logging</groupId>
   		<artifactId>cf-java-logging-support-servlet</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<!-- We're using the Servlet Filter instrumentation -->
+		<!-- We're using the Jersey container/client instrumentation -->
 		<dependency>
 			<groupId>com.sap.hcp.cf.logging</groupId>
 			<artifactId>cf-java-logging-support-jersey</artifactId>

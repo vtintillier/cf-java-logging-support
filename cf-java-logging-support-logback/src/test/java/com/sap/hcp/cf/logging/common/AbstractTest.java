@@ -2,7 +2,9 @@ package com.sap.hcp.cf.logging.common;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.Map;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -37,6 +39,15 @@ public abstract class AbstractTest {
 	protected String getField(String fieldName) {
 		try {
 			return JSON.std.mapFrom(lastLine()).get(fieldName).toString();
+		} catch (Exception ex) {
+			ex.printStackTrace();
+			return null;
+		}
+	}
+
+	protected List<String> getList(String fieldName) {
+		try {
+			return (List<String>)JSON.std.mapFrom(lastLine()).get(fieldName);
 		} catch (Exception ex) {
 			ex.printStackTrace();
 			return null;

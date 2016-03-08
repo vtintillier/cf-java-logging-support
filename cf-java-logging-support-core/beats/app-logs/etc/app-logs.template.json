@@ -18,6 +18,11 @@
         }
       ],
       "properties": {
+        "categories": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
         "component_id": {
           "doc_values": true,
           "index": "not_analyzed",

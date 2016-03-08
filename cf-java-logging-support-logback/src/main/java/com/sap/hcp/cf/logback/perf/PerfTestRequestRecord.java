@@ -1,4 +1,4 @@
-package com.sap.hcm.cf.logback.perf;
+package com.sap.hcp.cf.logback.perf;
 
 import java.io.IOException;
 import java.io.OutputStream;

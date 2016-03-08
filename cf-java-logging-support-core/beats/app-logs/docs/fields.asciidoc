@@ -303,6 +303,15 @@ Stacktrace information in case the message is reporting an exception.
 NOTE: This MUST NOT contain NEWLINE or TAB characters!
 
 
+==== categories
+
+type: string
+
+required: False
+
+A list of names to further categorize this log message.
+
+
 === custom_fields Fields
 
 A JSON object representing the custom arguments passed to the logging

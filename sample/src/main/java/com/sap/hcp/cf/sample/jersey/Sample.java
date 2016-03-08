@@ -1,21 +1,16 @@
 package com.sap.hcp.cf.sample.jersey;
 
-import com.sap.hcp.cf.logging.common.HttpHeaders;
-import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.jersey.filter.RequestMetricsClientRequestFilter;
 import com.sap.hcp.cf.logging.jersey.filter.RequestMetricsClientResponseFilter;
+import com.sap.hcp.cf.logging.jersey.filter.ClientRequestUtils;
+
 import org.glassfish.jersey.client.ClientConfig;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MDC;
 
 import javax.ws.rs.*;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Invocation;
-import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
+import javax.ws.rs.core.*;
 import java.net.URI;
 
 
@@ -31,7 +26,7 @@ public class Sample {
 
   @GET
   @Path("/forward")
-  public Response forward(@Context UriInfo uriInfo, @QueryParam("q") String queryParam) {
+  public Response forward(@Context UriInfo uriInfo, @QueryParam("q") String queryParam, @Context HttpHeaders headers) {
     LoggerFactory.getLogger(Sample.class).info("forwarding request");
     URI baseUri = uriInfo.getBaseUri();
     StringBuilder targetUri = new StringBuilder(baseUri.toString().replace("/jersey", ""));
@@ -39,6 +34,7 @@ public class Sample {
       targetUri.append("?").append(queryParam);
     }
     Invocation.Builder forwReq = ClientBuilder.newClient(clientConfig).target(targetUri.toString()).request();
+    forwReq = ClientRequestUtils.propagate(forwReq, headers);
     return Response.status(200).entity(forwReq.get(String.class)).build();
   }
 }
