@@ -137,4 +137,4 @@ In order to illustrate how the different features are used, this repository incl
 
 ## Documentation
 
-More info on the actual implementation can be found in the [Wiki](./wiki).
+More info on the actual implementation can be found in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki).
