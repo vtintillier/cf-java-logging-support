@@ -4,9 +4,9 @@
 
 This is a collection of support libraries for Java applications running on Cloud Foundry that serve two main purposes: It provides (a) means to emit *structured application log messages* and (b) instrument parts of your application stack to *collect request metrics*.
 
-When we say structured, we actually mean in JSON format. In that sense, it's shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder), but uses a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analytic stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
+When we say structured, we actually mean in JSON format. In that sense, it's shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
-If you're interested in the specifications of these standardized formats, you may want to have closer look at the [beats folder](./cf-java-logging-support/beats).
+If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.ml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
 While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to stay implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/),  but provide implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
 
@@ -14,7 +14,7 @@ The instrumentation part is currently focusing on providing [request filters for
 
 ## Features and dependencies
 
-As you can see from the structure of this repository, we're not providing one *uber* JAR that contains everything, but provide each feature separately. We also try to stay away from wiring up too many dependencies by tagging almost all of them as *provided*, i.e. it's your duty to get all runtime dependencies resolved in your application POM file. 
+As you can see from the structure of this repository, we're not providing one *uber* JAR that contains everything, but provide each feature separately. We also try to stay away from wiring up too many dependencies by tagging almost all of them as *provided.* As a consequence, it's your task to get all runtime dependencies resolved in your application POM file. 
 
 All in all, you should do the following:
 
@@ -23,13 +23,13 @@ All in all, you should do the following:
 * pick your favorite logging implementation, and
 * adjust your logging configuration accordingly.
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM:
+Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest version (currently `2.0.8`):
 
 ``` xml
 <dependency>
   <groupId>com.sap.hcp.cf.logging</groupId>
   <artifactId>cf-java-logging-support-servlet</artifactId>
-  <version>2.0.6</version>
+  <version>${cf-logging-version}</version>
 </dependency>
 ```
 
@@ -50,7 +50,7 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
 	<groupId>com.sap.hcp.cf.logging</groupId>
   	<artifactId>cf-java-logging-support-logback</artifactId>
-  	<version>2.0.7</version>
+  	<version>${cf-logging-version}</version>
 </dependency>
 
 <dependency>
@@ -66,7 +66,7 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
 	<groupId>com.sap.hcp.cf.logging</groupId>
   	<artifactId>java-logging-support-log4j2</artifactId>
-  	<version>2.0.7</version>
+  	<version>${cf-logging-version}</version>
 </dependency>
 <dependency>
 	<groupId>org.apache.logging.log4j</groupId>
@@ -94,7 +94,7 @@ Here are sort of the minimal configurations you'd need:
   	<!-- for local development, you may want to switch to a more human-readable layout --> 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%date %-5level [%thread] - [%logger]- %msg%n</pattern>
+            <pattern>%date %-5level [%thread] - [%logger] [%mdc] - %msg%n</pattern>
         </encoder>
     </appender>
     <root level="${LOG_ROOT_LEVEL:-WARN}">
@@ -117,7 +117,7 @@ Here are sort of the minimal configurations you'd need:
             <JsonPatternLayout charset="utf-8"/>
         </Console>
         <Console name="STDOUT" target="SYSTEM_OUT" follow="true">
-            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+            <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} [%mdc] - %msg%n"/>
         </Console>
 	</Appenders>
   <Loggers>
@@ -130,3 +130,11 @@ Here are sort of the minimal configurations you'd need:
   </Loggers>
 </Configuration>      
 ```
+
+## Sample Application
+
+In order to illustrate how the different features are used, this repository includes a simple application in the  [./sample folder](./sample).
+
+## Documentation
+
+More info on the actual implementation can be found in the [Wiki](./wiki).
