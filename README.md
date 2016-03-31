@@ -4,7 +4,7 @@
 
 This is a collection of support libraries for Java applications running on Cloud Foundry that serve two main purposes: It provides (a) means to emit *structured application log messages* and (b) instrument parts of your application stack to *collect request metrics*.
 
-When we say structured, we actually mean in JSON format. In that sense, it's shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
+When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
 If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.ml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
