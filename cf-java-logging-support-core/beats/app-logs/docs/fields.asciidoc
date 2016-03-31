@@ -265,7 +265,7 @@ example: http-nio-4655
 
 required: False
 
-Identifies the exedcution thread in which this log message has been written.
+Identifies the execution thread in which this log message has been written.
 
 "-" indicates that no proper value could be provided.
 
