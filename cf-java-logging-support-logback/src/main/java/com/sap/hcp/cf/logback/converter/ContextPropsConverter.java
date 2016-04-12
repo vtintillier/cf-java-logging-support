@@ -9,13 +9,13 @@ import ch.qos.logback.classic.pattern.ClassicConverter;
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
 /**
- * A simple {@link ClassicConverter} implementation that converts key/value pairs from the {@link MDC}.
+ * A simple {@link ClassicConverter} implementation that converts key/value pairs from the {@link org.slf4j.MDC}.
  * These key/value pairs are embedded in the JSON message, i.e. the appear as fields at the top-level
  * JSON object.
  * <p>
  * There are two exceptions to this:
  * <ol>
- * 	<li>The predefined keys from {@link ContextTags}</li>
+ * 	<li>The predefined keys from {@link com.sap.hcp.cf.logging.common.Fields}</li>
  * 	<li>The list of key names that have been passed in as options.</li>
  * </ol>
  *

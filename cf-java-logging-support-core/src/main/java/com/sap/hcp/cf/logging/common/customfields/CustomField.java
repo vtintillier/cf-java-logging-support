@@ -11,7 +11,7 @@ public class CustomField {
     }
 
 	/**
-     * Include key:value in the JSON output if the {@link CustomFieldsProvider} is used.
+     * Include <i>custom field</i> key:value in the JSON output.
      * @param key the key, must not be null
      * @param value the value, {@link String#valueOf} will be used to generate the String representation
      * @return a CustomField object representing key=value

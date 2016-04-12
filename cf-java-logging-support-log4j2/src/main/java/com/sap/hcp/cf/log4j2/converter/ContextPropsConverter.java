@@ -6,18 +6,17 @@ import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.pattern.ConverterKeys;
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
-import org.slf4j.MDC;
 
 import com.sap.hcp.cf.logging.common.converter.DefaultPropertiesConverter;
 
 /**
- * A simple {@link LogEventPatternConverter} implementation that converts key/value pairs from the {@link MDC}.
+ * A simple {@link LogEventPatternConverter} implementation that converts key/value pairs from the {@link org.slf4j.MDC}.
  * These key/value pairs are embedded in the JSON message, i.e. the appear as fields at the top-level
  * JSON object.
  * <p>
  * There are two exceptions to this:
  * <ol>
- * 	<li>The predefined keys from {@link ContextTags}</li>
+ * 	<li>The predefined keys from {@link com.sap.hcp.cf.logging.common.Fields}</li>
  * 	<li>The list of key names that have been passed in as options.</li>
  * </ol>
  *

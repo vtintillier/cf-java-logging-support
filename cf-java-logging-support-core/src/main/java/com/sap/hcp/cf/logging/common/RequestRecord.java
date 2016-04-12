@@ -26,7 +26,7 @@ import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
  * 	<li><code>response_time_ms</code> set to the delta between the time when the instance was created and the first call to {@link #toString()}</li> 
  * </ul>
  * <p>
- * May "inherit" tags from other instances created in the same thread (hierarchy) via (context) propagation, see {@link #addTag(String, String, boolean)}
+ * May "inherit" tags from other instances created in the same thread (hierarchy) via (context) propagation, see {@link RequestRecord#addContextTag(String, String)}
  * Such context information is kept in thread-local storage provided via {@link MDC}. As a consequence, context information will stay until explicitly reset/cleared.
  * 
  *
