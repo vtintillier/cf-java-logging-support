@@ -67,13 +67,33 @@ def fields_to_es_template(input, output, index):
         }
     }
 
+    # make sure we do have a few "default" fields
     properties = {}
+
     for doc, section in docs.items():
         if doc not in ["version", "defaults", "summary"]:
             prop = fill_section_properties(section, defaults)
             properties.update(prop)
 
     template["mappings"]["_default_"]["properties"] = properties
+    #
+    # Add these two "defaults"
+    # THIS IS SUPER IMPORTANT FOR US, OTHERWISE ES MAY CHOKE 
+    #
+    template["mappings"]["_default_"]["properties"]["@message"] = {
+        "type": "string",
+        "index": "analyzed"
+    }
+    template["mappings"]["_default_"]["properties"]["timestamp"] = {
+        "type": "long",
+        "doc_values": True,
+        "ignore_malformed": True
+    }
+    template["mappings"]["_default_"]["properties"]["@timestamp"] = {
+        "type": "date",
+        "doc_values": True,
+        "ignore_malformed": True
+    }
 
     json.dump(template, output,
               indent=2, separators=(',', ': '),
@@ -124,27 +144,32 @@ def fill_field_properties(field, defaults):
     elif field.get("type") == "date":
         properties[field["name"]] = {
             "type": "date",
-            "doc_values": True
+            "doc_values": True,
+            "ignore_malformed": True
         }
     elif field.get("type") == "long":
         properties[field["name"]] = {
             "type": "long",
-            "doc_values": True
+            "doc_values": True,
+            "ignore_malformed": True
         }
     elif field.get("type") == "integer":
         properties[field["name"]] = {
             "type": "integer",
-            "doc_values": True
+            "doc_values": True,
+            "ignore_malformed": True
         }
     elif field.get("type") == "double":
         properties[field["name"]] = {
             "type": "double",
-            "doc_values": True
+            "doc_values": True,
+            "ignore_malformed": True
         }
     elif field.get("type") == "float":
         properties[field["name"]] = {
             "type": "float",
-            "doc_values": True
+            "doc_values": True,
+            "ignore_malformed": True
         }
     elif field.get("type") == "string":
         properties[field["name"]] = {

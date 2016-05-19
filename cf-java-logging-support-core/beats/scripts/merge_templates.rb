@@ -1,3 +1,5 @@
+#!/usr/bin/env ruby 
+
 require 'json'
 
 if ARGV.size < 3

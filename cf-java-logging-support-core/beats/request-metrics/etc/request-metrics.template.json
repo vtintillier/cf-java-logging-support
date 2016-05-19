@@ -18,6 +18,15 @@
         }
       ],
       "properties": {
+        "@message": {
+          "index": "analyzed",
+          "type": "string"
+        },
+        "@timestamp": {
+          "doc_values": true,
+          "ignore_malformed": true,
+          "type": "date"
+        },
         "component_id": {
           "doc_values": true,
           "index": "not_analyzed",
@@ -115,14 +124,17 @@
         },
         "request_received_at": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "date"
         },
         "request_sent_at": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "date"
         },
         "request_size_b": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "long"
         },
         "response_content_type": {
@@ -132,22 +144,27 @@
         },
         "response_received_at": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "date"
         },
         "response_sent_at": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "date"
         },
         "response_size_b": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "long"
         },
         "response_status": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "integer"
         },
         "response_time_ms": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "float"
         },
         "space_id": {
@@ -160,6 +177,11 @@
           "index": "not_analyzed",
           "type": "string"
         },
+        "timestamp": {
+          "doc_values": true,
+          "ignore_malformed": true,
+          "type": "long"
+        },
         "type": {
           "doc_values": true,
           "index": "not_analyzed",
@@ -167,10 +189,12 @@
         },
         "written_at": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "date"
         },
         "written_ts": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "long"
         },
         "x_forwarded_for": {

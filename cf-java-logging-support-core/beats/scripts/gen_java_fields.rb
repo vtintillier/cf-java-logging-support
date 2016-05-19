@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 require 'yaml'
 require 'set'
 require 'pp'

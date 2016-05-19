@@ -18,6 +18,15 @@
         }
       ],
       "properties": {
+        "@message": {
+          "index": "analyzed",
+          "type": "string"
+        },
+        "@timestamp": {
+          "doc_values": true,
+          "ignore_malformed": true,
+          "type": "date"
+        },
         "categories": {
           "doc_values": true,
           "index": "not_analyzed",
@@ -103,6 +112,11 @@
           "index": "not_analyzed",
           "type": "string"
         },
+        "timestamp": {
+          "doc_values": true,
+          "ignore_malformed": true,
+          "type": "long"
+        },
         "type": {
           "doc_values": true,
           "index": "not_analyzed",
@@ -110,10 +124,12 @@
         },
         "written_at": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "date"
         },
         "written_ts": {
           "doc_values": true,
+          "ignore_malformed": true,
           "type": "long"
         }
       }
