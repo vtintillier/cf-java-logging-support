@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby 
+#!/usr/bin/env ruby
 
 require 'json'
 
@@ -9,9 +9,19 @@ end
 template_name = ARGV.shift
 merged_template = {}
 
+def deep_merge(dst, src)
+  dst.merge!(src) {
+    |key, oldval, newval|
+    if oldval.kind_of?(Hash) && newval.kind_of?(Hash)
+      deep_merge(oldval, newval)
+    else
+      newval
+    end
+  }
+end
 ARGV.each do |tfile|
     t = JSON::load(File.new(tfile))
-    merged_template.merge!(t)
+    deep_merge(merged_template, t)
 end
 
 merged_template['template'] = template_name
