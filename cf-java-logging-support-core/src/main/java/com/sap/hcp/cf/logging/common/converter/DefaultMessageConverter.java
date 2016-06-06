@@ -11,9 +11,11 @@ public class DefaultMessageConverter {
 		
 	private boolean flatten = false;
 	private boolean escape = false;
-	private static Pattern OBJ_PATTERN = Pattern.compile("\\s*\\{([^}]+)}");
-	private static Pattern ARRAY_PATTERN = Pattern.compile("\\s*\\[([^\\]]+)]");
-	
+	private static final String LBRACE = "{";
+	private static final String RBRACE = "}";
+	private static final String LBRACKET = "[";
+	private static final String RBRACKET = "]";
+
 	public boolean isFlatten() {
 		return flatten;
 	}
@@ -52,13 +54,13 @@ public class DefaultMessageConverter {
 	}
 		
 	private String flattenMsg(String msg) {
-			Matcher m = OBJ_PATTERN.matcher(msg);
-			if (m.matches()) {
-				return m.group(1);
+			String trimmedMsg = msg.trim();
+
+			if (trimmedMsg.indexOf(LBRACE) == 0 && trimmedMsg.lastIndexOf(RBRACE) == trimmedMsg.length()-1) {
+				return trimmedMsg.substring(1, trimmedMsg.length()-1);
 			}
-			m = ARRAY_PATTERN.matcher(msg);
-			if (m.matches()) {
-				return m.group(1);
+			if (trimmedMsg.indexOf(LBRACKET) == 0 && trimmedMsg.lastIndexOf(RBRACKET) == trimmedMsg.length()-1) {
+				return trimmedMsg.substring(1, trimmedMsg.length()-1);
 			}
 			return msg;
 		}

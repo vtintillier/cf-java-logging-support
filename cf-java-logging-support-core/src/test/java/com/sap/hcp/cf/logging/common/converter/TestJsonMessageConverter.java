@@ -73,7 +73,43 @@ public class TestJsonMessageConverter extends AbstractConverterTest {
 	public void testEscapedMessage() {
 		DefaultMessageConverter jmc = new DefaultMessageConverter();
 		String strangeMsg = TEST_MSG_NO_ARGS + STRANGE_SEQ;
-		assertThat(formatMsg(jmc,strangeMsg), is(strangeMsg));	
-		
+		assertThat(formatMsg(jmc,strangeMsg), is(strangeMsg));
 	}
+
+	@Test
+	public void testObjNestedBraces() {
+		String nestedBracesMsg = "\"request\": \"/Foo(${bar})\"";
+		String logMsg = " {" + nestedBracesMsg + "}  ";
+		DefaultMessageConverter jmc = new DefaultMessageConverter();
+		jmc.setFlatten(true);
+		assertThat(formatMsg(jmc,logMsg), is(nestedBracesMsg));
+	}
+
+	@Test
+	public void testObjIncompleteNestedBraces() {
+		String nestedBracesMsg = "\"request\": \"/Foo(${bar)\"";
+		String logMsg = " {" + nestedBracesMsg + "}  ";
+		DefaultMessageConverter jmc = new DefaultMessageConverter();
+		jmc.setFlatten(true);
+		assertThat(formatMsg(jmc,logMsg), is(nestedBracesMsg));
+	}
+
+	@Test
+	public void testInvalidObjNestedBraces() {
+		String nestedBracesMsg = "\"request\": \"/Foo(${bar)\"";
+		String logMsg = " {" + nestedBracesMsg;
+		DefaultMessageConverter jmc = new DefaultMessageConverter();
+		jmc.setFlatten(true);
+		assertThat(formatMsg(jmc,logMsg), is(logMsg));
+	}
+
+	@Test
+	public void testObjNestedBrackets() {
+		String nestedBracketsMsg = "\"request\", \"/Foo($[bar])\"";
+		String logMsg = " [" + nestedBracketsMsg + "]  ";
+		DefaultMessageConverter jmc = new DefaultMessageConverter();
+		jmc.setFlatten(true);
+		assertThat(formatMsg(jmc,logMsg), is(nestedBracketsMsg));
+	}
+
 }
