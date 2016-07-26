@@ -65,7 +65,7 @@ Again, we don't include dependencies to those implementation backends ourselves,
 ``` xml
 <dependency>
 	<groupId>com.sap.hcp.cf.logging</groupId>
-  	<artifactId>java-logging-support-log4j2</artifactId>
+  	<artifactId>cf-java-logging-support-log4j2</artifactId>
   	<version>${cf-logging-version}</version>
 </dependency>
 <dependency>
