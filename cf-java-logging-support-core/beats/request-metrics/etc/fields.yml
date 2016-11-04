@@ -194,7 +194,7 @@ ctx:
       required: true
       description: |
         To make the message self-contained this is the type tag.
-        As we're talking about request metrics messages, it's always "request-metrics".
+        As we're talking about request metrics messages, it's always "request".
 
 request-metrics:
   type: group

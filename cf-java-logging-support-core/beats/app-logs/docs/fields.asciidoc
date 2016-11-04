@@ -232,7 +232,7 @@ type: string
 required: True
 
 To make the message self-contained this is the type tag.
-As we're talking about log messages, it's always "app-logs".
+As we're talking about log messages, it's always "logs".
 
 
 [[exported-fields-app-logs]]

@@ -2,7 +2,8 @@
   "mappings": {
     "_default_": {
       "_all": {
-        "enabled": false
+        "enabled": true,
+        "omit_norms": true
       },
       "dynamic_templates": [
         {

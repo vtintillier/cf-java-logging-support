@@ -49,7 +49,8 @@ def fields_to_es_template(input, output, index):
         "mappings": {
             "_default_": {
                 "_all": {
-                    "enabled": False
+                    "omit_norms": True,
+                    "enabled": True
                 },
                 "properties": {},
                 "dynamic_templates": [{
@@ -78,7 +79,7 @@ def fields_to_es_template(input, output, index):
     template["mappings"]["_default_"]["properties"] = properties
     #
     # Add these two "defaults"
-    # THIS IS SUPER IMPORTANT FOR US, OTHERWISE ES MAY CHOKE 
+    # THIS IS SUPER IMPORTANT FOR US, OTHERWISE ES MAY CHOKE
     #
     template["mappings"]["_default_"]["properties"]["@message"] = {
         "type": "string",
