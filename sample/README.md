@@ -4,14 +4,14 @@
 
 A simple CF sample application that we cloned from [cloudfoundry-sticky-session](https://github.com/jbayer/cloudfoundry-sticky-session) and tweaked to provide a sample for the logging and instrumentation features.
 
-Currently configured to use `logback` as the logging implementation.
+Currently configured to use `log4j2` as the logging implementation.
 
 ## Running it locally
 
 You can use the following Maven target to run the application locally 
 
 ```sh
-mvn tomcat7:run
+mvn tomcat8:run
 ```
 
 Once the tomcat container has started, you can access the application via [http://localhost:8080/logging-sample-app](http://localhost:8080/logging-sample-app)
