@@ -18,6 +18,7 @@
 		<slf4j.version>1.7.12</slf4j.version>
 		<jersey.version>2.22.2</jersey.version>
 		<javax.ws.version>2.0.1</javax.ws.version>
+		<cf-logging.version>2.0.9</cf-logging.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -78,10 +79,10 @@
 
 <!-- LOG4J2 VERSION
 
- 		<dependency>
-  		<groupId>com.sap.hcp.cf-logging.logging</groupId>
-  		<artifactId>java-logging-support-log4j2</artifactId>
-  		<version>${cf-logging.version}</version>
+		<dependency>
+			<groupId>com.sap.hcp.cf.logging</groupId>
+			<artifactId>cf-java-logging-support-log4j2</artifactId>
+			<version>${cf-logging.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
