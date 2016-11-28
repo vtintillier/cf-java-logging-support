@@ -7,4 +7,4 @@ applications:
   host: logging-sample-app
   instances: 1
   memory: 256M
-  path: target/logging-sample-app-2.0.9.war
+  path: target/logging-sample-app-2.0.10.war

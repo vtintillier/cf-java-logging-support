@@ -20,16 +20,21 @@ public abstract class AbstractTest {
 
     protected final ByteArrayOutputStream outContent  = new ByteArrayOutputStream();
     protected final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private PrintStream stdout;
+    private PrintStream stderr;
+
 	@Before
 	public void setupStreams() {
+		stdout = System.out;
+		stderr = System.err;
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
 	}
 	
 	@After
 	public void teardownStreams() {
-        System.setOut(null);
-        System.setErr(null);		
+        System.setOut(stdout);
+        System.setErr(stderr);
 	}
 	protected String getMessage() {
 		return getField("msg");

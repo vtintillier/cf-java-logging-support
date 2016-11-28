@@ -6,7 +6,7 @@ This is a collection of support libraries for Java applications running on Cloud
 
 When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
-If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.ml` files in the [beats folder](./cf-java-logging-support-core/beats).
+If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.yml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
 While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to stay implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/),  but provide implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
 
@@ -14,12 +14,12 @@ The instrumentation part is currently focusing on providing [request filters for
 
 ## Features and dependencies
 
-As you can see from the structure of this repository, we're not providing one *uber* JAR that contains everything, but provide each feature separately. We also try to stay away from wiring up too many dependencies by tagging almost all of them as *provided.* As a consequence, it's your task to get all runtime dependencies resolved in your application POM file. 
+As you can see from the structure of this repository, we're not providing one *uber* JAR that contains everything, but provide each feature separately. We also try to stay away from wiring up too many dependencies by tagging almost all of them as *provided.* As a consequence, it's your task to get all runtime dependencies resolved in your application POM file.
 
 All in all, you should do the following:
 
-* make up your mind which features you actually need, 
-* adjust your Maven dependencies accordingly, 
+* make up your mind which features you actually need,
+* adjust your Maven dependencies accordingly,
 * pick your favorite logging implementation, and
 * adjust your logging configuration accordingly.
 
@@ -39,7 +39,7 @@ This feature only depends on the servlet API which you have included in your POM
 
 The *core* feature (on which all other features rely) is just using the `org.slf4j` API, but to actually get logs written, you need to pick an implementation feature. As stated above, we have two implementations
 
-* `cf-java-logging-support-logback` based on [logback](http://logback.qos.ch/), and 
+* `cf-java-logging-support-logback` based on [logback](http://logback.qos.ch/), and
 * `cf-java-logging-support-log4j2` based on [log4j2](http://logging.apache.org/log4j/2.x/).
 
 Again, we don't include dependencies to those implementation backends ourselves, so you need to provide the corresponding dependencies in your POM file:
@@ -91,7 +91,7 @@ Here are sort of the minimal configurations you'd need:
 	<appender name="STDOUT-JSON" class="ch.qos.logback.core.ConsoleAppender">
        <encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder"/>
     </appender>
-  	<!-- for local development, you may want to switch to a more human-readable layout --> 
+    <!-- for local development, you may want to switch to a more human-readable layout -->
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
             <pattern>%date %-5level [%thread] - [%logger] [%mdc] - %msg%n</pattern>
@@ -102,14 +102,14 @@ Here are sort of the minimal configurations you'd need:
        <appender-ref ref="STDOUT-JSON" />
     </root>
   	<!-- request metrics are reported using INFO level, so make sure the instrumentation loggers are set to that level -->
-    <logger name="com.sap.hcp.cf" level="INFO" />	
+    <logger name="com.sap.hcp.cf" level="INFO" />
 </configuration>
 ```
 
 *log4j2.xml:*
 
 ``` xml
-<Configuration 
+<Configuration
    status="warn" strict="true"
    packages="com.sap.hcp.cf.log4j2.converter,com.sap.hcp.cf.log4j2.layout">
 	<Appenders>
@@ -128,7 +128,7 @@ Here are sort of the minimal configurations you'd need:
   	 <!-- request metrics are reported using INFO level, so make sure the instrumentation loggers are set to that level -->
      <Logger name="com.sap.hcp.cf" level="INFO"/>
   </Loggers>
-</Configuration>      
+</Configuration>
 ```
 
 ## Sample Application
