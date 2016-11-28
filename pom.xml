@@ -27,6 +27,13 @@
       <organizationUrl>https://github.com/SAP</organizationUrl>
     </developer>
     <developer>
+      <id>istvanballok</id>
+      <name>Istvan Ballok</name>
+      <email>istvan.zoltan.ballok@sap.com</email>
+      <organization>SAP SE</organization>
+      <organizationUrl>https://github.com/SAP</organizationUrl>
+    </developer>
+    <developer>
       <id>msaliminia</id>
       <email>mehran.saliminia@sap.com</email>
       <organization>SAP SE</organization>
