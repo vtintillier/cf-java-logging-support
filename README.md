@@ -6,7 +6,7 @@ This is a collection of support libraries for Java applications running on Cloud
 
 When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
-If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.ml` files in the [beats folder](./cf-java-logging-support-core/beats).
+If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.yml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
 While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to stay implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/),  but provide implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
 
