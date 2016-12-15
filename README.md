@@ -23,9 +23,18 @@ All in all, you should do the following:
 * pick your favorite logging implementation, and
 * adjust your logging configuration accordingly.
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest version (currently `2.0.8`):
+Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest version (currently `2.0.10`):
+
+```xml
+<properties>
+	<cf-logging-version>2.0.10</cf-logging-version>
+</properties>
+```
+
+
 
 ``` xml
+
 <dependency>
   <groupId>com.sap.hcp.cf.logging</groupId>
   <artifactId>cf-java-logging-support-servlet</artifactId>
