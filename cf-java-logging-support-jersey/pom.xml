@@ -26,21 +26,21 @@
 			<version>${jersey.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.glassfish.jersey.core</groupId>
 			<artifactId>jersey-server</artifactId>
 			<version>${jersey.version}</version>
 			<scope>provided</scope>
 		</dependency>
-		
+
     <dependency>
     	<groupId>com.sap.hcp.cf.logging</groupId>
     	<artifactId>cf-java-logging-support-core</artifactId>
     	<version>${project.version}</version>
     	<scope>compile</scope>
     </dependency>
-    
+
     <!-- unit test related -->
     <dependency>
 			<groupId>org.glassfish.jersey.test-framework</groupId>
@@ -55,18 +55,24 @@
 			<version>${jersey.version}</version>
 			<scope>test</scope>
 		</dependency>
-    <!-- we need our logback implementation for testing! -->
+    <!-- we need our log4j2 implementation for testing! -->
     <dependency>
-    	<groupId>com.sap.hcp.cf.logging</groupId>
-    	<artifactId>cf-java-logging-support-logback</artifactId>
-    	<version>${project.version}</version>
+      <groupId>com.sap.hcp.cf.logging</groupId>
+      <artifactId>cf-java-logging-support-log4j2</artifactId>
+      <version>${project.version}</version>
     	<scope>test</scope>
-    </dependency>    		
+    </dependency>
     <dependency>
-    	<groupId>ch.qos.logback</groupId>
-    	<artifactId>logback-classic</artifactId>
-    	<version>${logback.version}</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-slf4j-impl</artifactId>
+      <version>${log4j2.version}</version>
     	<scope>test</scope>
-    </dependency>    
+    </dependency>
+    <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>${log4j2.version}</version>
+    	<scope>test</scope>
+    </dependency>
   </dependencies>
 </project>
