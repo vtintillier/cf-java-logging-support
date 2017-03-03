@@ -13,6 +13,8 @@ While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-en
 
 The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html) and [client and server filters for Jersey](https://jersey.java.net/documentation/latest/filters-and-interceptors.html), but again, we're open to contributions for other APIs and frameworks.
 
+Last, there is also a sibling project on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support).
+
 ## Features and dependencies
 
 As you can see from the structure of this repository, we're not providing one *uber* JAR that contains everything, but provide each feature separately. We also try to stay away from wiring up too many dependencies by tagging almost all of them as *provided.* As a consequence, it's your task to get all runtime dependencies resolved in your application POM file.
