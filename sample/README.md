@@ -6,6 +6,8 @@ A simple CF sample application that we cloned from [cloudfoundry-sticky-session]
 
 Currently configured to use `log4j2` as the logging implementation.
 
+It uses a environment variable `RANDOM_SLEEP` which, when set to `true` will introduce a artificial delay (up to 1 sec). 
+
 ## Running it locally
 
 You can use the following Maven target to run the application locally 
