@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import java.io.Closeable;
+
 import org.slf4j.MDC;
 
 import com.fasterxml.jackson.jr.ob.JSON;
@@ -31,7 +33,7 @@ import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
  * 
  *
  */
-public class RequestRecord {
+public class RequestRecord implements Closeable{
 
 	/*
 	 * -- default values for request fields that are marked as "required"
@@ -183,6 +185,7 @@ public class RequestRecord {
 		return endMs;
 	}
 
+	@Override
 	public void close() {
 		RequestRecordHolder.remove(this);
 	}
