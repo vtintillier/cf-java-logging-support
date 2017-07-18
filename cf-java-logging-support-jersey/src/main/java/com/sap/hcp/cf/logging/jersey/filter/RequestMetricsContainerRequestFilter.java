@@ -13,13 +13,15 @@ import javax.ws.rs.ext.Provider;
 @PreMatching
 public class RequestMetricsContainerRequestFilter implements ContainerRequestFilter {
 
-	private final RequestHandler handler;
-	
-	public RequestMetricsContainerRequestFilter() {
-		this.handler =  new RequestHandler();
-	}
-	public void filter(ContainerRequestContext requestContext) throws IOException {
-		requestContext.setProperty(REQ_METRICS_KEY,  handler.handle(new ContainerRequestContextAdapter(requestContext)));
-	}
+    private final RequestHandler handler;
+
+    public RequestMetricsContainerRequestFilter() {
+        handler = new RequestHandler();
+    }
+
+    @Override
+    public void filter(ContainerRequestContext requestContext) throws IOException {
+        requestContext.setProperty(REQ_METRICS_KEY, handler.handle(new ContainerRequestContextAdapter(requestContext)));
+    }
 
 }

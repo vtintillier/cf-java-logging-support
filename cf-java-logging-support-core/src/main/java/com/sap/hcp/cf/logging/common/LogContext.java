@@ -15,79 +15,80 @@ import org.slf4j.MDC;
 
 public class LogContext {
 
-	@SuppressWarnings("serial")
-	private static Map<String, String> CTX_FIELDS = new HashMap<String, String>() {{
-		put(Fields.CORRELATION_ID,  	Defaults.UNKNOWN);
-		put(Fields.REQUEST_ID,  		null);
-		put(Fields.COMPONENT_ID,  		Defaults.UNKNOWN);
-		put(Fields.COMPONENT_NAME,  	Defaults.UNKNOWN);
-		put(Fields.COMPONENT_TYPE,  	Defaults.COMPONENT_TYPE);
-		put(Fields.COMPONENT_INSTANCE,  Defaults.COMPONENT_INDEX);
-		put(Fields.CONTAINER_ID,  		Defaults.UNKNOWN);
-		put(Fields.ORGANIZATION_ID,  	Defaults.UNKNOWN);
-		put(Fields.ORGANIZATION_NAME,   Defaults.UNKNOWN);
-		put(Fields.SPACE_ID,            Defaults.UNKNOWN);
-		put(Fields.SPACE_NAME,          Defaults.UNKNOWN);
-	}};
+    @SuppressWarnings("serial")
+    private static Map<String, String> CTX_FIELDS = new HashMap<String, String>() {
+        {
+            put(Fields.CORRELATION_ID, Defaults.UNKNOWN);
+            put(Fields.REQUEST_ID, null);
+            put(Fields.COMPONENT_ID, Defaults.UNKNOWN);
+            put(Fields.COMPONENT_NAME, Defaults.UNKNOWN);
+            put(Fields.COMPONENT_TYPE, Defaults.COMPONENT_TYPE);
+            put(Fields.COMPONENT_INSTANCE, Defaults.COMPONENT_INDEX);
+            put(Fields.CONTAINER_ID, Defaults.UNKNOWN);
+            put(Fields.ORGANIZATION_ID, Defaults.UNKNOWN);
+            put(Fields.ORGANIZATION_NAME, Defaults.UNKNOWN);
+            put(Fields.SPACE_ID, Defaults.UNKNOWN);
+            put(Fields.SPACE_NAME, Defaults.UNKNOWN);
+        }
+    };
 
     public static final String HTTP_HEADER_CORRELATION_ID = HttpHeaders.CORRELATION_ID;
 
     public static void loadContextFields(boolean override) {
-    	/*
-    	 * -- do bootstrap, either enforced or because map is empty
-    	 */
-    	if (override || MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty()) {
-    		MDC.setContextMap(VcapEnvReader.getEnvMap());
-    	}
-    	else {
-    		/* -- map is not empty, but we're missing important stuff -- */
-    		if (!MDC.getCopyOfContextMap().containsKey(Fields.COMPONENT_ID)) {
-    			for (Entry<String, String> envTag : VcapEnvReader.getEnvMap().entrySet()) {
-    				if (override || MDC.get(envTag.getKey()) == null) {
-    					MDC.put(envTag.getKey(), envTag.getValue());
-    				}
-    			}
-    		}
-    	}
-    	for (Entry<String, String> ctxTag : CTX_FIELDS.entrySet()) {
-    		if ((override || (MDC.get(ctxTag.getKey()) == null) && ctxTag.getValue() != null)) {
-    			MDC.put(ctxTag.getKey(),ctxTag.getValue());
-    		}
-    	}
+        /*
+         * -- do bootstrap, either enforced or because map is empty
+         */
+        if (override || MDC.getCopyOfContextMap() == null || MDC.getCopyOfContextMap().isEmpty()) {
+            MDC.setContextMap(VcapEnvReader.getEnvMap());
+        } else {
+            /* -- map is not empty, but we're missing important stuff -- */
+            if (!MDC.getCopyOfContextMap().containsKey(Fields.COMPONENT_ID)) {
+                for (Entry<String, String> envTag: VcapEnvReader.getEnvMap().entrySet()) {
+                    if (override || MDC.get(envTag.getKey()) == null) {
+                        MDC.put(envTag.getKey(), envTag.getValue());
+                    }
+                }
+            }
+        }
+        for (Entry<String, String> ctxTag: CTX_FIELDS.entrySet()) {
+            if (override || MDC.get(ctxTag.getKey()) == null && ctxTag.getValue() != null) {
+                MDC.put(ctxTag.getKey(), ctxTag.getValue());
+            }
+        }
     }
-    
+
     public static void loadContextFields() {
-    	loadContextFields(false);
+        loadContextFields(false);
     }
-    
+
     public static void resetContextFields() {
-    	for (String ctxTag : CTX_FIELDS.keySet()) {
-    		MDC.remove(ctxTag);
-    	}
+        for (String ctxTag: CTX_FIELDS.keySet()) {
+            MDC.remove(ctxTag);
+        }
     }
-    
+
     public static Collection<String> getContextFieldsKeys() {
-    	return Collections.unmodifiableSet(CTX_FIELDS.keySet());
+        return Collections.unmodifiableSet(CTX_FIELDS.keySet());
     }
-    
+
     public static String getDefault(String key) {
-    	return CTX_FIELDS.get(key);
+        return CTX_FIELDS.get(key);
     }
-    
+
     public static void initializeContext(String correlationIdFromHeader) {
-    	loadContextFields(false);
+        loadContextFields(false);
         setOrGenerateCorrelationId(correlationIdFromHeader);
     }
 
     public static String add(String key, String value) {
-    	MDC.put(key, value);
-    	return value;
+        MDC.put(key, value);
+        return value;
     }
-    
+
     public static void remove(String key) {
-    	MDC.remove(key);
+        MDC.remove(key);
     }
-    
+
     public static void initializeContext() {
         initializeContext(null);
     }

@@ -10,19 +10,24 @@ public class CustomField {
         this.value = value;
     }
 
-	/**
+    /**
      * Include <i>custom field</i> key:value in the JSON output.
-     * @param key the key, must not be null
-     * @param value the value, {@link String#valueOf} will be used to generate the String representation
+     * 
+     * @param key
+     *            the key, must not be null
+     * @param value
+     *            the value, {@link String#valueOf} will be used to generate the
+     *            String representation
      * @return a CustomField object representing key=value
-     * @throws IllegalArgumentException if key is null
+     * @throws IllegalArgumentException
+     *             if key is null
      */
     public static CustomField customField(String key, Object value) {
         return new CustomField(key, value);
     }
 
     public String getKey() {
-        return this.key;
+        return key;
     }
 
     public String getValue() {
@@ -33,16 +38,15 @@ public class CustomField {
     public String toString() {
         return key + "=" + getValue();
     }
-    
+
     private void validateNotNull(Object obj, String msg) throws IllegalArgumentException {
-    	if (obj == null) {
-    		if (msg != null) {
-    			throw new IllegalArgumentException(msg);
-    		}
-    		else {
-    			throw new IllegalArgumentException();
-    		}
-    	}
-	}
+        if (obj == null) {
+            if (msg != null) {
+                throw new IllegalArgumentException(msg);
+            } else {
+                throw new IllegalArgumentException();
+            }
+        }
+    }
 
 }

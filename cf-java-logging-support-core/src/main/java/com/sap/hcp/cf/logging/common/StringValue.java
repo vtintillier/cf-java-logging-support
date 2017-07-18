@@ -6,32 +6,36 @@ package com.sap.hcp.cf.logging.common;
  */
 public class StringValue implements Value {
 
-	public static final String UNDEFINED = "-";
-	
-	private String value;
-	
-	public StringValue(final String value) {
-		this.value = value;
-	}
+    public static final String UNDEFINED = "-";
 
-	@Override
-	public String toString() {
-		return String.valueOf(value);
-	}
+    private final String value;
 
-	public Object getValue() {
-		return String.valueOf(value);
-	}
+    public StringValue(final String value) {
+        this.value = value;
+    }
 
-	public long asLong() {
-		return Long.parseLong(value);
-	}
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 
-	public double asDouble() {
-		return Double.parseDouble(value);
-	}
+    @Override
+    public Object getValue() {
+        return String.valueOf(value);
+    }
 
-	public String asString() {
-		return value;
-	}
+    @Override
+    public long asLong() {
+        return Long.parseLong(value);
+    }
+
+    @Override
+    public double asDouble() {
+        return Double.parseDouble(value);
+    }
+
+    @Override
+    public String asString() {
+        return value;
+    }
 }

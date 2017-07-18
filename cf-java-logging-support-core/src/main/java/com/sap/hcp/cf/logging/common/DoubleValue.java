@@ -10,39 +10,42 @@ import java.util.Locale;
  */
 public class DoubleValue implements Value {
 
-	private double value;
-	
-	public DoubleValue(Object value) {
-		if (value != null && Double.class.isAssignableFrom(value.getClass())) {
-			this.value = ((Double) value).doubleValue();
-		}
-		else {
-			this.value = 0.0;
-		}
-	}
-	
-	public DoubleValue(double value) {
-		this.value = value;
-	}
+    private double value;
 
-	@Override
-	public String toString() {
-		return new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(value);
-	}
+    public DoubleValue(Object value) {
+        if (value != null && Double.class.isAssignableFrom(value.getClass())) {
+            this.value = ((Double) value).doubleValue();
+        } else {
+            this.value = 0.0;
+        }
+    }
 
-	public Object getValue() {
-		return Double.valueOf(value);
-	}
+    public DoubleValue(double value) {
+        this.value = value;
+    }
 
-	public long asLong() {
-		return (long) value;
-	}
+    @Override
+    public String toString() {
+        return new DecimalFormat("0.000", DecimalFormatSymbols.getInstance(Locale.ENGLISH)).format(value);
+    }
 
-	public double asDouble() {
-		return value;
-	}
+    @Override
+    public Object getValue() {
+        return Double.valueOf(value);
+    }
 
-	public String asString() {
-		return toString();
-	}
+    @Override
+    public long asLong() {
+        return (long) value;
+    }
+
+    @Override
+    public double asDouble() {
+        return value;
+    }
+
+    @Override
+    public String asString() {
+        return toString();
+    }
 }

@@ -8,9 +8,10 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class RequestMetricsDynamicBinding implements DynamicFeature {
 
-	public void configure(ResourceInfo resourceInfo, FeatureContext context) {
-		context.register(RequestMetricsContainerRequestFilter.class);
-		context.register(RequestMetricsContainerResponseFilter.class);
-	}
+    @Override
+    public void configure(ResourceInfo resourceInfo, FeatureContext context) {
+        context.register(RequestMetricsContainerRequestFilter.class);
+        context.register(RequestMetricsContainerResponseFilter.class);
+    }
 
 }

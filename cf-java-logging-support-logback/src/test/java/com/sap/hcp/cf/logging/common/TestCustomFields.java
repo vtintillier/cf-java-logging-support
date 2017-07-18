@@ -13,16 +13,16 @@ import org.slf4j.LoggerFactory;
 public class TestCustomFields extends AbstractTest {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TestCustomFields.class);
-    
+
     @Test
     public void testLogMessage() {
-    	LOGGER.info(TEST_MESSAGE);
+        LOGGER.info(TEST_MESSAGE);
         assertThat(getMessage(), is(TEST_MESSAGE));
     }
 
     @Test
     public void testLogMessageWithCustomField() {
-    	LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE));
+        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE));
 
         assertThat(getMessage(), is(TEST_MESSAGE));
         assertThat(getCustomField(SOME_KEY), is(SOME_VALUE));
@@ -51,14 +51,14 @@ public class TestCustomFields extends AbstractTest {
         assertThat(getCustomField(SOME_KEY), is(strangeCharacters));
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test(expected = IllegalArgumentException.class)
     public void testNullKey() {
         customField(null, SOME_VALUE);
     }
 
     @Test
     public void testNullValue() {
-    	LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, null));
+        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, null));
 
         assertThat(getMessage(), is(TEST_MESSAGE));
         assertThat(getCustomField(SOME_KEY), is("null"));
@@ -66,7 +66,7 @@ public class TestCustomFields extends AbstractTest {
 
     @Test
     public void testLogMessageWithTwoCustomFields() {
-    	LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE), customField(SOME_OTHER_KEY, SOME_OTHER_VALUE));
+        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE), customField(SOME_OTHER_KEY, SOME_OTHER_VALUE));
 
         assertThat(getMessage(), is(TEST_MESSAGE));
 
@@ -76,7 +76,7 @@ public class TestCustomFields extends AbstractTest {
 
     @Test
     public void testOrderOfLogMessageWithTwoCustomFields() {
-    	LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE), customField(SOME_OTHER_KEY, SOME_OTHER_VALUE));
+        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE), customField(SOME_OTHER_KEY, SOME_OTHER_VALUE));
 
         String jsonString = getCustomFields();
         assertThat(jsonString, stringContainsInOrder(asList(SOME_KEY, SOME_OTHER_KEY)));
@@ -87,6 +87,3 @@ public class TestCustomFields extends AbstractTest {
         return getField("custom_fields");
     }
 }
-
-
-

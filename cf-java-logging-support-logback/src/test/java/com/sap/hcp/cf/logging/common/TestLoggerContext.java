@@ -7,7 +7,6 @@ import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.text.IsEmptyString.isEmptyOrNullString;
-
 import static org.junit.Assert.assertThat;
 
 import java.io.ByteArrayOutputStream;

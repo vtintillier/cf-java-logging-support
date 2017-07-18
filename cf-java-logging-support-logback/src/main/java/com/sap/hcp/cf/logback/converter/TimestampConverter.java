@@ -9,18 +9,17 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  */
 public class TimestampConverter extends ClassicConverter {
 
-	public static final String WORD = "tstamp";
+    public static final String WORD = "tstamp";
 
+    @Override
+    public String convert(ILoggingEvent event) {
+        StringBuilder appendTo = new StringBuilder();
+        appendTo.append(System.nanoTime());
+        return appendTo.toString();
+    }
 
-	@Override
-	public String convert(ILoggingEvent event) {
-		StringBuilder appendTo = new StringBuilder();
-		appendTo.append(System.nanoTime());
-		return appendTo.toString();
-	}
-
-	@Override
-	public void start() {
-		super.start();
-	}
+    @Override
+    public void start() {
+        super.start();
+    }
 }

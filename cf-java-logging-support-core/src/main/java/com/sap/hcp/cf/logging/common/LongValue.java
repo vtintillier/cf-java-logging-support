@@ -6,39 +6,42 @@ package com.sap.hcp.cf.logging.common;
  */
 public class LongValue implements Value {
 
-	private long value;
-	
-	public LongValue(final long value) {
-		this.value = value;
-	}
+    private long value;
 
-	public LongValue(Object value) {
-		if (value != null && Long.class.isAssignableFrom(value.getClass())) {
-			this.value = ((Long) value).longValue();
-		}
-		else {
-			this.value = -1L;
-		}
-	}
-	
-	@Override
-	public String toString() {
-		return String.valueOf(value);
-	}
+    public LongValue(final long value) {
+        this.value = value;
+    }
 
-	public Object getValue() {
-		return Long.valueOf(value);
-	}
+    public LongValue(Object value) {
+        if (value != null && Long.class.isAssignableFrom(value.getClass())) {
+            this.value = ((Long) value).longValue();
+        } else {
+            this.value = -1L;
+        }
+    }
 
-	public long asLong() {
-		return value;
-	}
+    @Override
+    public String toString() {
+        return String.valueOf(value);
+    }
 
-	public double asDouble() {
-		return value;
-	}
+    @Override
+    public Object getValue() {
+        return Long.valueOf(value);
+    }
 
-	public String asString() {
-		return toString();
-	}
+    @Override
+    public long asLong() {
+        return value;
+    }
+
+    @Override
+    public double asDouble() {
+        return value;
+    }
+
+    @Override
+    public String asString() {
+        return toString();
+    }
 }

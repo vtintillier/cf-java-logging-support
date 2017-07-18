@@ -11,14 +11,15 @@ import javax.ws.rs.ext.Provider;
 @Provider
 public class RequestMetricsClientRequestFilter implements ClientRequestFilter {
 
-	private final RequestHandler handler;
-	
-	public RequestMetricsClientRequestFilter() {
-		this.handler = new RequestHandler();
-	}
-	
-	public void filter(ClientRequestContext requestContext) throws IOException {
-		requestContext.setProperty(REQ_METRICS_KEY, handler.handle(new ClientRequestContextAdapter(requestContext)));
-	}
+    private final RequestHandler handler;
+
+    public RequestMetricsClientRequestFilter() {
+        handler = new RequestHandler();
+    }
+
+    @Override
+    public void filter(ClientRequestContext requestContext) throws IOException {
+        requestContext.setProperty(REQ_METRICS_KEY, handler.handle(new ClientRequestContextAdapter(requestContext)));
+    }
 
 }

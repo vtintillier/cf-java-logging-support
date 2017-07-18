@@ -9,46 +9,54 @@ import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
 
 public class ClientRequestContextAdapter implements RequestContextAdapter {
 
-	public static final String LAYER_NAME = "[JERSEY.CLIENT]";
-	
-	private final ClientRequestContext ctx;
+    public static final String LAYER_NAME = "[JERSEY.CLIENT]";
 
-	public ClientRequestContextAdapter(ClientRequestContext requestContext) {
-		this.ctx = requestContext;
-	}
+    private final ClientRequestContext ctx;
 
-	public String getHeader(String headerName) {
-		return ctx.getHeaderString(headerName);
-	}
+    public ClientRequestContextAdapter(ClientRequestContext requestContext) {
+        ctx = requestContext;
+    }
 
-	public String getMethod() {
-		return ctx.getMethod();
-	}
+    @Override
+    public String getHeader(String headerName) {
+        return ctx.getHeaderString(headerName);
+    }
 
-	public URI getUri() {
-		return ctx.getUri();
-	}
+    @Override
+    public String getMethod() {
+        return ctx.getMethod();
+    }
 
-	public String getName() {
-		return LAYER_NAME;
-	}
+    @Override
+    public URI getUri() {
+        return ctx.getUri();
+    }
 
-	public Direction getDirection() {
-		return Direction.OUT;
-	}
+    @Override
+    public String getName() {
+        return LAYER_NAME;
+    }
 
-	public void setHeader(String headerName, String headerValue) {
-		if (headerName != null && headerValue != null) {
-			MultivaluedMap<String, Object > headers = ctx.getHeaders();
-			headers.add(headerName, headerValue);
-		}
-	}
+    @Override
+    public Direction getDirection() {
+        return Direction.OUT;
+    }
 
-	public String getUser() {
-		return null;
-	}
+    @Override
+    public void setHeader(String headerName, String headerValue) {
+        if (headerName != null && headerValue != null) {
+            MultivaluedMap<String, Object> headers = ctx.getHeaders();
+            headers.add(headerName, headerValue);
+        }
+    }
 
-	public long getRequestSize() {
-		return -1;
-	}
+    @Override
+    public String getUser() {
+        return null;
+    }
+
+    @Override
+    public long getRequestSize() {
+        return -1;
+    }
 }

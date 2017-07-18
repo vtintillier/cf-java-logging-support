@@ -10,50 +10,58 @@ import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
 
 public class ContainerRequestContextAdapter implements RequestContextAdapter {
 
-	public static final String LAYER_NAME = "[JERSEY.CONTAINER]";
-	
-	private final ContainerRequestContext ctx;
+    public static final String LAYER_NAME = "[JERSEY.CONTAINER]";
 
-	public ContainerRequestContextAdapter(ContainerRequestContext requestContext) {
-		this.ctx = requestContext;
-	}
-	
-	public String getHeader(String headerName) {
-		return ctx.getHeaderString(headerName);
-	}
+    private final ContainerRequestContext ctx;
 
-	public String getMethod() {
-		return ctx.getMethod();
-	}
+    public ContainerRequestContextAdapter(ContainerRequestContext requestContext) {
+        ctx = requestContext;
+    }
 
-	public URI getUri() {
-		return ctx.getUriInfo().getRequestUri();
-	}
+    @Override
+    public String getHeader(String headerName) {
+        return ctx.getHeaderString(headerName);
+    }
 
-	public String getName() {
-		return LAYER_NAME;
-	}
+    @Override
+    public String getMethod() {
+        return ctx.getMethod();
+    }
 
-	public Direction getDirection() {
-		return Direction.IN;
-	}
+    @Override
+    public URI getUri() {
+        return ctx.getUriInfo().getRequestUri();
+    }
 
-	public void setHeader(String headerName, String headerValue) {
-	}
+    @Override
+    public String getName() {
+        return LAYER_NAME;
+    }
 
-	public String getUser() {
-		SecurityContext sc = ctx.getSecurityContext();
-		if (sc != null) {
-			Principal p = sc.getUserPrincipal();
-			if (p != null) {
-				return p.getName();
-			}
-		}
-		return null;
-	}
+    @Override
+    public Direction getDirection() {
+        return Direction.IN;
+    }
 
-	public long getRequestSize() {
-		return ctx.getLength();
-	}
+    @Override
+    public void setHeader(String headerName, String headerValue) {
+    }
+
+    @Override
+    public String getUser() {
+        SecurityContext sc = ctx.getSecurityContext();
+        if (sc != null) {
+            Principal p = sc.getUserPrincipal();
+            if (p != null) {
+                return p.getName();
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public long getRequestSize() {
+        return ctx.getLength();
+    }
 
 }
