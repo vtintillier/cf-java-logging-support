@@ -141,6 +141,7 @@
                         </manifest>
                         <manifestEntries>
                             <git-SHA-1>${buildNumber}</git-SHA-1>
+                            <Built-By>SAP</Built-By>
                         </manifestEntries>
                     </archive>
                 </configuration>
