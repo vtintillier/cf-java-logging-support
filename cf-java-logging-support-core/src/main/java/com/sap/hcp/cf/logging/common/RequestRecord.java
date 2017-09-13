@@ -93,9 +93,10 @@ public class RequestRecord implements Closeable {
      */
     public RequestRecord(String layerKey, Direction direction) {
         addTag(Fields.LAYER, layerKey);
-        if (direction != null) {
-            this.direction = direction;
+        if (direction == null) {
+            direction = Direction.OUT;
         }
+        this.direction = direction;
         addTag(Fields.DIRECTION, direction.toString());
         setDefaults();
         start();
