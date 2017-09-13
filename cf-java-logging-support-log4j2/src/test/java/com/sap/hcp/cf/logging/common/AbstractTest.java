@@ -50,6 +50,7 @@ public abstract class AbstractTest {
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected List<String> getList(String fieldName) {
         try {
             return (List<String>) JSON.std.mapFrom(getLastLine()).get(fieldName);

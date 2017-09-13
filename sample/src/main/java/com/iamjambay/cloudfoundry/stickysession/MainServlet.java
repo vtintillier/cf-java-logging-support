@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.util.Enumeration;
 import java.util.Map.Entry;
-import java.util.Random;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -24,7 +23,6 @@ public class MainServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private static final String CF_INSTANCE_INDEX = "CF_INSTANCE_INDEX";
     private final Logger logger = LoggerFactory.getLogger(MainServlet.class);
-    private final Random random = new Random();
     private static final String STACKTRACE = "/stacktrace";
 
     public MainServlet() {
@@ -103,10 +101,6 @@ public class MainServlet extends HttpServlet {
         } catch (Exception ex) {
             logger.error("Cannot compute fibonacci number for " + qs, ex);
         }
-    }
-
-    private void logRequest(HttpServletRequest request) {
-        logger.info("Done processing request " + request.getRequestURI() + " from " + request.getRemoteHost());
     }
 
     @Override

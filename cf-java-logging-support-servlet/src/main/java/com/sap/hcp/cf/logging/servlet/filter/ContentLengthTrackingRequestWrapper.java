@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequestWrapper;
  */
 public class ContentLengthTrackingRequestWrapper extends HttpServletRequestWrapper {
 
-    private final HttpServletRequest request;
     private WrappedInputReader wrappedReader = null;
     private WrappedInputStream wrappedStream = null;
 
@@ -25,7 +24,6 @@ public class ContentLengthTrackingRequestWrapper extends HttpServletRequestWrapp
      */
     public ContentLengthTrackingRequestWrapper(HttpServletRequest request) {
         super(request);
-        this.request = request;
     }
 
     @Override

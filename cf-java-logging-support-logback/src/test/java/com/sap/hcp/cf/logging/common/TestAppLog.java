@@ -63,7 +63,6 @@ public class TestAppLog extends AbstractTest {
         logMsg = "Running testMDC()";
         long beforeTS = System.nanoTime();
         LOGGER.info(logMsg);
-        long afterTS = System.nanoTime();
         assertThat(getMessage(), is(logMsg));
         assertThat(getField(Fields.COMPONENT_ID), is("-"));
         assertThat(getField(Fields.COMPONENT_NAME), is("-"));

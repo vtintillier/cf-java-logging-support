@@ -16,11 +16,14 @@ public class DateTimeValue implements Value {
     private static final TimeZone UTC_TZ = TimeZone.getTimeZone("UTC");
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
+    static {
+        DATE_FORMAT.setTimeZone(UTC_TZ);
+    }
+
     private long timestamp;
 
     public DateTimeValue(long timestamp) {
         this.timestamp = timestamp;
-        DATE_FORMAT.setTimeZone(UTC_TZ);
     }
 
     public DateTimeValue(String dt) {

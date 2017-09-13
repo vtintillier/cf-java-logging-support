@@ -46,9 +46,9 @@ public class CategoriesConverter extends ClassicConverter {
     private void getMarkersRecursively(Marker marker, ArrayComposer<JSONComposer<String>> ac) throws IOException {
         if (marker != null) {
             ac.add(marker.getName());
-            Iterator it = marker.iterator();
+            Iterator<Marker> it = marker.iterator();
             while (it.hasNext()) {
-                getMarkersRecursively((Marker) it.next(), ac);
+                getMarkersRecursively(it.next(), ac);
             }
         }
     }
