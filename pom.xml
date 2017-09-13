@@ -44,6 +44,13 @@
             <organization>SAP SE</organization>
             <organizationUrl>https://github.com/SAP</organizationUrl>
         </developer>
+        <developer>
+            <id>ChristophEichhorn</id>
+            <name>Christoph Eichhorn</name>
+            <email>christoph.eichhorn@sap.com</email>
+            <organization>SAP SE</organization>
+            <organizationUrl>https://github.com/SAP</organizationUrl>
+        </developer>
     </developers>
 
     <licenses>
