@@ -21,8 +21,6 @@ import com.sap.hcp.cf.logging.common.Markers;
 @Plugin(name = "JsonPatternLayout", category = "Core", elementType = "Layout", printObject = true)
 public final class JsonPatternLayout extends AbstractStringLayout {
 
-    private static final long serialVersionUID = 1L;
-
     private final PatternSelector markerSelector;
     private final PatternSelector execptionSelector;
 
