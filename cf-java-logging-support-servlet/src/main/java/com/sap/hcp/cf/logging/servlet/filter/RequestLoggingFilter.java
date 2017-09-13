@@ -74,59 +74,63 @@ public class RequestLoggingFilter implements Filter {
          */
         LogContext.initializeContext(getCorrelationIdFromHeader(httpRequest));
 
-        RequestRecord rr = new RequestRecord(LOG_PROVIDER);
-        ContentLengthTrackingResponseWrapper responseWrapper = null;
-        ContentLengthTrackingRequestWrapper requestWrapper = null;
+        RequestRecord rr = null;
+        try {
+            rr = new RequestRecord(LOG_PROVIDER);
+            ContentLengthTrackingResponseWrapper responseWrapper = null;
+            ContentLengthTrackingRequestWrapper requestWrapper = null;
 
-        /*
-         * -- we essentially do three things here: -- a) we create a log record
-         * using our library and log it via STDOUT -- b) keep track of certain
-         * header fields so that they are available in later processing steps --
-         * b) inject a response wrapper to keep track of content length
-         * (hopefully)
-         */
-        if (wrapResponse) {
-            responseWrapper = new ContentLengthTrackingResponseWrapper(httpResponse);
-        }
-        if (wrapRequest) {
-
-            requestWrapper = new ContentLengthTrackingRequestWrapper(httpRequest);
-        }
-
-        addHeaders(httpRequest, rr);
-
-        /* -- start measuring right before calling up the filter chain -- */
-        rr.start();
-        if (chain != null) {
-            chain.doFilter(requestWrapper != null ? requestWrapper : httpRequest, responseWrapper != null
-                                                                                                          ? responseWrapper
-                                                                                                          : httpResponse);
-        }
-        rr.stop();
-
-        if (requestWrapper != null) {
-            rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(requestWrapper.getContentLength()));
-        } else {
-            rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(httpRequest.getContentLength()));
-        }
-        String headerValue = httpResponse.getHeader(HttpHeaders.CONTENT_LENGTH);
-        if (headerValue != null) {
-            rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(Long.valueOf(headerValue)));
-        } else {
-            if (responseWrapper != null) {
-                rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(responseWrapper.getContentLength()));
+            /*
+             * -- we essentially do three things here: -- a) we create a log
+             * record using our library and log it via STDOUT -- b) keep track
+             * of certain header fields so that they are available in later
+             * processing steps -- b) inject a response wrapper to keep track of
+             * content length (hopefully)
+             */
+            if (wrapResponse) {
+                responseWrapper = new ContentLengthTrackingResponseWrapper(httpResponse);
             }
+            if (wrapRequest) {
+
+                requestWrapper = new ContentLengthTrackingRequestWrapper(httpRequest);
+            }
+
+            addHeaders(httpRequest, rr);
+
+            /* -- start measuring right before calling up the filter chain -- */
+            rr.start();
+            if (chain != null) {
+                chain.doFilter(requestWrapper != null ? requestWrapper : httpRequest, responseWrapper != null
+                                                                                                              ? responseWrapper
+                                                                                                              : httpResponse);
+            }
+            rr.stop();
+
+            if (requestWrapper != null) {
+                rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(requestWrapper.getContentLength()));
+            } else {
+                rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(httpRequest.getContentLength()));
+            }
+            String headerValue = httpResponse.getHeader(HttpHeaders.CONTENT_LENGTH);
+            if (headerValue != null) {
+                rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(Long.valueOf(headerValue)));
+            } else {
+                if (responseWrapper != null) {
+                    rr.addValue(Fields.RESPONSE_SIZE_B, new LongValue(responseWrapper.getContentLength()));
+                }
+            }
+            rr.addTag(Fields.RESPONSE_CONTENT_TYPE, getValue(httpResponse.getHeader(HttpHeaders.CONTENT_TYPE)));
+            rr.addValue(Fields.RESPONSE_STATUS, new LongValue(httpResponse.getStatus()));
+            /*
+             * -- log info
+             */
+            logger.info(Markers.REQUEST_MARKER, rr.toString());
+            /*
+             * -- close this
+             */
+        } finally {
+            rr.close();
         }
-        rr.addTag(Fields.RESPONSE_CONTENT_TYPE, getValue(httpResponse.getHeader(HttpHeaders.CONTENT_TYPE)));
-        rr.addValue(Fields.RESPONSE_STATUS, new LongValue(httpResponse.getStatus()));
-        /*
-         * -- log info
-         */
-        logger.info(Markers.REQUEST_MARKER, rr.toString());
-        /*
-         * -- close this
-         */
-        rr.close();
     }
 
     private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {

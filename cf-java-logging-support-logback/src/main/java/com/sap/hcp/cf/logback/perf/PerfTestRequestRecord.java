@@ -38,8 +38,13 @@ public class PerfTestRequestRecord {
             }
         }));
         for (int i = 0; i < iterations; i++) {
-            RequestRecord rrec = new RequestRecord(PerfTestRequestRecord.class.getName());
-            LOGGER.info(Markers.REQUEST_MARKER, rrec.toString());
+            RequestRecord rrec = null;
+            try {
+                rrec = new RequestRecord(PerfTestRequestRecord.class.getName());
+                LOGGER.info(Markers.REQUEST_MARKER, rrec.toString());
+            } finally {
+                rrec.close();
+            }
         }
         double delta = (System.nanoTime() - start) / 1000000.0;
         System.setOut(defOut);
