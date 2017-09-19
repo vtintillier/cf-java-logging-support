@@ -1,3 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
 <configuration debug="false" scan="false">
     <turboFilter class="com.sap.hcp.cf.logback.filter.CustomLoggingTurboFilter" />
     <!-- write logs to console -->

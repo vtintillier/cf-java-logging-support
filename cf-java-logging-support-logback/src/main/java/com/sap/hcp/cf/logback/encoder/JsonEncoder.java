@@ -9,7 +9,7 @@ import com.sap.hcp.cf.logback.converter.ArgsConverter;
 import com.sap.hcp.cf.logback.converter.CategoriesConverter;
 import com.sap.hcp.cf.logback.converter.ContextPropsConverter;
 import com.sap.hcp.cf.logback.converter.JsonMessageConverter;
-import com.sap.hcp.cf.logback.converter.StacktraceConverter;
+import com.sap.hcp.cf.logback.converter.LogbackStacktraceConverter;
 import com.sap.hcp.cf.logback.converter.TimestampConverter;
 import com.sap.hcp.cf.logback.encoder.LayoutPatterns.PATTERN_KEY;
 import com.sap.hcp.cf.logging.common.Markers;
@@ -82,7 +82,8 @@ public class JsonEncoder extends LayoutWrappingEncoder<ILoggingEvent> {
             PatternLayout.defaultConverterMap.put(ArgsConverter.WORD, ArgsConverter.class.getName());
             PatternLayout.defaultConverterMap.put(JsonMessageConverter.WORD, JsonMessageConverter.class.getName());
             PatternLayout.defaultConverterMap.put(ContextPropsConverter.WORD, ContextPropsConverter.class.getName());
-            PatternLayout.defaultConverterMap.put(StacktraceConverter.WORD, StacktraceConverter.class.getName());
+            PatternLayout.defaultConverterMap.put(LogbackStacktraceConverter.WORD, LogbackStacktraceConverter.class
+                                                                                                                   .getName());
             PatternLayout.defaultConverterMap.put(TimestampConverter.WORD, TimestampConverter.class.getName());
             PatternLayout.defaultConverterMap.put(CategoriesConverter.WORD, CategoriesConverter.class.getName());
         }

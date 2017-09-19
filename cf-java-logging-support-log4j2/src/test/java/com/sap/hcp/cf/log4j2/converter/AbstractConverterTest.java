@@ -92,9 +92,8 @@ public abstract class AbstractConverterTest {
     protected Map<String, Object> mapFrom(String serialized, boolean wrap) throws JSONObjectException, IOException {
         if (wrap) {
             return JSON.std.mapFrom("{" + serialized + "}");
-        } else {
-            return JSON.std.mapFrom(serialized);
         }
+        return JSON.std.mapFrom(serialized);
     }
 
     protected Map<String, Object> mdcMap() {

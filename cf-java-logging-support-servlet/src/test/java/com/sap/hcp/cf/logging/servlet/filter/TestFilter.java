@@ -35,6 +35,8 @@ public class TestFilter {
 
     protected final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     protected final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
+    private PrintStream previousOut;
+    private PrintStream previousErr;
 
     private static final String REQUEST_ID = "1234-56-7890-xxx";
     private static final String CORRELATION_ID = "xxx-56-7890-xxx";
@@ -46,14 +48,16 @@ public class TestFilter {
 
     @Before
     public void setupStreams() {
+        previousOut = System.out;
         System.setOut(new PrintStream(outContent));
+        previousErr = System.err;
         System.setErr(new PrintStream(errContent));
     }
 
     @After
     public void teardownStreams() {
-        System.setOut(null);
-        System.setErr(null);
+        System.setOut(previousOut);
+        System.setErr(previousErr);
     }
 
     @Test

@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
@@ -33,10 +34,9 @@ public abstract class AbstractConverterTest {
     }
 
     protected LoggingEvent makeEvent(String msg, Throwable t, Object[] args) {
-        return new LoggingEvent(this.getClass().getName(), (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(this
-                                                                                                                       .getClass()
-                                                                                                                       .getName()),
-                                Level.INFO, msg, t, args);
+        Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+        return new LoggingEvent(this.getClass().getName(), (ch.qos.logback.classic.Logger) logger, Level.INFO, msg, t,
+                                args);
     }
 
     protected Object arrayElem(String serialized, int i) throws JSONObjectException, IOException {
@@ -70,9 +70,8 @@ public abstract class AbstractConverterTest {
     protected Map<String, Object> mapFrom(String serialized, boolean wrap) throws JSONObjectException, IOException {
         if (wrap) {
             return JSON.std.mapFrom("{" + serialized + "}");
-        } else {
-            return JSON.std.mapFrom(serialized);
         }
+        return JSON.std.mapFrom(serialized);
     }
 
     protected Map<String, Object> mdcMap() {
