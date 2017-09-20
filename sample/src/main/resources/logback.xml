@@ -1,4 +1,5 @@
 <configuration debug="false" scan="false">
+    <turboFilter class="com.sap.hcp.cf.logback.filter.CustomLoggingTurboFilter" />
     <!-- write logs to console -->
     <appender name="STDOUT-JSON" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encode and enrich full message with the required fields/tags -->

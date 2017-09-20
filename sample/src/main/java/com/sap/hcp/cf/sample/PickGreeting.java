@@ -25,6 +25,15 @@ public class PickGreeting {
         }
         String greeting = GREETINGS[random.nextInt(GREETINGS.length)];
         LOGGER.info("Picked greeting : {}", greeting);
+
+        String teststring = "TESTSTRING";
+
+        LOGGER.trace("This is a trace message with attached string {}", teststring);
+        LOGGER.debug("This is a debug message with attached string {}", teststring);
+        LOGGER.info("This is an info message with attached string {}", teststring);
+        LOGGER.warn("This is a warning message with attached string {}", teststring);
+        LOGGER.error("This is an error message with attached string {}", teststring);
+
         return greeting;
     }
 }

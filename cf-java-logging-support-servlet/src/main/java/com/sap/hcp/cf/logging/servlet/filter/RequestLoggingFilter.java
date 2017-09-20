@@ -22,6 +22,8 @@ import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.LongValue;
 import com.sap.hcp.cf.logging.common.Markers;
 import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.servlet.dynlog.DynLogEnvironment;
+import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelProcessor;
 
 /**
  * A simple servlet filter that logs HTTP request processing info.
@@ -29,13 +31,22 @@ import com.sap.hcp.cf.logging.common.RequestRecord;
  */
 public class RequestLoggingFilter implements Filter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(RequestLoggingFilter.class);
     public static final String LOG_PROVIDER = "[SERVLET]";
     public static final String WRAP_RESPONSE_INIT_PARAM = "wrapResponse";
     public static final String WRAP_REQUEST_INIT_PARAM = "wrapRequest";
 
     private boolean wrapResponse = true;
     private boolean wrapRequest = true;
-    private final Logger logger = LoggerFactory.getLogger(RequestLoggingFilter.class);
+    private DynLogEnvironment dynLogEnvironment;
+    private DynamicLogLevelProcessor dynamicLogLevelProcessor;
+
+    public RequestLoggingFilter() {
+        dynLogEnvironment = new DynLogEnvironment();
+        if (dynLogEnvironment.getRsaPublicKey() != null) {
+            dynamicLogLevelProcessor = new DynamicLogLevelProcessor(dynLogEnvironment);
+        }
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -68,7 +79,9 @@ public class RequestLoggingFilter implements Filter {
     private void doFilterRequest(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain)
                                                                                                                       throws IOException,
                                                                                                                       ServletException {
-
+        if (httpRequest.getHeader(dynLogEnvironment.getDynLogHeaderKey()) != null) {
+            dynamicLogLevelProcessor.copyDynamicLogLevelToMDC(httpRequest);
+        }
         /*
          * -- make sure correlation id is read from headers
          */
@@ -124,7 +137,7 @@ public class RequestLoggingFilter implements Filter {
             /*
              * -- log info
              */
-            logger.info(Markers.REQUEST_MARKER, rr.toString());
+            LOGGER.info(Markers.REQUEST_MARKER, rr.toString());
             /*
              * -- close this
              */

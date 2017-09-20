@@ -43,5 +43,11 @@
             <version>${logback.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Library for token signing/verification -->
+        <dependency>
+            <groupId>com.auth0</groupId>
+            <artifactId>java-jwt</artifactId>
+            <version>3.2.0</version>
+        </dependency>
     </dependencies>
 </project>

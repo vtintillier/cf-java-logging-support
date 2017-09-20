@@ -143,6 +143,13 @@ Here are sort of the minimal configurations you'd need:
 </Configuration>
 ```
 
+## Dynamic Log Levels
+
+This library provides the possibility to change the log-level threshold for a
+single thread by adding a token in the header of a request. A detailed
+description about how to apply this feature can be found
+[here](./DynamicLogLevels.md).
+
 ## Sample Application
 
 In order to illustrate how the different features are used, this repository includes a simple application in the  [./sample folder](./sample).
