@@ -26,11 +26,12 @@ All in all, you should do the following:
 * pick your favorite logging implementation, and
 * adjust your logging configuration accordingly.
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest version (currently `2.0.11`):
+
+Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.0.10`):
 
 ```xml
 <properties>
-	<cf-logging-version>2.0.11</cf-logging-version>
+	<cf-logging-version>2.0.10</cf-logging-version>
 </properties>
 ```
 
@@ -46,6 +47,8 @@ Say, you want to make use of the *servlet filter* feature, then you need to add 
 ```
 
 This feature only depends on the servlet API which you have included in your POM anyhow.
+
+For the new dynamic log level feature and the stacktrace feature version 2.1.0 has to be chosen which is not yet available on the nexus repository but can be obtained by building the parent project of this repository.
 
 ## Implementation variants and logging configurations
 
@@ -149,6 +152,10 @@ This library provides the possibility to change the log-level threshold for a
 single thread by adding a token in the header of a request. A detailed
 description about how to apply this feature can be found
 [here](./DynamicLogLevels.md).
+
+## Logging Stacktraces
+
+Stacktraces can be logged within one log message. Further details can be found [here](./LoggingStacktraces.md).
 
 ## Sample Application
 
