@@ -27,11 +27,11 @@ All in all, you should do the following:
 * adjust your logging configuration accordingly.
 
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.0.10`):
+Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.1.1`):
 
 ```xml
 <properties>
-	<cf-logging-version>2.0.10</cf-logging-version>
+	<cf-logging-version>2.1.1</cf-logging-version>
 </properties>
 ```
 
@@ -47,8 +47,6 @@ Say, you want to make use of the *servlet filter* feature, then you need to add 
 ```
 
 This feature only depends on the servlet API which you have included in your POM anyhow.
-
-For the new dynamic log level feature and the stacktrace feature version 2.1.0 has to be chosen which is not yet available on the nexus repository but can be obtained by building the parent project of this repository.
 
 ## Implementation variants and logging configurations
 
