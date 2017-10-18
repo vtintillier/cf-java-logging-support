@@ -149,11 +149,12 @@ Here are sort of the minimal configurations you'd need:
 This library provides the possibility to change the log-level threshold for a
 single thread by adding a token in the header of a request. A detailed
 description about how to apply this feature can be found
-[here](./DynamicLogLevels.md).
+[here](https://github.com/SAP/cf-java-logging-support/wiki/Dynamic-Log-Levels).
 
 ## Logging Stacktraces
 
-Stacktraces can be logged within one log message. Further details can be found [here](./LoggingStacktraces.md).
+Stacktraces can be logged within one log message. Further details can be found 
+[here](https://github.com/SAP/cf-java-logging-support/wiki/Logging-Stack-Traces).
 
 ## Sample Application
 
