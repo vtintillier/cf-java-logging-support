@@ -17,7 +17,7 @@ This is a specification of the "app-logs beat" message type that we use to store
 "application logs" written via a proper logging infrastructure implementation.
 
 NOTE: For Java applications running on CF, this is our logging support library, see
-https://github.com/SAP/perfx/cf-java-logging-support
+https://github.com/SAP/cf-java-logging-support
 
 Field names follow the convention that we're not using camel case names, but
 rather use "_" as a delimiter between parts.
