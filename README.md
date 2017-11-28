@@ -13,7 +13,7 @@ While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-en
 
 The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html) and [client and server filters for Jersey](https://jersey.java.net/documentation/latest/filters-and-interceptors.html), but again, we're open to contributions for other APIs and frameworks.
 
-Last, there is also a sibling project on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support).
+Last, there are also two sibling projects on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support) and [python logging support](https://github.com/SAP/cf-python-logging-support).
 
 ## Features and dependencies
 
