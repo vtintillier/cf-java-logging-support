@@ -48,7 +48,10 @@ public class DefaultMessageConverter {
             } else {
                 appendTo.append(result);
             }
+        } else {
+            appendTo.append("null");
         }
+
     }
 
     private String flattenMsg(String msg) {
