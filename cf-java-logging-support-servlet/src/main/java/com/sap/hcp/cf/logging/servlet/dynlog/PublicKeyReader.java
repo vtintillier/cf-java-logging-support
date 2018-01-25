@@ -22,7 +22,7 @@ public class PublicKeyReader {
         String pemKey = environment.getVariable("DYN_LOG_LEVEL_KEY");
 
         if (pemKey == null) {
-            LOGGER.error("DYN_LOG_LEVEL_KEY not found in environment");
+            LOGGER.info("DYN_LOG_LEVEL_KEY not found in environment");
             return null;
         } else {
             pemKey = pemKey.replace("-----BEGIN PUBLIC KEY-----", "");
