@@ -9,3 +9,5 @@ applications:
   path: target/logging-sample-app-2.1.1.war
   env:
     RANDOM_SLEEP: true
+# Set LogRemoteIP: true to activate logging of remote IPs
+    LogRemoteIP: false
