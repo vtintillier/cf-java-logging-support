@@ -12,6 +12,8 @@ import javax.xml.bind.DatatypeConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sap.hcp.cf.logging.common.helper.Environment;
+
 public class PublicKeyReader {
 
     private final static Logger LOGGER = LoggerFactory.getLogger(PublicKeyReader.class);

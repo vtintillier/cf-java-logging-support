@@ -21,6 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.MDC;
 
 import com.sap.hcp.cf.logging.common.helper.DynamicLogLevelHelper;
+import com.sap.hcp.cf.logging.common.helper.Environment;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DynamicLogLevelProcessorTest extends Mockito {

@@ -1,4 +1,4 @@
-package com.sap.hcp.cf.logging.servlet.dynlog;
+package com.sap.hcp.cf.logging.common.helper;
 
 public class Environment {
 
