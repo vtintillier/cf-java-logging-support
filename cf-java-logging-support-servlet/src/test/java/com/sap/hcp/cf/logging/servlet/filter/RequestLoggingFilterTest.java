@@ -136,6 +136,8 @@ public class RequestLoggingFilterTest {
 
     @Test
     public void testWithSettings() throws IOException, ServletException {
+        LogRemoteIPSettings mockLogRemoteIPSettings = mock(LogRemoteIPSettings.class);
+        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn(true);
         HttpServletRequest mockReq = mock(HttpServletRequest.class);
         HttpServletResponse mockResp = mock(HttpServletResponse.class);
         PrintWriter mockWriter = mock(PrintWriter.class);
@@ -147,11 +149,40 @@ public class RequestLoggingFilterTest {
         when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
         when(mockReq.getHeader(HttpHeaders.REFERER)).thenReturn(REFERER);
         FilterChain mockFilterChain = mock(FilterChain.class);
-        new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
+        RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
+        requestLoggingFilter.logRemoteIPSettings = mockLogRemoteIPSettings;
+        requestLoggingFilter.doFilter(mockReq, mockResp, mockFilterChain);
         assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
         assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
         assertThat(getField(Fields.REQUEST_ID), is(REQUEST_ID));
         assertThat(getField(Fields.REMOTE_HOST), is(REMOTE_HOST));
+        assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REFERER), is(REFERER));
+    }
+
+    @Test
+    public void testWithSettingsWithoutRemoteIP() throws IOException, ServletException {
+        LogRemoteIPSettings mockLogRemoteIPSettings = mock(LogRemoteIPSettings.class);
+        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn(false);
+        HttpServletRequest mockReq = mock(HttpServletRequest.class);
+        HttpServletResponse mockResp = mock(HttpServletResponse.class);
+        PrintWriter mockWriter = mock(PrintWriter.class);
+        when(mockResp.getWriter()).thenReturn(mockWriter);
+        when(mockReq.getRequestURI()).thenReturn(REQUEST);
+        when(mockReq.getQueryString()).thenReturn(QUERY_STRING);
+        when(mockReq.getRemoteHost()).thenReturn(REMOTE_HOST);
+        // will also set correlation id
+        when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
+        when(mockReq.getHeader(HttpHeaders.REFERER)).thenReturn(REFERER);
+        FilterChain mockFilterChain = mock(FilterChain.class);
+        RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
+        requestLoggingFilter.logRemoteIPSettings = mockLogRemoteIPSettings;
+        requestLoggingFilter.doFilter(mockReq, mockResp, mockFilterChain);
+        assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
+        assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
+        assertThat(getField(Fields.REQUEST_ID), is(REQUEST_ID));
+        assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.REFERER), is(REFERER));

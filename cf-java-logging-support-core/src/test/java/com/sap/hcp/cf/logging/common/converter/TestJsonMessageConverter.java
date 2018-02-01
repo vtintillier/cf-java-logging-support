@@ -114,4 +114,11 @@ public class TestJsonMessageConverter extends AbstractConverterTest {
         assertThat(formatMsg(jmc, logMsg), is(nestedBracketsMsg));
     }
 
+    @Test
+    public void testNullMessage() {
+        String logMsg = null;
+        DefaultMessageConverter jmc = new DefaultMessageConverter();
+        assertThat(formatMsg(jmc, logMsg), is("null"));
+    }
+
 }

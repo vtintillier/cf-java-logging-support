@@ -8,6 +8,8 @@ import java.security.spec.InvalidKeySpecException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sap.hcp.cf.logging.common.helper.Environment;
+
 public class DynLogEnvironment {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynLogEnvironment.class);

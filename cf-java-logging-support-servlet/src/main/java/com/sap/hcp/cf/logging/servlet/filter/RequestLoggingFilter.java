@@ -40,8 +40,10 @@ public class RequestLoggingFilter implements Filter {
     private boolean wrapRequest = true;
     private DynLogEnvironment dynLogEnvironment;
     private DynamicLogLevelProcessor dynamicLogLevelProcessor;
+    protected LogRemoteIPSettings logRemoteIPSettings;
 
     public RequestLoggingFilter() {
+        logRemoteIPSettings = new LogRemoteIPSettings();
         dynLogEnvironment = new DynLogEnvironment();
         if (dynLogEnvironment.getRsaPublicKey() != null) {
             dynamicLogLevelProcessor = new DynamicLogLevelProcessor(dynLogEnvironment);
@@ -168,9 +170,11 @@ public class RequestLoggingFilter implements Filter {
                                                                      : request.getRequestURI());
         lrec.addTag(Fields.METHOD, request.getMethod());
         lrec.addTag(Fields.PROTOCOL, getValue(request.getProtocol()));
-        lrec.addTag(Fields.REMOTE_IP, getValue(request.getRemoteAddr()));
-        lrec.addTag(Fields.REMOTE_HOST, getValue(request.getRemoteHost()));
-        lrec.addTag(Fields.REMOTE_PORT, Integer.toString(request.getRemotePort()));
+        if (logRemoteIPSettings.getLogRemoteIPSetting()) {
+            lrec.addTag(Fields.REMOTE_IP, getValue(request.getRemoteAddr()));
+            lrec.addTag(Fields.REMOTE_HOST, getValue(request.getRemoteHost()));
+            lrec.addTag(Fields.REMOTE_PORT, Integer.toString(request.getRemotePort()));
+        }
         lrec.addTag(Fields.REMOTE_USER, getValue(request.getRemoteUser()));
         lrec.addTag(Fields.REFERER, getHeader(request, HttpHeaders.REFERER));
         lrec.addTag(Fields.X_FORWARDED_FOR, getHeader(request, HttpHeaders.X_FORWARDED_FOR));
