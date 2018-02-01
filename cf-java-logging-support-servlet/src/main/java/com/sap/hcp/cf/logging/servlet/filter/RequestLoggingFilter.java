@@ -35,7 +35,6 @@ public class RequestLoggingFilter implements Filter {
     public static final String LOG_PROVIDER = "[SERVLET]";
     public static final String WRAP_RESPONSE_INIT_PARAM = "wrapResponse";
     public static final String WRAP_REQUEST_INIT_PARAM = "wrapRequest";
-    public static final String LOG_REMOTE_IP = "LogRemoteIP";
 
     private boolean wrapResponse = true;
     private boolean wrapRequest = true;
@@ -171,7 +170,7 @@ public class RequestLoggingFilter implements Filter {
                                                                      : request.getRequestURI());
         lrec.addTag(Fields.METHOD, request.getMethod());
         lrec.addTag(Fields.PROTOCOL, getValue(request.getProtocol()));
-        if (logRemoteIPSettings.getLogRemoteIPSetting().equals("true")) {
+        if (logRemoteIPSettings.getLogRemoteIPSetting()) {
             lrec.addTag(Fields.REMOTE_IP, getValue(request.getRemoteAddr()));
             lrec.addTag(Fields.REMOTE_HOST, getValue(request.getRemoteHost()));
             lrec.addTag(Fields.REMOTE_PORT, Integer.toString(request.getRemotePort()));

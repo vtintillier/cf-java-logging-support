@@ -137,7 +137,7 @@ public class RequestLoggingFilterTest {
     @Test
     public void testWithSettings() throws IOException, ServletException {
         LogRemoteIPSettings mockLogRemoteIPSettings = mock(LogRemoteIPSettings.class);
-        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn("true");
+        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn(true);
         HttpServletRequest mockReq = mock(HttpServletRequest.class);
         HttpServletResponse mockResp = mock(HttpServletResponse.class);
         PrintWriter mockWriter = mock(PrintWriter.class);
@@ -164,7 +164,7 @@ public class RequestLoggingFilterTest {
     @Test
     public void testWithSettingsWithoutRemoteIP() throws IOException, ServletException {
         LogRemoteIPSettings mockLogRemoteIPSettings = mock(LogRemoteIPSettings.class);
-        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn("false");
+        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn(false);
         HttpServletRequest mockReq = mock(HttpServletRequest.class);
         HttpServletResponse mockResp = mock(HttpServletResponse.class);
         PrintWriter mockWriter = mock(PrintWriter.class);

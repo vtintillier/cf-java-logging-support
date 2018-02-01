@@ -6,8 +6,8 @@ applications:
 - name: logging-sample-app
   host: logging-sample-app
   instances: 1
-  path: target/logging-sample-app-2.1.1.war
+  path: target/logging-sample-app-2.1.2.war
   env:
     RANDOM_SLEEP: true
-# Set LogRemoteIP: true to activate logging of remote IPs
-    LogRemoteIP: false
+# Set LOG_REMOTE_IP: true to activate logging of remote IPs
+    LOG_REMOTE_IP: false
