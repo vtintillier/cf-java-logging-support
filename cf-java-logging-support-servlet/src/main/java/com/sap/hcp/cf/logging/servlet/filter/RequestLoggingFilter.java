@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import static com.sap.hcp.cf.logging.common.RequestRecordConfigurator.to;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -19,6 +21,7 @@ import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.LogContext;
+import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
 import com.sap.hcp.cf.logging.common.LongValue;
 import com.sap.hcp.cf.logging.common.Markers;
 import com.sap.hcp.cf.logging.common.RequestRecord;
@@ -40,10 +43,11 @@ public class RequestLoggingFilter implements Filter {
     private boolean wrapRequest = true;
     private DynLogEnvironment dynLogEnvironment;
     private DynamicLogLevelProcessor dynamicLogLevelProcessor;
-    protected LogRemoteIPSettings logRemoteIPSettings;
+    protected LogOptionalFieldsSettings logOptionalFieldsSettings;
 
     public RequestLoggingFilter() {
-        logRemoteIPSettings = new LogRemoteIPSettings();
+        String invokingClass = this.getClass().getName().toString();
+        logOptionalFieldsSettings = new LogOptionalFieldsSettings(invokingClass);
         dynLogEnvironment = new DynLogEnvironment();
         if (dynLogEnvironment.getRsaPublicKey() != null) {
             dynamicLogLevelProcessor = new DynamicLogLevelProcessor(dynLogEnvironment);
@@ -170,17 +174,19 @@ public class RequestLoggingFilter implements Filter {
                                                                      : request.getRequestURI());
         lrec.addTag(Fields.METHOD, request.getMethod());
         lrec.addTag(Fields.PROTOCOL, getValue(request.getProtocol()));
-        if (logRemoteIPSettings.getLogRemoteIPSetting()) {
-            lrec.addTag(Fields.REMOTE_IP, getValue(request.getRemoteAddr()));
-            lrec.addTag(Fields.REMOTE_HOST, getValue(request.getRemoteHost()));
-            lrec.addTag(Fields.REMOTE_PORT, Integer.toString(request.getRemotePort()));
-        }
-        lrec.addTag(Fields.REMOTE_USER, getValue(request.getRemoteUser()));
-        lrec.addTag(Fields.REFERER, getHeader(request, HttpHeaders.REFERER));
-        lrec.addTag(Fields.X_FORWARDED_FOR, getHeader(request, HttpHeaders.X_FORWARDED_FOR));
 
+        boolean isSensitiveConnectionData = logOptionalFieldsSettings.isLogSensitiveConnectionData();
+
+        to(lrec).addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_IP, getValue(request.getRemoteAddr()))
+                .addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_HOST, getValue(request.getRemoteHost()))
+                .addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_PORT, Integer.toString(request
+                                                                                                       .getRemotePort()))
+                .addOptionalTag(isSensitiveConnectionData, Fields.X_FORWARDED_FOR, getHeader(request,
+                                                                                             HttpHeaders.X_FORWARDED_FOR))
+                .addOptionalTag(logOptionalFieldsSettings.isLogRemoteUserField(), Fields.REMOTE_USER, getValue(request
+                                                                                                                      .getRemoteUser()))
+                .addOptionalTag(logOptionalFieldsSettings.isLogRefererField(), Fields.REFERER, getHeader(request,
+                                                                                                         HttpHeaders.REFERER));
         lrec.addContextTag(Fields.REQUEST_ID, getHeader(request, HttpHeaders.X_VCAP_REQUEST_ID));
-
     }
-
 }

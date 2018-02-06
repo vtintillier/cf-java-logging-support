@@ -14,4 +14,6 @@ public interface Defaults {
     public LongValue RESPONSE_SIZE_B = new LongValue(-1);
     public LongValue REQUEST_SIZE_B = new LongValue(-1);
     public LongValue STATUS = new LongValue(200);
+
+    public String REDACTED = "redacted";
 }

@@ -30,6 +30,7 @@ import com.fasterxml.jackson.jr.ob.JSONObjectException;
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.HttpHeaders;
+import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
 
 public class RequestLoggingFilterTest {
 
@@ -74,7 +75,6 @@ public class RequestLoggingFilterTest {
         assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
-        assertThat(getField(Fields.REFERER), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.REQUEST_SIZE_B), is("-1"));
     }
 
@@ -102,7 +102,6 @@ public class RequestLoggingFilterTest {
         assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
-        assertThat(getField(Fields.REFERER), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.REQUEST_SIZE_B), is("1"));
     }
 
@@ -130,14 +129,11 @@ public class RequestLoggingFilterTest {
         assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
-        assertThat(getField(Fields.REFERER), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.REQUEST_SIZE_B), is("1"));
     }
 
     @Test
-    public void testWithSettings() throws IOException, ServletException {
-        LogRemoteIPSettings mockLogRemoteIPSettings = mock(LogRemoteIPSettings.class);
-        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn(true);
+    public void testWithActivatedOptionalFields() throws IOException, ServletException {
         HttpServletRequest mockReq = mock(HttpServletRequest.class);
         HttpServletResponse mockResp = mock(HttpServletResponse.class);
         PrintWriter mockWriter = mock(PrintWriter.class);
@@ -149,8 +145,12 @@ public class RequestLoggingFilterTest {
         when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
         when(mockReq.getHeader(HttpHeaders.REFERER)).thenReturn(REFERER);
         FilterChain mockFilterChain = mock(FilterChain.class);
+        LogOptionalFieldsSettings mockOptionalFieldsSettings = mock(LogOptionalFieldsSettings.class);
+        when(mockOptionalFieldsSettings.isLogSensitiveConnectionData()).thenReturn(true);
+        when(mockOptionalFieldsSettings.isLogRemoteUserField()).thenReturn(true);
+        when(mockOptionalFieldsSettings.isLogRefererField()).thenReturn(true);
         RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
-        requestLoggingFilter.logRemoteIPSettings = mockLogRemoteIPSettings;
+        requestLoggingFilter.logOptionalFieldsSettings = mockOptionalFieldsSettings;
         requestLoggingFilter.doFilter(mockReq, mockResp, mockFilterChain);
         assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
         assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
@@ -162,9 +162,7 @@ public class RequestLoggingFilterTest {
     }
 
     @Test
-    public void testWithSettingsWithoutRemoteIP() throws IOException, ServletException {
-        LogRemoteIPSettings mockLogRemoteIPSettings = mock(LogRemoteIPSettings.class);
-        when(mockLogRemoteIPSettings.getLogRemoteIPSetting()).thenReturn(false);
+    public void testWithSuppressedOptionalFields() throws IOException, ServletException {
         HttpServletRequest mockReq = mock(HttpServletRequest.class);
         HttpServletResponse mockResp = mock(HttpServletResponse.class);
         PrintWriter mockWriter = mock(PrintWriter.class);
@@ -176,16 +174,20 @@ public class RequestLoggingFilterTest {
         when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
         when(mockReq.getHeader(HttpHeaders.REFERER)).thenReturn(REFERER);
         FilterChain mockFilterChain = mock(FilterChain.class);
+        LogOptionalFieldsSettings mockLogOptionalFieldsSettings = mock(LogOptionalFieldsSettings.class);
+        when(mockLogOptionalFieldsSettings.isLogSensitiveConnectionData()).thenReturn(false);
+        when(mockLogOptionalFieldsSettings.isLogRemoteUserField()).thenReturn(false);
+        when(mockLogOptionalFieldsSettings.isLogRefererField()).thenReturn(false);
         RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
-        requestLoggingFilter.logRemoteIPSettings = mockLogRemoteIPSettings;
+        requestLoggingFilter.logOptionalFieldsSettings = mockLogOptionalFieldsSettings;
         requestLoggingFilter.doFilter(mockReq, mockResp, mockFilterChain);
         assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
         assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
         assertThat(getField(Fields.REQUEST_ID), is(REQUEST_ID));
-        assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REMOTE_IP), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REMOTE_HOST), is(Defaults.REDACTED));
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
-        assertThat(getField(Fields.REFERER), is(REFERER));
     }
 
     @Test

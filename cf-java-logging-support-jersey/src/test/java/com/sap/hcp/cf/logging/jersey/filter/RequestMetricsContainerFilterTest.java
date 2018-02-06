@@ -50,12 +50,7 @@ public class RequestMetricsContainerFilterTest extends AbstractFilterTest {
         assertThat(getField(Fields.RESPONSE_CONTENT_TYPE), is(TestResource.EXPECTED_CONTENT_TYPE));
         assertThat(getField(Fields.DIRECTION), is(Direction.IN.toString()));
         assertThat(getField(Fields.METHOD), is(TestResource.EXPECTED_REQUEST_METHOD));
-        assertThat(getField(Fields.REMOTE_IP), not(nullValue()));
-        assertThat(getField(Fields.REMOTE_HOST), not(nullValue()));
-        assertThat(getField(Fields.REFERER), not(nullValue()));
-        assertThat(getField(Fields.X_FORWARDED_FOR), not(nullValue()));
         assertThat(getField(Fields.LAYER), is(ContainerRequestContextAdapter.LAYER_NAME));
-
     }
 
     @Test

@@ -77,7 +77,6 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest {
         final Response response = getClient().target(getBaseUri() + "testresource").request().header(
                                                                                                      HTTP_HEADER_CORRELATION_ID,
                                                                                                      "1").get();
-
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.RESPONSE_SIZE_B), is("4"));
         assertThat(getField(Fields.RESPONSE_TIME_MS), not(nullValue()));
@@ -85,10 +84,6 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest {
         assertThat(getField(Fields.RESPONSE_CONTENT_TYPE), is(TestResource.EXPECTED_CONTENT_TYPE));
         assertThat(getField(Fields.DIRECTION), is(Direction.OUT.toString()));
         assertThat(getField(Fields.METHOD), is(TestResource.EXPECTED_REQUEST_METHOD));
-        assertThat(getField(Fields.REMOTE_IP), not(nullValue()));
-        assertThat(getField(Fields.REMOTE_HOST), not(nullValue()));
-        assertThat(getField(Fields.REFERER), not(nullValue()));
-        assertThat(getField(Fields.X_FORWARDED_FOR), not(nullValue()));
         assertThat(getField(Fields.LAYER), is(ClientRequestContextAdapter.LAYER_NAME));
     }
 
