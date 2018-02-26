@@ -2,7 +2,9 @@ package com.sap.hcp.cf.logging.common.helper;
 
 public class Environment {
 
-    public static final String LOG_REMOTE_IP = "LOG_REMOTE_IP";
+    public static final String LOG_SENSITIVE_CONNECTION_DATA = "LOG_SENSITIVE_CONNECTION_DATA";
+    public static final String LOG_REMOTE_USER = "LOG_REMOTE_USER";
+    public static final String LOG_REFERER = "LOG_REFERER";
 
     public String getVariable(String name) {
         return System.getenv(name);
