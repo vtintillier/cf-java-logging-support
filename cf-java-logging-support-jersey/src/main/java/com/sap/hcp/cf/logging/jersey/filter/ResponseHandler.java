@@ -19,7 +19,7 @@ public class ResponseHandler {
             rr.addTag(Fields.RESPONSE_CONTENT_TYPE, responseContext.getHeader(HttpHeaders.CONTENT_TYPE));
             rr.addValue(Fields.RESPONSE_STATUS, new LongValue(responseContext.getStatus()));
             rr.stop();
-            LOGGER.info(Markers.REQUEST_MARKER, rr.toString());
+            LOGGER.info(Markers.REQUEST_MARKER, "{}", rr);
             /*
              * -- close this instance
              */

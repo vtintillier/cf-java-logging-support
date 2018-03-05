@@ -143,7 +143,7 @@ public class RequestLoggingFilter implements Filter {
             /*
              * -- log info
              */
-            LOGGER.info(Markers.REQUEST_MARKER, rr.toString());
+            LOGGER.info(Markers.REQUEST_MARKER, "{}", rr);
             /*
              * -- close this
              */
