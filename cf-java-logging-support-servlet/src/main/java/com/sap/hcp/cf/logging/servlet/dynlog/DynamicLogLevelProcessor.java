@@ -51,4 +51,8 @@ public class DynamicLogLevelProcessor {
             }
         }
     }
+
+    public void removeDynamicLogLevelFromMDC() {
+        MDC.remove(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY);
+    }
 }

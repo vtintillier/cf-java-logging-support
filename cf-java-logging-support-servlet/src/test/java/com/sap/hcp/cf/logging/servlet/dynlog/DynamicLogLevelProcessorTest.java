@@ -55,4 +55,11 @@ public class DynamicLogLevelProcessorTest extends Mockito {
         processor.copyDynamicLogLevelToMDC(httpRequest);
         assertEquals("TRACE", MDC.get(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY));
     }
+
+    @Test
+    public void testDeleteDynamicLogLevelFromMDC() throws Exception {
+        processor.copyDynamicLogLevelToMDC(httpRequest);
+        processor.removeDynamicLogLevelFromMDC();
+        assertEquals(null, MDC.get(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY));
+    }
 }

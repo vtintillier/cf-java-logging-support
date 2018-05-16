@@ -149,6 +149,10 @@ public class RequestLoggingFilter implements Filter {
              */
         } finally {
             rr.close();
+
+            if (dynamicLogLevelProcessor != null) {
+                dynamicLogLevelProcessor.removeDynamicLogLevelFromMDC();
+            }
         }
     }
 
