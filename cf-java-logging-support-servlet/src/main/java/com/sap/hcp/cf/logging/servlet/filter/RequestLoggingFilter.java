@@ -85,7 +85,7 @@ public class RequestLoggingFilter implements Filter {
     private void doFilterRequest(HttpServletRequest httpRequest, HttpServletResponse httpResponse, FilterChain chain)
                                                                                                                       throws IOException,
                                                                                                                       ServletException {
-        if (httpRequest.getHeader(dynLogEnvironment.getDynLogHeaderKey()) != null) {
+        if (httpRequest.getHeader(dynLogEnvironment.getDynLogHeaderKey()) != null && dynamicLogLevelProcessor != null) {
             dynamicLogLevelProcessor.copyDynamicLogLevelToMDC(httpRequest);
         }
         /*
