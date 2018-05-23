@@ -51,6 +51,13 @@
             <organization>SAP SE</organization>
             <organizationUrl>https://github.com/SAP</organizationUrl>
         </developer>
+        <developer>
+            <id>KarstenSchnitter</id>
+            <name>Karsten Schnitter</name>
+            <email>k.schnitter@sap.com</email>
+            <organization>SAP SE</organization>
+            <organizationUrl>https://github.com/SAP</organizationUrl>
+        </developer>
     </developers>
 
     <licenses>
