@@ -44,7 +44,7 @@ public class TokenCreator {
         // "TRACE", "DEBUG", "INFO", "WARN", "ERROR"
         String level = "TRACE";
         // Set a validity period in days
-        int validityPeriodInDays = 2;
+        long validityPeriodInDays = 2;
         // If available provide Base64 encoded private key here:
         String privateKey = "";
         // If available provide Base64 encoded private key here:

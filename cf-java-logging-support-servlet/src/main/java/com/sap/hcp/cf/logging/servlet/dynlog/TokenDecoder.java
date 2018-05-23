@@ -36,7 +36,8 @@ public class TokenDecoder {
                 throw new DynamicLogLevelException("Token provided to dynamically change the log-level on thread-level is outdated");
             }
         } catch (JWTVerificationException e) {
-            throw new DynamicLogLevelException("Token could not be verified", e);
+            // Exception is not attached to avoid logging of JWT token
+            throw new DynamicLogLevelException("Token could not be verified");
         }
     }
 }
