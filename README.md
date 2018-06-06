@@ -46,7 +46,7 @@ Say, you want to make use of the *servlet filter* feature, then you need to add 
 </dependency>
 ```
 
-This feature only depends on the servlet API which you have included in your POM anyhow.
+This feature only depends on the servlet API which you have included in your POM anyhow. You can find more information about the *servlet filter* feature (like e.g. how to adjust the web.xml) in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki/Instrumenting-Servlets).
 
 ## Implementation variants and logging configurations
 
