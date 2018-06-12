@@ -93,9 +93,8 @@ public class RequestLoggingFilter implements Filter {
          */
         LogContext.initializeContext(getCorrelationIdFromHeader(httpRequest));
 
-        RequestRecord rr = null;
         try {
-            rr = new RequestRecord(LOG_PROVIDER);
+			RequestRecord rr = new RequestRecord(LOG_PROVIDER);
             ContentLengthTrackingResponseWrapper responseWrapper = null;
             ContentLengthTrackingRequestWrapper requestWrapper = null;
 
@@ -125,6 +124,8 @@ public class RequestLoggingFilter implements Filter {
             }
             rr.stop();
 
+			LOGGER.info("Request is async? {}", httpRequest.isAsyncStarted());
+
             if (requestWrapper != null) {
                 rr.addValue(Fields.REQUEST_SIZE_B, new LongValue(requestWrapper.getContentLength()));
             } else {
@@ -148,8 +149,6 @@ public class RequestLoggingFilter implements Filter {
              * -- close this
              */
         } finally {
-            rr.close();
-
             if (dynamicLogLevelProcessor != null) {
                 dynamicLogLevelProcessor.removeDynamicLogLevelFromMDC();
             }

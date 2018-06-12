@@ -20,10 +20,6 @@ public class ResponseHandler {
             rr.addValue(Fields.RESPONSE_STATUS, new LongValue(responseContext.getStatus()));
             rr.stop();
             LOGGER.info(Markers.REQUEST_MARKER, "{}", rr);
-            /*
-             * -- close this instance
-             */
-            rr.close();
         } else {
             LOGGER.error("No record found to handle response {}", responseContext);
         }
