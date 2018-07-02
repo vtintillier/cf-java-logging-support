@@ -27,7 +27,7 @@ All in all, you should do the following:
 * adjust your logging configuration accordingly.
 
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.1.5`):
+Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.2.0`):
 
 ```xml
 <properties>

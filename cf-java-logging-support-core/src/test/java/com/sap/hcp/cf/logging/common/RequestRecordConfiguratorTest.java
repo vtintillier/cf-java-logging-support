@@ -20,7 +20,6 @@ public class RequestRecordConfiguratorTest {
         String tag = "TestTag";
 
         to(requestRecord).addOptionalTag(canBeLogged, key, tag);
-        requestRecord.close();
 
         assertEquals(tag, getFieldFromRequestRecord(requestRecord, key));
     }
@@ -33,7 +32,6 @@ public class RequestRecordConfiguratorTest {
         String tag = "TestTag";
 
         to(requestRecord).addOptionalTag(canBeLogged, key, tag);
-        requestRecord.close();
 
         assertEquals(Defaults.REDACTED, getFieldFromRequestRecord(requestRecord, key));
     }
@@ -46,7 +44,6 @@ public class RequestRecordConfiguratorTest {
         String tag = Defaults.UNKNOWN;
 
         to(requestRecord).addOptionalTag(canBeLogged, key, tag);
-        requestRecord.close();
 
         assertEquals(Defaults.UNKNOWN, getFieldFromRequestRecord(requestRecord, key));
     }
@@ -59,7 +56,6 @@ public class RequestRecordConfiguratorTest {
         String tag = Defaults.UNKNOWN;
 
         to(requestRecord).addOptionalTag(canBeLogged, key, tag);
-        requestRecord.close();
 
         assertEquals(Defaults.UNKNOWN, getFieldFromRequestRecord(requestRecord, key));
     }
