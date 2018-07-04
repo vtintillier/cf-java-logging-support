@@ -47,8 +47,12 @@ public class DynamicLogLevelProcessor {
                                                        ALLOWED_DYNAMIC_LOGLEVELS.toString());
                 }
             } catch (DynamicLogLevelException e) {
-                LOGGER.error("DynamicLogLevelProcessor could not write dynamic log level to MDC", e);
+                LOGGER.warn("DynamicLogLevelProcessor could not write dynamic log level to MDC", e);
             }
         }
+    }
+
+    public void removeDynamicLogLevelFromMDC() {
+        MDC.remove(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY);
     }
 }

@@ -27,11 +27,11 @@ All in all, you should do the following:
 * adjust your logging configuration accordingly.
 
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.1.4`):
+Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.2.0`):
 
 ```xml
 <properties>
-	<cf-logging-version>2.1.4</cf-logging-version>
+	<cf-logging-version>2.1.5</cf-logging-version>
 </properties>
 ```
 
@@ -46,7 +46,7 @@ Say, you want to make use of the *servlet filter* feature, then you need to add 
 </dependency>
 ```
 
-This feature only depends on the servlet API which you have included in your POM anyhow.
+This feature only depends on the servlet API which you have included in your POM anyhow. You can find more information about the *servlet filter* feature (like e.g. how to adjust the web.xml) in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki/Instrumenting-Servlets).
 
 ## Implementation variants and logging configurations
 
@@ -153,7 +153,7 @@ description about how to apply this feature can be found
 
 ## Logging Stacktraces
 
-Stacktraces can be logged within one log message. Further details can be found 
+Stacktraces can be logged within one log message. Further details can be found
 [here](https://github.com/SAP/cf-java-logging-support/wiki/Logging-Stack-Traces).
 
 ## Sample Application

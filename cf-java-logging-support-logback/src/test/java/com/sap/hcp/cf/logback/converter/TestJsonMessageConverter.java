@@ -66,7 +66,6 @@ public class TestJsonMessageConverter extends AbstractConverterTest {
         RequestRecord lrec = new RequestRecord(LOG_PROVIDER);
         String lmsg = lrec.toString();
         assertThat(jmc.convert(makeEvent(lmsg, NO_ARGS)), is(lmsg));
-        lrec.close();
     }
 
     @Test
@@ -77,7 +76,6 @@ public class TestJsonMessageConverter extends AbstractConverterTest {
         RequestRecord lrec = new RequestRecord(LOG_PROVIDER);
         String lmsg = lrec.toString();
         assertThat(jmc.convert(makeEvent(lmsg, NO_ARGS)), is(lmsg.substring(1, lmsg.length() - 1)));
-        lrec.close();
     }
 
     @Test
