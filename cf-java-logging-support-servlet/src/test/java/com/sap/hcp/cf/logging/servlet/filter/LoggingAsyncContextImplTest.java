@@ -131,7 +131,7 @@ public class LoggingAsyncContextImplTest {
 			public void run() {
 				MDC.put("initial-key", "initial-value");
 			}
-		});
+		}).get();
 		Map<String, String> requestContextMap = new HashMap<>();
 		testedContext.start(putAllContextMap(requestContextMap));
 		Map<String, String> finalContextMap = new HashMap<>();
@@ -141,7 +141,7 @@ public class LoggingAsyncContextImplTest {
 			public void run() {
 				finalContextMap.putAll(MDC.getCopyOfContextMap());
 			}
-		});
+		}).get();
 
 		assertThat(requestContextMap.entrySet(), is(empty()));
 		assertThat(finalContextMap, hasEntry("initial-key", "initial-value"));
