@@ -149,8 +149,8 @@ public class RequestLoggingFilterTest {
         when(mockOptionalFieldsSettings.isLogSensitiveConnectionData()).thenReturn(true);
         when(mockOptionalFieldsSettings.isLogRemoteUserField()).thenReturn(true);
         when(mockOptionalFieldsSettings.isLogRefererField()).thenReturn(true);
-        RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
-        requestLoggingFilter.logOptionalFieldsSettings = mockOptionalFieldsSettings;
+		RequestRecordFactory requestRecordFactory = new RequestRecordFactory(mockOptionalFieldsSettings);
+		RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter(requestRecordFactory);
         requestLoggingFilter.doFilter(mockReq, mockResp, mockFilterChain);
         assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
         assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
@@ -178,8 +178,8 @@ public class RequestLoggingFilterTest {
         when(mockLogOptionalFieldsSettings.isLogSensitiveConnectionData()).thenReturn(false);
         when(mockLogOptionalFieldsSettings.isLogRemoteUserField()).thenReturn(false);
         when(mockLogOptionalFieldsSettings.isLogRefererField()).thenReturn(false);
-        RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter();
-        requestLoggingFilter.logOptionalFieldsSettings = mockLogOptionalFieldsSettings;
+		RequestRecordFactory requestRecordFactory = new RequestRecordFactory(mockLogOptionalFieldsSettings);
+		RequestLoggingFilter requestLoggingFilter = new RequestLoggingFilter(requestRecordFactory);
         requestLoggingFilter.doFilter(mockReq, mockResp, mockFilterChain);
         assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
         assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
