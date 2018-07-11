@@ -11,8 +11,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.MDC;
 
@@ -20,34 +18,14 @@ public class LoggingAsyncContextImpl implements AsyncContext {
 
 	private AsyncContext asyncContext;
 
-	public LoggingAsyncContextImpl(AsyncContext asyncContext, final RequestLoggingVisitor loggingVisitor) {
+	public LoggingAsyncContextImpl(AsyncContext asyncContext, final RequestLogger requestLogger) {
 		this.asyncContext = asyncContext;
 		asyncContext.addListener(new AsyncListener() {
 
 			@Override
 			public void onTimeout(AsyncEvent event) throws IOException {
-				generateLog(loggingVisitor);
+				requestLogger.logRequest();
 			}
-
-			private void generateLog(final RequestLoggingVisitor loggingVisitor) {
-				ServletRequest request = getRequest();
-				ServletResponse response = getResponse();
-				if (request instanceof HttpServletRequest && response instanceof HttpServletResponse) {
-					HttpServletRequest httpRequest = (HttpServletRequest) request;
-					HttpServletResponse httpResponse = (HttpServletResponse) response;
-					Map<String, String> contextMap = getContextMap();
-					Map<String, String> currentContextMap = MDC.getCopyOfContextMap();
-					try {
-						MDC.setContextMap(contextMap);
-						loggingVisitor.logRequest(httpRequest, httpResponse);
-					} finally {
-						if (currentContextMap != null) {
-							MDC.setContextMap(currentContextMap);
-						}
-					}
-				}
-			}
-
 
 			@Override
 			public void onStartAsync(AsyncEvent event) throws IOException {
@@ -55,12 +33,12 @@ public class LoggingAsyncContextImpl implements AsyncContext {
 
 			@Override
 			public void onError(AsyncEvent event) throws IOException {
-				generateLog(loggingVisitor);
+				requestLogger.logRequest();
 			}
 
 			@Override
 			public void onComplete(AsyncEvent event) throws IOException {
-				generateLog(loggingVisitor);
+				requestLogger.logRequest();
 			}
 		});
 	}

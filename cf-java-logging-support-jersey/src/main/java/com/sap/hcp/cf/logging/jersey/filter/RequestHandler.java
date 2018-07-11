@@ -1,7 +1,5 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
-import static com.sap.hcp.cf.logging.common.RequestRecordConfigurator.to;
-
 import java.net.URI;
 
 import com.sap.hcp.cf.logging.common.Defaults;
@@ -11,6 +9,7 @@ import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
 import com.sap.hcp.cf.logging.common.LongValue;
 import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.RequestRecordBuilder;
 
 public class RequestHandler {
     final LogOptionalFieldsSettings logOptionalFieldsSettings;
@@ -38,35 +37,25 @@ public class RequestHandler {
             }
         }
 
-        RequestRecord lrec = new RequestRecord(adapter.getName(), adapter.getDirection());
-        lrec.start();
+		boolean isSensitiveConnectionData = logOptionalFieldsSettings.isLogSensitiveConnectionData();
+		boolean isLogRemoteUserField = logOptionalFieldsSettings.isLogRemoteUserField();
+		boolean isLogRefererField = logOptionalFieldsSettings.isLogRefererField();
+		RequestRecord lrec = RequestRecordBuilder.requestRecord(adapter.getName(), adapter.getDirection())
+				.addTag(Fields.REQUEST, getValue(getRequestUri(adapter)))
+				.addTag(Fields.METHOD, getValue(adapter.getMethod()))
+				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_IP, getValue(adapter.getUri().getAuthority()))
+				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_HOST, getValue(adapter.getUri().getHost()))
+				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_PORT,
+						Integer.toString(adapter.getUri().getPort()))
+				.addOptionalTag(isSensitiveConnectionData, Fields.X_FORWARDED_FOR,
+						getHeader(adapter, HttpHeaders.X_FORWARDED_FOR))
+				.addOptionalTag(isLogRemoteUserField, Fields.REMOTE_USER, getValue(adapter.getUser()))
+				.addOptionalTag(isLogRefererField, Fields.REFERER, getHeader(adapter, HttpHeaders.REFERER))
+				.addContextTag(Fields.REQUEST_ID, getHeader(adapter, HttpHeaders.X_VCAP_REQUEST_ID))
+				.addValue(Fields.REQUEST_SIZE_B, new LongValue(adapter.getRequestSize())).build();
 
-        addHeaders(adapter, lrec);
-
+		lrec.start();
         return lrec;
-
-    }
-
-    private void addHeaders(RequestContextAdapter adapter, RequestRecord lrec) {
-
-        lrec.addTag(Fields.REQUEST, getValue(getRequestUri(adapter)));
-        lrec.addTag(Fields.METHOD, getValue(adapter.getMethod()));
-
-        boolean isSensitiveConnectionData = logOptionalFieldsSettings.isLogSensitiveConnectionData();
-
-        to(lrec).addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_IP, getValue(adapter.getUri().getAuthority()))
-                .addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_HOST, getValue(adapter.getUri().getHost()))
-                .addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_PORT, Integer.toString(adapter.getUri()
-                                                                                                       .getPort()))
-                .addOptionalTag(isSensitiveConnectionData, Fields.X_FORWARDED_FOR, getHeader(adapter,
-                                                                                             HttpHeaders.X_FORWARDED_FOR))
-                .addOptionalTag(logOptionalFieldsSettings.isLogRemoteUserField(), Fields.REMOTE_USER, getValue(adapter
-                                                                                                                      .getUser()))
-                .addOptionalTag(logOptionalFieldsSettings.isLogRefererField(), Fields.REFERER, getHeader(adapter,
-                                                                                                         HttpHeaders.REFERER));
-        lrec.addContextTag(Fields.REQUEST_ID, getHeader(adapter, HttpHeaders.X_VCAP_REQUEST_ID));
-
-        lrec.addValue(Fields.REQUEST_SIZE_B, new LongValue(adapter.getRequestSize()));
 
     }
 

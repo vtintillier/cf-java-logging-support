@@ -1,7 +1,5 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
-import static com.sap.hcp.cf.logging.common.RequestRecordConfigurator.to;
-
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -15,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.MDC;
 
-import com.sap.hcp.cf.logging.common.Defaults;
-import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
@@ -38,12 +34,21 @@ public class RequestLoggingFilter implements Filter {
 	private boolean wrapRequest = true;
 	private DynLogEnvironment dynLogEnvironment;
 	private DynamicLogLevelProcessor dynamicLogLevelProcessor;
-	protected LogOptionalFieldsSettings logOptionalFieldsSettings;
+	private RequestRecordFactory requestRecordFactory;
 
 	public RequestLoggingFilter() {
-		String invokingClass = this.getClass().getName().toString();
-		logOptionalFieldsSettings = new LogOptionalFieldsSettings(invokingClass);
-		dynLogEnvironment = new DynLogEnvironment();
+		this(createRequestRecordFactory());
+	}
+
+	private static RequestRecordFactory createRequestRecordFactory() {
+		String invokingClass = RequestLoggingFilter.class.getName();
+		LogOptionalFieldsSettings logOptionalFieldsSettings = new LogOptionalFieldsSettings(invokingClass);
+		return new RequestRecordFactory(logOptionalFieldsSettings);
+	}
+
+	RequestLoggingFilter(RequestRecordFactory requestRecordFactory) {
+		this.requestRecordFactory = requestRecordFactory;
+		this.dynLogEnvironment = new DynLogEnvironment();
 		if (dynLogEnvironment.getRsaPublicKey() != null) {
 			dynamicLogLevelProcessor = new DynamicLogLevelProcessor(dynLogEnvironment);
 		}
@@ -88,9 +93,9 @@ public class RequestLoggingFilter implements Filter {
 		LogContext.initializeContext(getCorrelationIdFromHeader(httpRequest));
 
 		try {
-			RequestRecord rr = new RequestRecord(LOG_PROVIDER);
-			ContentLengthTrackingResponseWrapper responseWrapper = null;
-			ContentLengthTrackingRequestWrapper requestWrapper = null;
+
+			RequestRecord rr = requestRecordFactory.create(httpRequest);
+			httpRequest.setAttribute(MDC.class.getName(), MDC.getCopyOfContextMap());
 
 			/*
 			 * -- we essentially do three things here: -- a) we create a log
@@ -100,18 +105,16 @@ public class RequestLoggingFilter implements Filter {
 			 * content length (hopefully)
 			 */
 			if (wrapResponse) {
-				responseWrapper = new ContentLengthTrackingResponseWrapper(httpResponse);
+				httpResponse = new ContentLengthTrackingResponseWrapper(httpResponse);
 			}
 
-			RequestLoggingVisitor loggingVisitor = new RequestLoggingVisitor(rr, responseWrapper);
-
 			if (wrapRequest) {
-				httpRequest = new LoggingContextRequestWrapper(httpRequest, loggingVisitor);
 				httpRequest = new ContentLengthTrackingRequestWrapper(httpRequest);
 			}
 
-			addHeaders(httpRequest, rr);
-			httpRequest.setAttribute(MDC.class.getName(), MDC.getCopyOfContextMap());
+			RequestLogger loggingVisitor = new RequestLogger(rr, httpRequest, httpResponse);
+			httpRequest = new LoggingContextRequestWrapper(httpRequest, loggingVisitor);
+
 
 
 			/* -- start measuring right before calling up the filter chain -- */
@@ -121,7 +124,7 @@ public class RequestLoggingFilter implements Filter {
 			}
 
 			if (!httpRequest.isAsyncStarted()) {
-				loggingVisitor.logRequest(httpRequest, httpResponse);
+				loggingVisitor.logRequest();
 			}
 			/*
 			 * -- close this
@@ -141,32 +144,4 @@ public class RequestLoggingFilter implements Filter {
 		return cId;
 	}
 
-	private String getHeader(HttpServletRequest request, String headerName) {
-		return getValue(request.getHeader(headerName));
-	}
-
-	private String getValue(String value) {
-		return value != null ? value : Defaults.UNKNOWN;
-	}
-
-	private void addHeaders(HttpServletRequest request, RequestRecord lrec) {
-		lrec.addTag(Fields.REQUEST, request.getQueryString() != null
-				? request.getRequestURI() + "?" + request.getQueryString() : request.getRequestURI());
-		lrec.addTag(Fields.METHOD, request.getMethod());
-		lrec.addTag(Fields.PROTOCOL, getValue(request.getProtocol()));
-
-		boolean isSensitiveConnectionData = logOptionalFieldsSettings.isLogSensitiveConnectionData();
-
-		to(lrec).addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_IP, getValue(request.getRemoteAddr()))
-				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_HOST, getValue(request.getRemoteHost()))
-				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_PORT,
-						Integer.toString(request.getRemotePort()))
-				.addOptionalTag(isSensitiveConnectionData, Fields.X_FORWARDED_FOR,
-						getHeader(request, HttpHeaders.X_FORWARDED_FOR))
-				.addOptionalTag(logOptionalFieldsSettings.isLogRemoteUserField(), Fields.REMOTE_USER,
-						getValue(request.getRemoteUser()))
-				.addOptionalTag(logOptionalFieldsSettings.isLogRefererField(), Fields.REFERER,
-						getHeader(request, HttpHeaders.REFERER));
-		lrec.addContextTag(Fields.REQUEST_ID, getHeader(request, HttpHeaders.X_VCAP_REQUEST_ID));
-	}
 }

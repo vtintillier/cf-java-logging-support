@@ -1,6 +1,6 @@
 package com.sap.hcp.cf.logging.common;
 
-import static com.sap.hcp.cf.logging.common.RequestRecordConfigurator.to;
+import static com.sap.hcp.cf.logging.common.RequestRecordBuilder.requestRecord;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
@@ -10,52 +10,48 @@ import org.junit.Test;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONObjectException;
 
-public class RequestRecordConfiguratorTest {
+public class RequestRecordBuilderTest {
 
     @Test
     public void testAddingSingleActivatedOptionalTagToRequestRecord() throws JSONObjectException, IOException {
-        RequestRecord requestRecord = new RequestRecord("TEST");
         boolean canBeLogged = true;
         String key = "TestKey";
         String tag = "TestTag";
 
-        to(requestRecord).addOptionalTag(canBeLogged, key, tag);
+		RequestRecord requestRecord = requestRecord("TEST").addOptionalTag(canBeLogged, key, tag).build();
 
         assertEquals(tag, getFieldFromRequestRecord(requestRecord, key));
     }
 
     @Test
     public void testAddingSingleForbiddenOptionalTagToRequestRecord() throws JSONObjectException, IOException {
-        RequestRecord requestRecord = new RequestRecord("TEST");
         boolean canBeLogged = false;
         String key = "TestKey";
         String tag = "TestTag";
 
-        to(requestRecord).addOptionalTag(canBeLogged, key, tag);
+		RequestRecord requestRecord = requestRecord("TEST").addOptionalTag(canBeLogged, key, tag).build();
 
         assertEquals(Defaults.REDACTED, getFieldFromRequestRecord(requestRecord, key));
     }
 
     @Test
     public void testAddingSingleForbiddenOptionalNullTagToRequestRecord() throws JSONObjectException, IOException {
-        RequestRecord requestRecord = new RequestRecord("TEST");
         boolean canBeLogged = false;
         String key = "TestKey";
         String tag = Defaults.UNKNOWN;
 
-        to(requestRecord).addOptionalTag(canBeLogged, key, tag);
+		RequestRecord requestRecord = requestRecord("TEST").addOptionalTag(canBeLogged, key, tag).build();
 
         assertEquals(Defaults.UNKNOWN, getFieldFromRequestRecord(requestRecord, key));
     }
 
     @Test
     public void testAddingSingleActivatedOptionalNullTagToRequestRecord() throws JSONObjectException, IOException {
-        RequestRecord requestRecord = new RequestRecord("TEST");
         boolean canBeLogged = true;
         String key = "TestKey";
         String tag = Defaults.UNKNOWN;
 
-        to(requestRecord).addOptionalTag(canBeLogged, key, tag);
+		RequestRecord requestRecord = requestRecord("TEST").addOptionalTag(canBeLogged, key, tag).build();
 
         assertEquals(Defaults.UNKNOWN, getFieldFromRequestRecord(requestRecord, key));
     }

@@ -5,7 +5,7 @@ applications:
 #
 - name: logging-sample-app
   instances: 1
-  path: target/logging-sample-app-2.2.0.war
+  path: target/logging-sample-app-2.2.1-SNAPSHOT.war
   routes:
   - route: logging-sample-app
   env:
