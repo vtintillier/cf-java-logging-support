@@ -95,7 +95,7 @@ public class RequestLoggingFilter implements Filter {
 		try {
 
 			RequestRecord rr = requestRecordFactory.create(httpRequest);
-			ContentLengthTrackingResponseWrapper responseWrapper = null;
+			httpRequest.setAttribute(MDC.class.getName(), MDC.getCopyOfContextMap());
 
 			/*
 			 * -- we essentially do three things here: -- a) we create a log
@@ -105,17 +105,16 @@ public class RequestLoggingFilter implements Filter {
 			 * content length (hopefully)
 			 */
 			if (wrapResponse) {
-				responseWrapper = new ContentLengthTrackingResponseWrapper(httpResponse);
+				httpResponse = new ContentLengthTrackingResponseWrapper(httpResponse);
 			}
-
-			RequestLoggingVisitor loggingVisitor = new RequestLoggingVisitor(rr, responseWrapper);
 
 			if (wrapRequest) {
 				httpRequest = new ContentLengthTrackingRequestWrapper(httpRequest);
-				httpRequest = new LoggingContextRequestWrapper(httpRequest, loggingVisitor);
 			}
 
-			httpRequest.setAttribute(MDC.class.getName(), MDC.getCopyOfContextMap());
+			RequestLogger loggingVisitor = new RequestLogger(rr, httpRequest, httpResponse);
+			httpRequest = new LoggingContextRequestWrapper(httpRequest, loggingVisitor);
+
 
 
 			/* -- start measuring right before calling up the filter chain -- */
@@ -125,7 +124,7 @@ public class RequestLoggingFilter implements Filter {
 			}
 
 			if (!httpRequest.isAsyncStarted()) {
-				loggingVisitor.logRequest(httpRequest, httpResponse);
+				loggingVisitor.logRequest();
 			}
 			/*
 			 * -- close this

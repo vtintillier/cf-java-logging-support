@@ -8,9 +8,9 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 public class LoggingContextRequestWrapper extends HttpServletRequestWrapper {
 
-	private RequestLoggingVisitor loggingVisitor;
+	private RequestLogger loggingVisitor;
 
-	public LoggingContextRequestWrapper(HttpServletRequest request, RequestLoggingVisitor loggingVisitor) {
+	public LoggingContextRequestWrapper(HttpServletRequest request, RequestLogger loggingVisitor) {
 		super(request);
 		this.loggingVisitor = loggingVisitor;
 	}

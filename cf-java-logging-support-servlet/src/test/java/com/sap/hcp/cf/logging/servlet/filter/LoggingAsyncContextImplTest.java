@@ -10,7 +10,6 @@ import static org.hamcrest.Matchers.not;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doAnswer;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,7 +20,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
 
 import javax.servlet.AsyncContext;
-import javax.servlet.AsyncEvent;
 import javax.servlet.AsyncListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +43,7 @@ public class LoggingAsyncContextImplTest {
 	private AsyncContext wrappedContext;
 
 	@Mock
-	private RequestLoggingVisitor loggingVisitor;
+	private RequestLogger requestLogger;
 
 	@Mock
 	private HttpServletRequest request;
@@ -147,24 +145,4 @@ public class LoggingAsyncContextImplTest {
 		assertThat(finalContextMap, hasEntry("initial-key", "initial-value"));
 	}
 
-	@Test
-	public void writesRequestLogWithMDCEntries() throws Exception {
-		Map<String, String> mdcAttributes = new HashMap<>();
-		mdcAttributes.put("this-key", "this-value");
-		mdcAttributes.put("that-key", "that-value");
-		when(request.getAttribute(MDC.class.getName())).thenReturn(mdcAttributes);
-		Map<String, String> contextMap = new HashMap<>();
-		doAnswer(new Answer<Void>() {
-
-			@Override
-			public Void answer(InvocationOnMock invocation) throws Throwable {
-				contextMap.putAll(MDC.getCopyOfContextMap());
-				return null;
-			}
-		}).when(loggingVisitor).logRequest(any(HttpServletRequest.class), any(HttpServletResponse.class));
-		asyncListener.getValue().onComplete(mock(AsyncEvent.class));
-		
-		assertThat(contextMap, both(hasEntry("that-key", "that-value")).and(hasEntry("this-key", "this-value")));
-
-	}
 }
