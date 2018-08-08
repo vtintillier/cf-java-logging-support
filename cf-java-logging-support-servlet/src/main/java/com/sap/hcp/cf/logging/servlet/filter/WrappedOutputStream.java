@@ -1,6 +1,7 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
 import java.io.IOException;
+import java.io.OutputStream;
 
 import javax.servlet.ServletOutputStream;
 
@@ -30,4 +31,28 @@ public class WrappedOutputStream extends ServletOutputStream {
             contentLength += i;
         }
     }
+
+	@Override
+	public void write(byte[] b) throws IOException {
+		wrappedStream.write(b);
+		incrContentLength(b.length);
+	}
+
+	@Override
+	public void write(byte[] b, int off, int len) throws IOException {
+		wrappedStream.write(b, off, len);
+		incrContentLength(len);
+	}
+
+	@Override
+	public void close() throws IOException {
+		wrappedStream.close();
+	}
+
+	@Override
+	public void flush() throws IOException {
+		try (OutputStream ostream = wrappedStream) {
+			wrappedStream.flush();
+		}
+	}
 }
