@@ -7,30 +7,30 @@ import javax.servlet.ServletOutputStream;
 
 public class WrappedOutputStream extends ServletOutputStream {
 
-    private long contentLength = -1;
-    private final ServletOutputStream wrappedStream;
+	private long contentLength = -1;
+	private final OutputStream wrappedStream;
 
-    public WrappedOutputStream(ServletOutputStream out) {
-        wrappedStream = out;
-    }
+	public WrappedOutputStream(OutputStream out) {
+		wrappedStream = out;
+	}
 
-    public long getContentLength() {
-        return contentLength;
-    }
+	public long getContentLength() {
+		return contentLength;
+	}
 
-    @Override
-    public void write(int b) throws IOException {
-        wrappedStream.write(b);
-        incrContentLength(1);
-    }
+	@Override
+	public void write(int b) throws IOException {
+		wrappedStream.write(b);
+		incrContentLength(1);
+	}
 
-    private void incrContentLength(int i) {
-        if (contentLength == -1) {
-            contentLength = i;
-        } else {
-            contentLength += i;
-        }
-    }
+	private void incrContentLength(int i) {
+		if (contentLength == -1) {
+			contentLength = i;
+		} else {
+			contentLength += i;
+		}
+	}
 
 	@Override
 	public void write(byte[] b) throws IOException {
@@ -51,8 +51,6 @@ public class WrappedOutputStream extends ServletOutputStream {
 
 	@Override
 	public void flush() throws IOException {
-		try (OutputStream ostream = wrappedStream) {
-			wrappedStream.flush();
-		}
+		wrappedStream.flush();
 	}
 }
