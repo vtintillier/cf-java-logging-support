@@ -4,11 +4,9 @@ import static com.sap.hcp.cf.logging.common.RequestRecordBuilder.requestRecord;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.sap.hcp.cf.logging.common.Defaults;
-import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.HttpHeaders;
-import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
-import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.*;
+
+import java.util.List;
 
 public class RequestRecordFactory {
 
@@ -22,7 +20,7 @@ public class RequestRecordFactory {
 		boolean isSensitiveConnectionData = logOptionalFieldsSettings.isLogSensitiveConnectionData();
 		boolean isLogRemoteUserField = logOptionalFieldsSettings.isLogRemoteUserField();
 		boolean isLogRefererField = logOptionalFieldsSettings.isLogRefererField();
-		return requestRecord("[SERVLET]").addTag(Fields.REQUEST, getFullRequestUri(request))
+		RequestRecordBuilder rrb =  requestRecord("[SERVLET]").addTag(Fields.REQUEST, getFullRequestUri(request))
 				.addTag(Fields.METHOD, request.getMethod())
 				.addTag(Fields.PROTOCOL, getValue(request.getProtocol()))
 				.addContextTag(Fields.REQUEST_ID, getHeader(request, HttpHeaders.X_VCAP_REQUEST_ID))
@@ -33,8 +31,11 @@ public class RequestRecordFactory {
 				.addOptionalTag(isSensitiveConnectionData, Fields.X_FORWARDED_FOR,
 						getHeader(request, HttpHeaders.X_FORWARDED_FOR))
 				.addOptionalTag(isLogRemoteUserField, Fields.REMOTE_USER, getValue(request.getRemoteUser()))
-				.addOptionalTag(isLogRefererField, Fields.REFERER, getHeader(request, HttpHeaders.REFERER))
-				.build();
+				.addOptionalTag(isLogRefererField, Fields.REFERER, getHeader(request, HttpHeaders.REFERER));
+		for(String header: HttpHeaders.PROPAGATED_HEADERS) {
+			rrb.addContextTag(LogContextAdapter.getField(header), getHeader(request, header));
+		}
+		return rrb.build();
 	}
 
 	private String getFullRequestUri(HttpServletRequest request) {
@@ -44,7 +45,17 @@ public class RequestRecordFactory {
 	}
 
 	private String getHeader(HttpServletRequest request, String headerName) {
-		return getValue(request.getHeader(headerName));
+		List<String> headers = HttpHeaders.ALIASES.get(headerName);
+		if (headers == null) {
+			return getValue(request.getHeader(headerName));
+		}
+		for (String header: headers) {
+			String value = request.getHeader(header);
+			if (value != null) {
+				return value;
+			}
+		}
+		return Defaults.UNKNOWN;
 	}
 
 	private String getValue(String value) {

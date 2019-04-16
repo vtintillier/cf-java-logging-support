@@ -19,6 +19,7 @@ public class LogContext {
     private static Map<String, String> CTX_FIELDS = new HashMap<String, String>() {
         {
             put(Fields.CORRELATION_ID, Defaults.UNKNOWN);
+            put(Fields.TENANT_ID, Defaults.UNKNOWN);
             put(Fields.REQUEST_ID, null);
             put(Fields.COMPONENT_ID, Defaults.UNKNOWN);
             put(Fields.COMPONENT_NAME, Defaults.UNKNOWN);
@@ -33,6 +34,7 @@ public class LogContext {
     };
 
     public static final String HTTP_HEADER_CORRELATION_ID = HttpHeaders.CORRELATION_ID;
+    public static final String HTTP_HEADER_TENANT_ID = HttpHeaders.TENANT_ID;
 
     public static void loadContextFields(boolean override) {
         /*
@@ -78,6 +80,10 @@ public class LogContext {
     public static void initializeContext(String correlationIdFromHeader) {
         loadContextFields(false);
         setOrGenerateCorrelationId(correlationIdFromHeader);
+    }
+
+    public static String get(String key) {
+        return MDC.get(key);
     }
 
     public static String add(String key, String value) {

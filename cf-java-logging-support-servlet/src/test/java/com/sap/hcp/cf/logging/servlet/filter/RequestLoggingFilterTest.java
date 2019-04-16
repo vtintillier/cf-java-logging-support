@@ -42,6 +42,7 @@ public class RequestLoggingFilterTest {
 
 	private static final String REQUEST_ID = "1234-56-7890-xxx";
 	private static final String CORRELATION_ID = "xxx-56-7890-xxx";
+	private static final String TENANT_ID = "tenant1";
 	private static final String REQUEST = "/foobar";
 	private static final String QUERY_STRING = "baz=bla";
 	private static final String FULL_REQUEST = REQUEST + "?" + QUERY_STRING;
@@ -134,6 +135,7 @@ public class RequestLoggingFilterTest {
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.REQUEST_SIZE_B), is("1"));
+		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
 	@Test
@@ -159,6 +161,7 @@ public class RequestLoggingFilterTest {
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.REFERER), is(REFERER));
+		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
 	@Test
@@ -184,6 +187,7 @@ public class RequestLoggingFilterTest {
 		assertThat(getField(Fields.REMOTE_HOST), is(Defaults.REDACTED));
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
+		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
 	@Test
@@ -194,8 +198,18 @@ public class RequestLoggingFilterTest {
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.CORRELATION_ID), is(CORRELATION_ID));
 		assertThat(getField(Fields.CORRELATION_ID), not(REQUEST_ID));
+		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
+	@Test
+	public void testExplicitTenantId() throws IOException, ServletException {
+		when(mockReq.getHeader(HttpHeaders.TENANT_ID)).thenReturn(TENANT_ID);
+		when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
+		FilterChain mockFilterChain = mock(FilterChain.class);
+		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
+		assertThat(getField(Fields.TENANT_ID), is(TENANT_ID));
+	}
+	
 	protected String getField(String fieldName) throws JSONObjectException, IOException {
 		return JSON.std.mapFrom(getLastLine()).get(fieldName).toString();
 	}
