@@ -3,17 +3,19 @@
 [![Build Status](https://travis-ci.org/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.org/SAP/cf-java-logging-support)
 ## Summary
 
-This is a collection of support libraries for Java applications running on Cloud Foundry that serve two main purposes: It provides (a) means to emit *structured application log messages* and (b) instrument parts of your application stack to *collect request metrics*.
+This is a collection of support libraries for Java applications running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) java clients for producing *custom metrics*.
 
-When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks like, e.g., [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
+When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks such as [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
-If you're interested in the specifications of these standardized formats, you may want to have closer look at the `fields.yml` files in the [beats folder](./cf-java-logging-support-core/beats).
+If you're interested in the specifications of these standardized formats, you may want to have a closer look at the `fields.yml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
-While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to stay implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/),  but provide implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
+While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to keep implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/),  but provided implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
 
 The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html) and [client and server filters for Jersey](https://jersey.java.net/documentation/latest/filters-and-interceptors.html), but again, we're open to contributions for other APIs and frameworks.
 
-Last, there are also two sibling projects on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support) and [python logging support](https://github.com/SAP/cf-python-logging-support).
+The custom metrics clients part allows users to easily define and push custom metrics. The clients configure all necessary components and make it possible to define custom metrics with minimal code change.
+
+Lastly, there are also two sibling projects on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support) and [python logging support](https://github.com/SAP/cf-python-logging-support).
 
 ## Features and dependencies
 
@@ -21,13 +23,14 @@ As you can see from the structure of this repository, we're not providing one *u
 
 All in all, you should do the following:
 
-* make up your mind which features you actually need,
-* adjust your Maven dependencies accordingly,
-* pick your favorite logging implementation, and
-* adjust your logging configuration accordingly.
+1. Make up your mind which features you actually need.
+2. Adjust your Maven dependencies accordingly.
+3. Pick your favorite logging implementation.
+And
+4. Adjust your logging configuration accordingly.
 
 
-Say, you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.2.3`):
+Let's say you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `2.2.3`):
 
 ```xml
 <properties>
@@ -48,9 +51,20 @@ Say, you want to make use of the *servlet filter* feature, then you need to add 
 
 This feature only depends on the servlet API which you have included in your POM anyhow. You can find more information about the *servlet filter* feature (like e.g. how to adjust the web.xml) in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki/Instrumenting-Servlets).
 
+If you want to use the `custom metrics` `spring-boot client`, just define the following dependency:
+
+``` xml
+
+<dependency>
+  <groupId>com.sap.cloud.cf.monitoring.clients</groupId>
+  <artifactId>clients-spring-boot</artifactId>
+  <version>${cf-logging-version}</version>
+</dependency>
+```
+
 ## Implementation variants and logging configurations
 
-The *core* feature (on which all other features rely) is just using the `org.slf4j` API, but to actually get logs written, you need to pick an implementation feature. As stated above, we have two implementations
+The *core* feature (on which all other features rely) is just using the `org.slf4j` API, but to actually get logs written, you need to pick an implementation feature. As stated above, we have two implementations:
 
 * `cf-java-logging-support-logback` based on [logback](http://logback.qos.ch/), and
 * `cf-java-logging-support-log4j2` based on [log4j2](http://logging.apache.org/log4j/2.x/).
@@ -93,9 +107,9 @@ Again, we don't include dependencies to those implementation backends ourselves,
 </dependency>
 ```
 
-As they have slightly different ways to do configuration, you again need to do that yourself. But we hope that we've found an easy way to accomplish that. The one thing you have to do is pick our *encoder* in your `logback.xml` if you're using `logback` or our `layout` in your `log4j2.xml`if you're using `log4j2`.
+As they have slightly differ in configuration, you again will need to do that yourself. But we hope that we've found an easy way to accomplish that. The one thing you have to do is pick our *encoder* in your `logback.xml` if you're using `logback` or our `layout` in your `log4j2.xml`if you're using `log4j2`.
 
-Here are sort of the minimal configurations you'd need:
+Here are the minimal configurations you'd need:
 
 *logback.xml*:
 
@@ -142,6 +156,92 @@ Here are sort of the minimal configurations you'd need:
      <Logger name="com.sap.hcp.cf" level="INFO"/>
   </Loggers>
 </Configuration>
+```
+
+## Custom metrics client usage
+
+With the custom metrics clients you can send metrics defined inside your code. If you choose not to use one of these clients, you can still directly push the metrics using the REST API. Once send the metrics can be consumed in Kibana.
+To use the clients you'd need:
+
+*Using spring-boot client in Spring Boot 2 application:*
+
+``` xml
+<dependency>
+  <groupId>com.sap.cloud.cf.monitoring.clients</groupId>
+  <artifactId>clients-spring-boot</artifactId>
+  <version>${cf-logging-version}</version>
+</dependency>
+```
+
+The spring-boot client uses `Spring Boot Actuator` which allows to read predefined metrics and write custom metrics. The Actuator supports [Micrometer](https://github.com/micrometer-metrics/micrometer) and is part of Actuator's dependencies.
+In your code you work directly with `Micrometer`. Define your custom metrics and iterate with them:
+
+``` java
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.LongTaskTimer;
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.Tag;
+
+@RestController
+public class DemoController {
+
+	private Counter counter;
+	private AtomicInteger concurrentHttpRequests;
+	private LongTaskTimer longTimer;
+
+	DemoController() {
+		this.counter = Metrics.counter("demo.contoller.number.of.requests", "unit", "requests");
+		List<Tag> tags = new ArrayList<Tag>(Arrays.asList(new Tag[] { Tag.of("parallel", "clients") }));
+		this.concurrentHttpRequests = Metrics.gauge("demo.controller.number.of.clients.being.served", tags,
+				new AtomicInteger(0));
+		this.longTimer = Metrics.more().longTaskTimer("demo.controller.time.spends.in.serving.clients");
+	}
+
+	@RequestMapping("/")
+	public String index() {
+		longTimer.record(() -> {
+			this.counter.increment();
+			concurrentHttpRequests.addAndGet(1);
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				LOGGER.error(e);
+			} finally {
+				concurrentHttpRequests.addAndGet(-1);
+			}
+		});
+
+		return "Greetings from Custom Metrics!";
+	}
+}
+```
+In the example above, three custom metrics are defined and used. The metrics are `Counter`, `LongTaskTimer` and `Gauge`.
+
+## Custom metrics client configurations
+
+This client library supports the following configurations regarding sending custom metrics:
+  * `interval`: the interval for sending metrics, in millis. **Default value: `60000`**
+  * `enabled`: enables or disables the sending of metrics. **Default value: `true`**
+  * `metrics`: array of whitelisted metric names. Only mentioned metrics would be processed and sent. If it is an empty array all metrics are being sent. **Default value: `[]`**
+
+  Configurations are read from environment variable named `CUSTOM_METRICS`. To change the default values, you should override the environment variable with your custom values. Example:
+
+```
+{
+    "interval": 30000,
+    "enabled": true,
+    "metrics": [
+        "my.whitelist.metric.1",
+        "my.whitelist.metric.2"
+    ]
+}
 ```
 
 ## Dynamic Log Levels
