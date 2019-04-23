@@ -65,6 +65,27 @@
            <organization>SAP SE</organization>
            <organizationUrl>https://github.com/SAP</organizationUrl>
        </developer>
+       <developer>
+           <id>deyanzhelyazkov</id>
+           <name>Deyan Zhelyazkov</name>
+           <email>deyan.zhelyazkov@sap.com</email>
+           <organization>SAP SE</organization>
+           <organizationUrl>https://github.com/SAP</organizationUrl>
+       </developer>
+       <developer>
+           <id>angelts</id>
+           <name>Angel Tsanev</name>
+           <email>angel.tsanev@sap.com</email>
+           <organization>SAP SE</organization>
+           <organizationUrl>https://github.com/SAP</organizationUrl>
+       </developer>
+       <developer>
+           <id>martein</id>
+           <name>Martin Nikolov</name>
+           <email>martin.nikolov@sap.com</email>
+           <organization>SAP SE</organization>
+           <organizationUrl>https://github.com/SAP</organizationUrl>
+       </developer>
     </developers>
 
     <licenses>
