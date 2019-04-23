@@ -2,7 +2,8 @@ package com.sap.hcp.cf.logging.jersey.filter;
 
 import java.net.URI;
 
-import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
+import com.sap.hcp.cf.logging.common.request.HttpHeader;
+import com.sap.hcp.cf.logging.common.request.RequestRecord.Direction;
 
 public interface RequestContextAdapter {
 
@@ -21,5 +22,7 @@ public interface RequestContextAdapter {
     public Direction getDirection();
 
     public long getRequestSize();
+
+	public String getHeader(HttpHeader httpHeader);
 
 }

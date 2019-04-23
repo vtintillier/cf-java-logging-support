@@ -1,4 +1,4 @@
-package com.sap.hcp.cf.logging.common;
+package com.sap.hcp.cf.logging.common.request;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,6 +11,14 @@ import org.slf4j.MDC;
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONComposer;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
+import com.sap.hcp.cf.logging.common.DateTimeValue;
+import com.sap.hcp.cf.logging.common.Defaults;
+import com.sap.hcp.cf.logging.common.DoubleValue;
+import com.sap.hcp.cf.logging.common.Fields;
+import com.sap.hcp.cf.logging.common.LogContext;
+import com.sap.hcp.cf.logging.common.LongValue;
+import com.sap.hcp.cf.logging.common.StringValue;
+import com.sap.hcp.cf.logging.common.Value;
 
 /**
  * A <i>request record</i> keeping track of all fields defined for a request
