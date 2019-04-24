@@ -56,8 +56,8 @@ If you want to use the `custom metrics` `spring-boot client`, just define the fo
 ``` xml
 
 <dependency>
-  <groupId>com.sap.cloud.cf.monitoring.clients</groupId>
-  <artifactId>clients-spring-boot</artifactId>
+  <groupId>com.sap.hcp.cf.logging</groupId>
+  <artifactId>cf-custom-metrics-clients-spring-boot</artifactId>
   <version>${cf-logging-version}</version>
 </dependency>
 ```
@@ -167,8 +167,8 @@ To use the clients you'd need:
 
 ``` xml
 <dependency>
-  <groupId>com.sap.cloud.cf.monitoring.clients</groupId>
-  <artifactId>clients-spring-boot</artifactId>
+  <groupId>com.sap.hcp.cf.logging</groupId>
+  <artifactId>cf-custom-metrics-clients-spring-boot</artifactId>
   <version>${cf-logging-version}</version>
 </dependency>
 ```
