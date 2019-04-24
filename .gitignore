@@ -29,3 +29,6 @@ import
 target
 gen
 .factorypath
+
+# VSCode
+.vscode
