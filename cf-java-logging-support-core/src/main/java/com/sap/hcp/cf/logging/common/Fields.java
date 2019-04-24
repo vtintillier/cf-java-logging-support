@@ -12,6 +12,7 @@ public interface Fields {
     public String WRITTEN_AT = "written_at";
     public String WRITTEN_TS = "written_ts";
     public String CORRELATION_ID = "correlation_id";
+    public String TENANT_ID = "tenant_id";
     public String COMPONENT_ID = "component_id";
     public String COMPONENT_NAME = "component_name";
     public String COMPONENT_TYPE = "component_type";
@@ -50,4 +51,6 @@ public interface Fields {
     public String RESPONSE_CONTENT_TYPE = "response_content_type";
     public String REFERER = "referer";
     public String X_FORWARDED_FOR = "x_forwarded_for";
+
+
 }

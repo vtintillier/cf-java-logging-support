@@ -1,19 +1,24 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
 import static com.sap.hcp.cf.logging.common.LogContext.HTTP_HEADER_CORRELATION_ID;
+import static com.sap.hcp.cf.logging.common.LogContext.HTTP_HEADER_TENANT_ID;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
+import com.sap.hcp.cf.logging.common.LogContext;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Test;
@@ -69,6 +74,7 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest {
             correlationIds.add(id);
         }
         assertThat(correlationIds.size(), is(1));
+        assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
     }
 
     @Test
@@ -85,6 +91,7 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest {
         assertThat(getField(Fields.DIRECTION), is(Direction.OUT.toString()));
         assertThat(getField(Fields.METHOD), is(TestResource.EXPECTED_REQUEST_METHOD));
         assertThat(getField(Fields.LAYER), is(ClientRequestContextAdapter.LAYER_NAME));
+        assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
     }
 
     @Test
@@ -93,6 +100,14 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest {
         final Response response = target("testresource").request().delete();
 
         assertThat(new Double(getField(Fields.RESPONSE_TIME_MS)), greaterThan(TestResource.EXPECTED_REQUEST_TIME));
+        assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 
+    }
+    @Test
+    public void TenantPropagationTest() {
+        LogContext.add(Fields.TENANT_ID, "tenant1");
+        @SuppressWarnings("unused")
+        final Response response = ClientRequestUtils.propagate(target("testchainedresource").request(), null).get();
+        assertThat(getField(Fields.TENANT_ID), is("tenant1"));
     }
 }

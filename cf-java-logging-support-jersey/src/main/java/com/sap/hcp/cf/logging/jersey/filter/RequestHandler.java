@@ -2,14 +2,7 @@ package com.sap.hcp.cf.logging.jersey.filter;
 
 import java.net.URI;
 
-import com.sap.hcp.cf.logging.common.Defaults;
-import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.HttpHeaders;
-import com.sap.hcp.cf.logging.common.LogContext;
-import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
-import com.sap.hcp.cf.logging.common.LongValue;
-import com.sap.hcp.cf.logging.common.RequestRecord;
-import com.sap.hcp.cf.logging.common.RequestRecordBuilder;
+import com.sap.hcp.cf.logging.common.*;
 
 public class RequestHandler {
     final LogOptionalFieldsSettings logOptionalFieldsSettings;
@@ -21,21 +14,7 @@ public class RequestHandler {
 
     public RequestRecord handle(RequestContextAdapter adapter) {
 
-        /*
-         * -- This might be an outgoing call and we may already have a
-         * correlation -- id in the LogContext
-         */
-        String correlationId = LogContext.getCorrelationId();
-        if (correlationId == null) {
-            correlationId = getCorrelationIdFromHeader(adapter);
-            LogContext.initializeContext(correlationId);
-            /*
-             * -- it was not in the header, then propagate
-             */
-            if (correlationId == null) {
-                adapter.setHeader(HttpHeaders.CORRELATION_ID, LogContext.getCorrelationId());
-            }
-        }
+        propagateHeaders(adapter);
 
 		boolean isSensitiveConnectionData = logOptionalFieldsSettings.isLogSensitiveConnectionData();
 		boolean isLogRemoteUserField = logOptionalFieldsSettings.isLogRemoteUserField();
@@ -57,6 +36,21 @@ public class RequestHandler {
 		lrec.start();
         return lrec;
 
+    }
+
+    private void propagateHeaders(RequestContextAdapter adapter) {
+        /*
+         * This might be an outgoing call and we may already have a
+         * correlation id in the LogContext
+         */
+        if (LogContextAdapter.getValue(HttpHeaders.CORRELATION_ID) == null) {
+            LogContext.initializeContext(getCorrelationIdFromHeader(adapter));
+        }
+        for (String header: HttpHeaders.PROPAGATED_HEADERS) {
+            if (adapter.getHeader(header) == null) {
+                adapter.setHeader(header, LogContextAdapter.getValue(header));
+            }
+        }
     }
 
     private String getValue(String value) {

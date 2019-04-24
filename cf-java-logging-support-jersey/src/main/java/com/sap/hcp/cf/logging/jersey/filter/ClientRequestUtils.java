@@ -4,6 +4,7 @@ import javax.ws.rs.client.Invocation;
 
 import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.LogContext;
+import com.sap.hcp.cf.logging.common.LogContextAdapter;
 
 public class ClientRequestUtils {
 
@@ -12,7 +13,9 @@ public class ClientRequestUtils {
             LogContext.initializeContext(reqHeaders != null ? reqHeaders.getHeaderString(HttpHeaders.CORRELATION_ID)
                                                             : null);
         }
-        builder.header(HttpHeaders.CORRELATION_ID, LogContext.getCorrelationId());
+        for (String header: HttpHeaders.PROPAGATED_HEADERS) {
+            builder.header(header, LogContextAdapter.getValue(header));
+        }
         return builder;
     }
 
