@@ -19,6 +19,7 @@
     <modules>
         <module>cf-custom-metrics-clients-core</module>
         <module>cf-custom-metrics-clients-spring-boot</module>
+        <module>cf-custom-metrics-clients-java</module>
     </modules>
 
     <dependencyManagement>

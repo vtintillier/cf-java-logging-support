@@ -15,9 +15,10 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.sap.cloud.cf.monitoring.client.MonitoringClient;
+import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfiguration;
+import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfigurationFactory;
 import com.sap.cloud.cf.monitoring.client.exceptions.MonitoringClientException;
 import com.sap.cloud.cf.monitoring.client.model.Metric;
-import com.sap.cloud.cf.monitoring.spring.configuration.*;
 
 import io.micrometer.core.instrument.Clock;
 
@@ -29,7 +30,7 @@ public class CustomMetricWriterTest {
 
     @Test
     public void testWriter_disabled() throws Exception {
-        EnvUtils.setEnvs(new String[][] { CustomMetricsConfigurationFactoryTest.getCustomMetricsEnv() });
+        EnvUtils.setEnvs(new String[][] { getCustomMetricsEnv() });
 
         initMockedWriter(CustomMetricsConfigurationFactory.create());
     }
@@ -53,7 +54,7 @@ public class CustomMetricWriterTest {
 
     @Test
     public void testPublish_successfullyWithWhitelistedMetrics() throws Exception {
-        EnvUtils.setEnvs(new String[][] { CustomMetricsConfigurationFactoryTest.getCustomMetricsEnv() });
+        EnvUtils.setEnvs(new String[][] { getCustomMetricsEnv() });
         CustomMetricWriter writer = createWriter();
         writer.timer("timer");
         writer.timer("secondTimer");
@@ -101,5 +102,17 @@ public class CustomMetricWriterTest {
 
     class StartIsCalledException extends RuntimeException {
         private static final long serialVersionUID = 1L;
+    }
+
+    private static String[] getCustomMetricsEnv() {
+        return new String[] { "CUSTOM_METRICS", getJson() };
+    }
+
+    private static String getJson() {
+        return "{\n" + //
+                "    \"interval\": \"20000\",\n" + //
+                "    \"enabled\": \"false\",\n" + //
+                "    \"metrics\": [\"timer\", \"summary\"]\n" + //
+                "}";
     }
 }
