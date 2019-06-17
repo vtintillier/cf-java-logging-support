@@ -12,6 +12,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.sap.cloud.cf.monitoring.client.configuration.CFConfigurationProvider;
+import com.sap.cloud.cf.monitoring.spring.EnvUtils;
+import com.sap.cloud.cf.monitoring.spring.configuration.CustomMetricsCondition;
 
 public class CustomMetricsConditionTest {
     private static final String TEST_INSTANCE_GUID = UUID.randomUUID().toString();
