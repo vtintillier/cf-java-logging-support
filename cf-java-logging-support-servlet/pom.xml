@@ -47,18 +47,7 @@
         <dependency>
             <groupId>com.auth0</groupId>
             <artifactId>java-jwt</artifactId>
-            <version>3.7.0</version>
-            <exclusions>
-            	<exclusion>
-            		<groupId>com.fasterxml.jackson.core</groupId>
-  					<artifactId>jackson-databind</artifactId>
-            	</exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-			<groupId>com.fasterxml.jackson.core</groupId>
-			<artifactId>jackson-databind</artifactId>
-    		<version>${jackson-jr.version}</version>
-		</dependency>
-    </dependencies>
+            <version>3.8.1</version>
+         </dependency>
+     </dependencies>
 </project>

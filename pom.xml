@@ -117,7 +117,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson-jr.version>2.9.8</jackson-jr.version>
+        <jackson-jr.version>2.9.9</jackson-jr.version>
         <slf4j.version>1.7.25</slf4j.version>
         <logback.version>1.2.3</logback.version>
         <log4j2.version>2.8.2</log4j2.version>
