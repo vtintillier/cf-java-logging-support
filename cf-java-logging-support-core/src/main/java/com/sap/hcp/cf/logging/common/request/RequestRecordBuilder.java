@@ -1,6 +1,8 @@
-package com.sap.hcp.cf.logging.common;
+package com.sap.hcp.cf.logging.common.request;
 
-import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
+import com.sap.hcp.cf.logging.common.Defaults;
+import com.sap.hcp.cf.logging.common.Value;
+import com.sap.hcp.cf.logging.common.request.RequestRecord.Direction;
 
 public class RequestRecordBuilder {
 

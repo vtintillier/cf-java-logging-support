@@ -1,31 +1,27 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
-import static com.sap.hcp.cf.logging.common.LogContext.HTTP_HEADER_CORRELATION_ID;
-import static com.sap.hcp.cf.logging.common.LogContext.HTTP_HEADER_TENANT_ID;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.ws.rs.client.Invocation;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
-import com.sap.hcp.cf.logging.common.LogContext;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Test;
 
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
+import com.sap.hcp.cf.logging.common.LogContext;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+import com.sap.hcp.cf.logging.common.request.RequestRecord.Direction;
 
 /**
  * Test Class for Jersey Performance Logs
@@ -81,7 +77,7 @@ public class RequestMetricsClientFilterTest extends AbstractFilterTest {
     public void PerformanceLogTest() {
         @SuppressWarnings("unused")
         final Response response = getClient().target(getBaseUri() + "testresource").request().header(
-                                                                                                     HTTP_HEADER_CORRELATION_ID,
+                                                                                                     HttpHeaders.CORRELATION_ID.getName(),
                                                                                                      "1").get();
         assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
         assertThat(getField(Fields.RESPONSE_SIZE_B), is("4"));

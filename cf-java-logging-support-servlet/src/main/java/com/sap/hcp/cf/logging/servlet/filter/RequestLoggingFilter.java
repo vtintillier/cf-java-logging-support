@@ -13,10 +13,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.MDC;
 
-import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
-import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynLogEnvironment;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelProcessor;
 
@@ -90,7 +90,7 @@ public class RequestLoggingFilter implements Filter {
 		/*
 		 * -- make sure correlation id is read from headers
 		 */
-		LogContext.initializeContext(getCorrelationIdFromHeader(httpRequest));
+		LogContext.initializeContext(HttpHeaderUtilities.getHeaderValue(httpRequest, HttpHeaders.CORRELATION_ID));
 
 		try {
 
@@ -134,14 +134,6 @@ public class RequestLoggingFilter implements Filter {
 				dynamicLogLevelProcessor.removeDynamicLogLevelFromMDC();
 			}
 		}
-	}
-
-	private String getCorrelationIdFromHeader(HttpServletRequest httpRequest) {
-		String cId = httpRequest.getHeader(HttpHeaders.CORRELATION_ID);
-		if (cId == null || cId.length() == 0) {
-			cId = httpRequest.getHeader(HttpHeaders.X_VCAP_REQUEST_ID);
-		}
-		return cId;
 	}
 
 }

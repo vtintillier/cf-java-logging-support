@@ -5,7 +5,8 @@ import java.net.URI;
 import javax.ws.rs.client.ClientRequestContext;
 import javax.ws.rs.core.MultivaluedMap;
 
-import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
+import com.sap.hcp.cf.logging.common.request.HttpHeader;
+import com.sap.hcp.cf.logging.common.request.RequestRecord.Direction;
 
 public class ClientRequestContextAdapter implements RequestContextAdapter {
 
@@ -59,4 +60,9 @@ public class ClientRequestContextAdapter implements RequestContextAdapter {
     public long getRequestSize() {
         return -1;
     }
+
+	@Override
+	public String getHeader(HttpHeader httpHeader) {
+		return getHeader(httpHeader.getName());
+	}
 }

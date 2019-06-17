@@ -35,8 +35,9 @@ import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONObjectException;
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
+import com.sap.hcp.cf.logging.common.request.HttpHeader;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
 
 public class RequestLoggingFilterTest {
 
@@ -144,8 +145,8 @@ public class RequestLoggingFilterTest {
 		when(mockReq.getQueryString()).thenReturn(QUERY_STRING);
 		when(mockReq.getRemoteHost()).thenReturn(REMOTE_HOST);
 		// will also set correlation id
-		when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
-		when(mockReq.getHeader(HttpHeaders.REFERER)).thenReturn(REFERER);
+		mockGetHeader(HttpHeaders.X_VCAP_REQUEST_ID, REQUEST_ID);
+		mockGetHeader(HttpHeaders.REFERER, REFERER);
 		FilterChain mockFilterChain = mock(FilterChain.class);
 		LogOptionalFieldsSettings mockOptionalFieldsSettings = mock(LogOptionalFieldsSettings.class);
 		when(mockOptionalFieldsSettings.isLogSensitiveConnectionData()).thenReturn(true);
@@ -164,14 +165,18 @@ public class RequestLoggingFilterTest {
 		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
+	private void mockGetHeader(HttpHeader header, String value) {
+		when(mockReq.getHeader(header.getName())).thenReturn(value);
+	}
+
 	@Test
 	public void testWithSuppressedOptionalFields() throws IOException, ServletException {
 		when(mockReq.getRequestURI()).thenReturn(REQUEST);
 		when(mockReq.getQueryString()).thenReturn(QUERY_STRING);
 		when(mockReq.getRemoteHost()).thenReturn(REMOTE_HOST);
 		// will also set correlation id
-		when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
-		when(mockReq.getHeader(HttpHeaders.REFERER)).thenReturn(REFERER);
+		mockGetHeader(HttpHeaders.X_VCAP_REQUEST_ID, REQUEST_ID);
+		mockGetHeader(HttpHeaders.REFERER, REFERER);
 		FilterChain mockFilterChain = mock(FilterChain.class);
 		LogOptionalFieldsSettings mockLogOptionalFieldsSettings = mock(LogOptionalFieldsSettings.class);
 		when(mockLogOptionalFieldsSettings.isLogSensitiveConnectionData()).thenReturn(false);
@@ -192,8 +197,8 @@ public class RequestLoggingFilterTest {
 
 	@Test
 	public void testExplicitCorrelationId() throws IOException, ServletException {
-		when(mockReq.getHeader(HttpHeaders.CORRELATION_ID)).thenReturn(CORRELATION_ID);
-		when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
+		mockGetHeader(HttpHeaders.CORRELATION_ID, CORRELATION_ID);
+		mockGetHeader(HttpHeaders.X_VCAP_REQUEST_ID, REQUEST_ID);
 		FilterChain mockFilterChain = mock(FilterChain.class);
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.CORRELATION_ID), is(CORRELATION_ID));
@@ -203,8 +208,8 @@ public class RequestLoggingFilterTest {
 
 	@Test
 	public void testExplicitTenantId() throws IOException, ServletException {
-		when(mockReq.getHeader(HttpHeaders.TENANT_ID)).thenReturn(TENANT_ID);
-		when(mockReq.getHeader(HttpHeaders.X_VCAP_REQUEST_ID)).thenReturn(REQUEST_ID);
+		mockGetHeader(HttpHeaders.TENANT_ID, TENANT_ID);
+		mockGetHeader(HttpHeaders.X_VCAP_REQUEST_ID, REQUEST_ID);
 		FilterChain mockFilterChain = mock(FilterChain.class);
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.TENANT_ID), is(TENANT_ID));

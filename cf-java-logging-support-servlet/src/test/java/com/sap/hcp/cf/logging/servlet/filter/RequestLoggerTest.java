@@ -25,9 +25,9 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.MDC;
 
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.HttpHeaders;
-import com.sap.hcp.cf.logging.common.RequestRecord;
 import com.sap.hcp.cf.logging.common.Value;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 @RunWith(MockitoJUnitRunner.class)
 public class RequestLoggerTest {
@@ -70,9 +70,13 @@ public class RequestLoggerTest {
 
 	@Test
 	public void addsResponseContentTypeAsTag() throws Exception {
-		when(httpResponse.getHeader(HttpHeaders.CONTENT_TYPE)).thenReturn("application/vnd.test");
+		mockGetHeader(HttpHeaders.CONTENT_TYPE, "application/vnd.test");
 		createLoggerWithoutResponse(httpResponse).logRequest();
 		verify(requestRecord).addTag(Fields.RESPONSE_CONTENT_TYPE, "application/vnd.test");
+	}
+
+	private void mockGetHeader(HttpHeaders header, String value) {
+		when(httpResponse.getHeader(header.getName())).thenReturn(value);
 	}
 
 	@Test
@@ -85,7 +89,7 @@ public class RequestLoggerTest {
 
 	@Test
 	public void addsResponseContentLengthAsValueFromHeaderIfAvailable() throws Exception {
-		when(httpResponse.getHeader(HttpHeaders.CONTENT_LENGTH)).thenReturn("1234");
+		mockGetHeader(HttpHeaders.CONTENT_LENGTH, "1234");
 		createLoggerWithoutResponse(httpResponse).logRequest();
 		verify(requestRecord).addValue(eq(Fields.RESPONSE_SIZE_B), valueCaptor.capture());
 		verifyZeroInteractions(responseWrapper);

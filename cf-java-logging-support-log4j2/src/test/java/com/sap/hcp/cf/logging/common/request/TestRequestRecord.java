@@ -1,4 +1,4 @@
-package com.sap.hcp.cf.logging.common;
+package com.sap.hcp.cf.logging.common.request;
 
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
@@ -16,7 +16,13 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
 import com.fasterxml.jackson.jr.ob.JSONObjectException;
-import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
+import com.sap.hcp.cf.logging.common.AbstractTest;
+import com.sap.hcp.cf.logging.common.Defaults;
+import com.sap.hcp.cf.logging.common.DoubleValue;
+import com.sap.hcp.cf.logging.common.Fields;
+import com.sap.hcp.cf.logging.common.Markers;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.RequestRecord.Direction;
 
 public class TestRequestRecord extends AbstractTest {
 
@@ -50,7 +56,6 @@ public class TestRequestRecord extends AbstractTest {
         assertThat(getField(Fields.X_FORWARDED_FOR), is(nullValue()));
         assertThat(getField(Fields.REMOTE_PORT), is(nullValue()));
         assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
-
     }
 
     @Test

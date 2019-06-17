@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import static com.sap.hcp.cf.logging.servlet.filter.HttpHeaderUtilities.getHeaderValue;
+
 import java.util.Collections;
 import java.util.Map;
 
@@ -12,10 +14,10 @@ import org.slf4j.MDC;
 
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.HttpHeaders;
 import com.sap.hcp.cf.logging.common.LongValue;
 import com.sap.hcp.cf.logging.common.Markers;
-import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 public class RequestLogger {
 
@@ -44,12 +46,12 @@ public class RequestLogger {
 		if (responseSize != null) {
 			requestRecord.addValue(Fields.RESPONSE_SIZE_B, responseSize);
 		}
-		requestRecord.addTag(Fields.RESPONSE_CONTENT_TYPE, getValue(httpResponse.getHeader(HttpHeaders.CONTENT_TYPE)));
+		requestRecord.addTag(Fields.RESPONSE_CONTENT_TYPE, getContentType(httpResponse));
 		requestRecord.addValue(Fields.RESPONSE_STATUS, new LongValue(httpResponse.getStatus()));
 	}
 
 	private LongValue getResponseSize(HttpServletResponse httpResponse) {
-		String headerValue = httpResponse.getHeader(HttpHeaders.CONTENT_LENGTH);
+		String headerValue = getHeaderValue(httpResponse, HttpHeaders.CONTENT_LENGTH);
 		if (headerValue != null) {
 			return new LongValue(Long.valueOf(headerValue));
 		}
@@ -60,8 +62,8 @@ public class RequestLogger {
 		return null;
 	}
 
-	private String getValue(String value) {
-		return value != null ? value : Defaults.UNKNOWN;
+	private String getContentType(HttpServletResponse httpResponse) {
+		return getHeaderValue(httpResponse, HttpHeaders.CONTENT_TYPE, Defaults.UNKNOWN);
 	}
 
 	private void generateLog() {

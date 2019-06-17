@@ -1,12 +1,17 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
-import static com.sap.hcp.cf.logging.common.RequestRecordBuilder.requestRecord;
+import static com.sap.hcp.cf.logging.common.request.RequestRecordBuilder.requestRecord;
+import static com.sap.hcp.cf.logging.servlet.filter.HttpHeaderUtilities.getHeaderValue;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.sap.hcp.cf.logging.common.*;
-
-import java.util.List;
+import com.sap.hcp.cf.logging.common.Defaults;
+import com.sap.hcp.cf.logging.common.Fields;
+import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
+import com.sap.hcp.cf.logging.common.request.HttpHeader;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.RequestRecordBuilder;
 
 public class RequestRecordFactory {
 
@@ -32,8 +37,8 @@ public class RequestRecordFactory {
 						getHeader(request, HttpHeaders.X_FORWARDED_FOR))
 				.addOptionalTag(isLogRemoteUserField, Fields.REMOTE_USER, getValue(request.getRemoteUser()))
 				.addOptionalTag(isLogRefererField, Fields.REFERER, getHeader(request, HttpHeaders.REFERER));
-		for(String header: HttpHeaders.PROPAGATED_HEADERS) {
-			rrb.addContextTag(LogContextAdapter.getField(header), getHeader(request, header));
+		for (HttpHeader header : HttpHeaders.propagated()) {
+			rrb.addContextTag(header.getField(), getHeader(request, header));
 		}
 		return rrb.build();
 	}
@@ -44,18 +49,8 @@ public class RequestRecordFactory {
 		return queryString != null ? requestURI + "?" + queryString : requestURI;
 	}
 
-	private String getHeader(HttpServletRequest request, String headerName) {
-		List<String> headers = HttpHeaders.ALIASES.get(headerName);
-		if (headers == null) {
-			return getValue(request.getHeader(headerName));
-		}
-		for (String header: headers) {
-			String value = request.getHeader(header);
-			if (value != null) {
-				return value;
-			}
-		}
-		return Defaults.UNKNOWN;
+	private String getHeader(HttpServletRequest request, HttpHeader header) {
+		return getHeaderValue(request, header, Defaults.UNKNOWN);
 	}
 
 	private String getValue(String value) {

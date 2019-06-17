@@ -33,10 +33,7 @@ public class LogContext {
         }
     };
 
-    public static final String HTTP_HEADER_CORRELATION_ID = HttpHeaders.CORRELATION_ID;
-    public static final String HTTP_HEADER_TENANT_ID = HttpHeaders.TENANT_ID;
-
-    public static void loadContextFields(boolean override) {
+	public static void loadContextFields(boolean override) {
         /*
          * -- do bootstrap, either enforced or because map is empty
          */

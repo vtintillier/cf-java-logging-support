@@ -11,7 +11,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.slf4j.LoggerFactory;
 
-import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 @Provider
 public class RequestMetricsContainerResponseFilter implements ContainerResponseFilter {

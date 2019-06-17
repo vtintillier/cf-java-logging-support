@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sap.hcp.cf.logging.common.Markers;
-import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 public class PerfTestRequestRecord {
 

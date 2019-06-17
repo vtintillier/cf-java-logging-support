@@ -1,6 +1,5 @@
 package com.sap.hcp.cf.logging.jersey.filter;
 
-import static com.sap.hcp.cf.logging.common.LogContext.HTTP_HEADER_CORRELATION_ID;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
@@ -14,7 +13,8 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.junit.Test;
 
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.RequestRecord.Direction;
+import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+import com.sap.hcp.cf.logging.common.request.RequestRecord.Direction;
 
 /**
  * Test Class for Jersey Performance Logs
@@ -42,7 +42,7 @@ public class RequestMetricsContainerFilterTest extends AbstractFilterTest {
     @Test
     public void PerformanceLogTest() {
         @SuppressWarnings("unused")
-        final Response response = target("testresource").request().header(HTTP_HEADER_CORRELATION_ID, "1").get();
+        final Response response = target("testresource").request().header(HttpHeaders.CORRELATION_ID.getName(), "1").get();
 
         assertThat(getField(Fields.RESPONSE_SIZE_B), is("4"));
         assertThat(getField(Fields.RESPONSE_TIME_MS), not(nullValue()));

@@ -5,7 +5,7 @@ import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
 
-import com.sap.hcp.cf.logging.common.RequestRecord;
+import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 public class TestJsonMessageConverter extends AbstractConverterTest {
 
