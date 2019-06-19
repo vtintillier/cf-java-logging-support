@@ -53,8 +53,7 @@ public class CustomMetricRegistry extends MetricRegistry {
 
     private void initializeAndStartReporter() {
         if (configProvider == null || customMetricsConfig == null || !customMetricsConfig.isEnabled()) {
-            LOGGER.error(
-                "Custom Metrics reporter will not start since required ENVs are missing or environment variable 'enable' is false.");
+            LOGGER.error("Custom Metrics reporter will not start since required ENVs are missing or environment variable 'enable' is false.");
             return;
         }
         MonitoringClient client = new MonitoringClientBuilder().setConfigurationProvider(configProvider).create();

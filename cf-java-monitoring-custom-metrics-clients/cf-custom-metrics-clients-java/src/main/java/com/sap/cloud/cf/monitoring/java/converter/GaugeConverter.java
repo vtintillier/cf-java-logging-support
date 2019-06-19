@@ -15,8 +15,8 @@ public final class GaugeConverter extends MetricConverter<Gauge> {
         Object gaugeValue = metricEntry.getValue().getValue();
         if (gaugeValue instanceof Number) {
             Number number = (Number) gaugeValue;
-            result.add(
-                buildCustomMetric(metricEntry.getKey() + ".value", number.doubleValue(), MetricType.GAUGE, timestamp));
+            result.add(buildCustomMetric(metricEntry.getKey() + ".value", number.doubleValue(), MetricType.GAUGE,
+                                         timestamp));
         } else {
             throw new IllegalArgumentException();
         }

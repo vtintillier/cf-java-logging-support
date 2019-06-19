@@ -12,7 +12,7 @@ public final class CounterConverter extends MetricConverter<Counter> {
     @Override
     List<Metric> convertMetricEntry(Entry<String, Counter> metricEntry, long timestamp) {
         Counter counter = metricEntry.getValue();
-        return Arrays.asList(
-            buildCustomMetric(metricEntry.getKey() + ".count", counter.getCount(), MetricType.COUNTER, timestamp));
+        return Arrays.asList(buildCustomMetric(metricEntry.getKey() + ".count", counter.getCount(), MetricType.COUNTER,
+                                               timestamp));
     }
 }
