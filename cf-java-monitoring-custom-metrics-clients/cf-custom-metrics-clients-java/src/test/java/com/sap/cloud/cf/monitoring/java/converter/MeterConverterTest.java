@@ -33,7 +33,7 @@ public class MeterConverterTest {
     }
 
     @Test
-    public void testMeterMetricsWithAggregation() {
+    public void testMeterMetricsWithMetricQuantiles() {
         List<Metric> metrics = new MeterConverter(true).convert(meters, currentTimeMillis);
 
         ConverterTestUtil util =
@@ -47,7 +47,7 @@ public class MeterConverterTest {
     }
 
     @Test
-    public void testMeterMetricsWithoutAggregation() {
+    public void testMeterMetricsWithoutMetricQuantiles() {
         List<Metric> metrics = new MeterConverter(false).convert(meters, currentTimeMillis);
 
         ConverterTestUtil util =

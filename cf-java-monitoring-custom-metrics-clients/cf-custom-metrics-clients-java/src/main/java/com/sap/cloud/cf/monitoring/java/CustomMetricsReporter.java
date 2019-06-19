@@ -71,13 +71,13 @@ public class CustomMetricsReporter extends ScheduledReporter {
             SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
         List<Metric> result = new ArrayList<>();
         long timestamp = System.currentTimeMillis();
-        boolean metricsAggregation = customMetricsConfig.isMetricsAggregation();
+        boolean metricQuantiles = customMetricsConfig.metricQuantiles();
 
         result.addAll(new GaugeConverter().convert(gauges, timestamp));
         result.addAll(new CounterConverter().convert(counters, timestamp));
-        result.addAll(new HistogramConverter(metricsAggregation).convert(histograms, timestamp));
-        result.addAll(new MeterConverter(metricsAggregation).convert(meters, timestamp));
-        result.addAll(new TimerConverter(metricsAggregation).convert(timers, timestamp));
+        result.addAll(new HistogramConverter(metricQuantiles).convert(histograms, timestamp));
+        result.addAll(new MeterConverter(metricQuantiles).convert(meters, timestamp));
+        result.addAll(new TimerConverter(metricQuantiles).convert(timers, timestamp));
 
         return result;
     }

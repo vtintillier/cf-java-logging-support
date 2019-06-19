@@ -10,10 +10,10 @@ import com.sap.cloud.cf.monitoring.client.model.Metric;
 
 public final class HistogramConverter extends MetricConverter<Histogram> {
 
-    private final boolean metricsAggregation;
+    private final boolean metricQuantiles;
 
-    public HistogramConverter(boolean metricsAggregation) {
-        this.metricsAggregation = metricsAggregation;
+    public HistogramConverter(boolean metricQuantiles) {
+        this.metricQuantiles = metricQuantiles;
     }
 
     @Override
@@ -31,7 +31,7 @@ public final class HistogramConverter extends MetricConverter<Histogram> {
         result.add(buildCustomMetric(key + ".p95", snapshot.get95thPercentile(), type, timestamp));
         result.add(buildCustomMetric(key + ".p99", snapshot.get99thPercentile(), type, timestamp));
 
-        if (metricsAggregation) {
+        if (metricQuantiles) {
             result.add(buildCustomMetric(key + ".mean", snapshot.getMean(), type, timestamp));
             result.add(buildCustomMetric(key + ".p75", snapshot.get75thPercentile(), type, timestamp));
             result.add(buildCustomMetric(key + ".p98", snapshot.get98thPercentile(), type, timestamp));

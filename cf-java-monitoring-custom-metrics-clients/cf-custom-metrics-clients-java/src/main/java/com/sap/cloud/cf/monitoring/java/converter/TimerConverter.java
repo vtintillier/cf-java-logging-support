@@ -10,10 +10,10 @@ import com.sap.cloud.cf.monitoring.client.model.Metric;
 
 public final class TimerConverter extends MetricConverter<Timer> {
 
-    private final boolean metricsAggregation;
+    private final boolean metricQuantiles;
 
-    public TimerConverter(boolean metricsAggregation) {
-        this.metricsAggregation = metricsAggregation;
+    public TimerConverter(boolean metricQuantiles) {
+        this.metricQuantiles = metricQuantiles;
     }
 
     @Override
@@ -32,7 +32,7 @@ public final class TimerConverter extends MetricConverter<Timer> {
         result.add(buildCustomMetric(key + ".p99", snapshot.get99thPercentile(), type, timestamp));
         result.add(buildCustomMetric(key + ".m1_rate", timer.getOneMinuteRate(), type, timestamp));
 
-        if (metricsAggregation) {
+        if (metricQuantiles) {
             result.add(buildCustomMetric(key + ".mean", snapshot.getMean(), type, timestamp));
             result.add(buildCustomMetric(key + ".p75", snapshot.get75thPercentile(), type, timestamp));
             result.add(buildCustomMetric(key + ".p98", snapshot.get98thPercentile(), type, timestamp));

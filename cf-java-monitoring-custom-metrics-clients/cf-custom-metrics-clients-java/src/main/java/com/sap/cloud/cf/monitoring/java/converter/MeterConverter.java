@@ -9,10 +9,10 @@ import com.sap.cloud.cf.monitoring.client.model.Metric;
 
 public final class MeterConverter extends MetricConverter<Meter> {
 
-    private final boolean metricsAggregation;
+    private final boolean metricQuantiles;
 
-    public MeterConverter(boolean metricsAggregation) {
-        this.metricsAggregation = metricsAggregation;
+    public MeterConverter(boolean metricQuantiles) {
+        this.metricQuantiles = metricQuantiles;
     }
 
     @Override
@@ -25,7 +25,7 @@ public final class MeterConverter extends MetricConverter<Meter> {
         result.add(buildCustomMetric(key + ".count", meter.getCount(), type, timestamp));
         result.add(buildCustomMetric(key + ".m1_rate", meter.getOneMinuteRate(), type, timestamp));
 
-        if (metricsAggregation) {
+        if (metricQuantiles) {
             result.add(buildCustomMetric(key + ".mean_rate", meter.getMeanRate(), type, timestamp));
             result.add(buildCustomMetric(key + ".m5_rate", meter.getFiveMinuteRate(), type, timestamp));
             result.add(buildCustomMetric(key + ".m15_rate", meter.getFifteenMinuteRate(), type, timestamp));

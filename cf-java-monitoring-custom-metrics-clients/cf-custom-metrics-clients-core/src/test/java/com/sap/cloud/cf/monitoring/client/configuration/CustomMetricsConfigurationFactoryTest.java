@@ -33,7 +33,7 @@ public class CustomMetricsConfigurationFactoryTest {
         assertEquals(CustomMetricsConfiguration.DEFAULT_INTERVAL, config.getInterval());
         assertNotNull(config.getMetrics());
         assertTrue(config.getMetrics().isEmpty());
-        assertFalse(config.isMetricsAggregation());
+        assertFalse(config.metricQuantiles());
     }
 
     @Test
@@ -48,7 +48,7 @@ public class CustomMetricsConfigurationFactoryTest {
         assertEquals(2, metrics.size());
         assertTrue(metrics.contains("timer"));
         assertTrue(metrics.contains("summary"));
-        assertTrue(config.isMetricsAggregation());
+        assertTrue(config.metricQuantiles());
     }
 
     @Test
@@ -81,7 +81,7 @@ public class CustomMetricsConfigurationFactoryTest {
                 "    \"interval\": \"" + interval + "\",\n" + //
                 "    \"enabled\": \"false\",\n" + //
                 "    \"metrics\": [\"timer\", \"summary\"],\n" + //
-                "    \"metricsAggregation\": \"true\"\n" + //
+                "    \"metricQuantiles\": \"true\"\n" + //
                 "}";
     }
 }

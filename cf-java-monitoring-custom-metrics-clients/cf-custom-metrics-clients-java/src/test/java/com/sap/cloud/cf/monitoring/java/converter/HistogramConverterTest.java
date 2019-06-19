@@ -64,7 +64,7 @@ public class HistogramConverterTest {
     }
 
     @Test
-    public void testTimerMetricWithAggregation() {
+    public void testTimerMetricWithMetricQuantiles() {
         List<Metric> metrics = new HistogramConverter(true).convert(histograms, currentTimeMillis);
 
         ConverterTestUtil util = new ConverterTestUtil(metrics, HISTOGRAM_METRIC,
@@ -84,7 +84,7 @@ public class HistogramConverterTest {
     }
 
     @Test
-    public void testTimerMetricWithoutAggregation() {
+    public void testTimerMetricWithoutMetricQuantiles() {
         List<Metric> metrics = new HistogramConverter(false).convert(histograms, currentTimeMillis);
 
         ConverterTestUtil util = new ConverterTestUtil(metrics, HISTOGRAM_METRIC,
