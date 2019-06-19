@@ -73,8 +73,8 @@ public class CustomMetricsReporterTest {
     }
 
     @Test
-    public void testReportHistogramWithAggregationSuccessfully() {
-        when(customMetricsConfig.isMetricsAggregation()).thenReturn(true);
+    public void testReportHistogramWithMetricQuantilesSuccessfully() {
+        when(customMetricsConfig.metricQuantiles()).thenReturn(true);
         registry.histogram(METRIC_NAME);
 
         reporter.report();
@@ -83,8 +83,8 @@ public class CustomMetricsReporterTest {
     }
 
     @Test
-    public void testReportHistogramWithoutAggregationSuccessfully() {
-        when(customMetricsConfig.isMetricsAggregation()).thenReturn(false);
+    public void testReportHistogramWithoutMetricQuantilesSuccessfully() {
+        when(customMetricsConfig.metricQuantiles()).thenReturn(false);
         registry.histogram(METRIC_NAME);
 
         reporter.report();
@@ -93,8 +93,8 @@ public class CustomMetricsReporterTest {
     }
 
     @Test
-    public void testReportMeterWithAggregationSuccessfully() {
-        when(customMetricsConfig.isMetricsAggregation()).thenReturn(true);
+    public void testReportMeterWithMetricQuantilesSuccessfully() {
+        when(customMetricsConfig.metricQuantiles()).thenReturn(true);
         registry.meter(METRIC_NAME);
 
         reporter.report();
@@ -103,8 +103,8 @@ public class CustomMetricsReporterTest {
     }
 
     @Test
-    public void testReportMeterWithoutAggregationSuccessfully() {
-        when(customMetricsConfig.isMetricsAggregation()).thenReturn(false);
+    public void testReportMeterWithoutMetricQuantilesSuccessfully() {
+        when(customMetricsConfig.metricQuantiles()).thenReturn(false);
         registry.meter(METRIC_NAME);
 
         reporter.report();
@@ -121,7 +121,7 @@ public class CustomMetricsReporterTest {
 
     @Test
     public void testReportMetricWithWhitelist() {
-        when(customMetricsConfig.isMetricsAggregation()).thenReturn(true);
+        when(customMetricsConfig.metricQuantiles()).thenReturn(true);
         when(customMetricsConfig.getMetrics()).thenReturn(Arrays.asList(METRIC_NAME));
 
         registry.meter(METRIC_NAME);

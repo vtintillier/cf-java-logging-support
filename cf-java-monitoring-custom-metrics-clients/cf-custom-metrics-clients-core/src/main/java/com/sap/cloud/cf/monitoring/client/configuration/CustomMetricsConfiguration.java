@@ -11,7 +11,7 @@ public class CustomMetricsConfiguration {
     private long interval = DEFAULT_INTERVAL;
     private boolean enabled = true;
     private List<String> metrics;
-    private boolean metricsAggregation = false;
+    private boolean metricQuantiles = false;
 
     public long getInterval() {
         return interval;
@@ -28,8 +28,8 @@ public class CustomMetricsConfiguration {
         return new ArrayList<>(metrics);
     }
 
-    public boolean isMetricsAggregation() {
-        return metricsAggregation;
+    public boolean metricQuantiles() {
+        return metricQuantiles;
     }
 
     @Override
@@ -41,8 +41,8 @@ public class CustomMetricsConfiguration {
             .append(", metrics=")
             .append(metrics)
             .append("]")
-            .append(", metricsAggregation=")
-            .append(metricsAggregation)
+            .append(", metricQuantiles=")
+            .append(metricQuantiles)
             .toString();
     }
 }

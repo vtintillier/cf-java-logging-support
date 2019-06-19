@@ -54,7 +54,7 @@ public class TimerConverterTest {
     }
 
     @Test
-    public void testTimerMetricWithAggregation() {
+    public void testTimerMetricWithMetricQuantiles() {
         List<Metric> metrics = new TimerConverter(true).convert(timers, currentTimeMillis);
         ConverterTestUtil util =
             new ConverterTestUtil(metrics, TIMER_METRIC, MetricType.TIMER.getMetricTypeName(), currentTimeMillis);
@@ -77,7 +77,7 @@ public class TimerConverterTest {
     }
 
     @Test
-    public void testTimerMetricWithoutAggregation() {
+    public void testTimerMetricWithoutMetricQuantiles() {
         List<Metric> metrics = new TimerConverter(false).convert(timers, currentTimeMillis);
 
         ConverterTestUtil util =
