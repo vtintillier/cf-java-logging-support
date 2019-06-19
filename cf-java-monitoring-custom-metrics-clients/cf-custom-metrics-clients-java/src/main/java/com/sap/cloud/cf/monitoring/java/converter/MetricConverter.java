@@ -12,7 +12,7 @@ public abstract class MetricConverter<T> {
     private static final String KEY_TYPE = "type";
 
     enum MetricType {
-        TIMER("timer"), HISTOGRAM("histogram"), GAUGE("gauge"), METER("meter"), COUNTER("counter");
+                     TIMER("timer"), HISTOGRAM("histogram"), GAUGE("gauge"), METER("meter"), COUNTER("counter");
 
         private final String metricTypeName;
 
@@ -27,7 +27,7 @@ public abstract class MetricConverter<T> {
 
     public List<Metric> convert(Map<String, T> metrics, long timestamp) {
         ArrayList<Metric> result = new ArrayList<>();
-        for (Entry<String, T> entry : metrics.entrySet()) {
+        for (Entry<String, T> entry: metrics.entrySet()) {
             result.addAll(convertMetricEntry(entry, timestamp));
         }
         return result;

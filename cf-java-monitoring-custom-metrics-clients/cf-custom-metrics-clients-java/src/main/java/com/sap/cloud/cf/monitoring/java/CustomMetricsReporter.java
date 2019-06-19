@@ -45,16 +45,17 @@ public class CustomMetricsReporter extends ScheduledReporter {
     }
 
     public CustomMetricsReporter(MetricRegistry registry, MonitoringClient client,
-            CustomMetricsConfiguration customMetricsConfig) {
+                                 CustomMetricsConfiguration customMetricsConfig) {
         super(registry, "custom-metrics-reporter", getFilter(customMetricsConfig.getMetrics()), TimeUnit.SECONDS,
-                TimeUnit.MILLISECONDS);
+              TimeUnit.MILLISECONDS);
         this.client = client;
         this.customMetricsConfig = customMetricsConfig;
     }
 
     @Override
     public void report(SortedMap<String, Gauge> gauges, SortedMap<String, Counter> counters,
-            SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
+                       SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters,
+                       SortedMap<String, Timer> timers) {
         try {
             List<Metric> convertedMetrics = convert(gauges, counters, histograms, meters, timers);
             if (convertedMetrics.isEmpty()) {
@@ -68,7 +69,8 @@ public class CustomMetricsReporter extends ScheduledReporter {
     }
 
     private List<Metric> convert(SortedMap<String, Gauge> gauges, SortedMap<String, Counter> counters,
-            SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters, SortedMap<String, Timer> timers) {
+                                 SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters,
+                                 SortedMap<String, Timer> timers) {
         List<Metric> result = new ArrayList<>();
         long timestamp = System.currentTimeMillis();
         boolean metricQuantiles = customMetricsConfig.metricQuantiles();

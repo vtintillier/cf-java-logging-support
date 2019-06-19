@@ -2,11 +2,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>com.sap.hcp.cf.logging</groupId>
-        <artifactId>cf-java-monitoring-custom-metrics-clients</artifactId>
-        <version>3.0.0</version>
-    </parent>
+	<parent>
+		<groupId>com.sap.hcp.cf.logging</groupId>
+		<artifactId>cf-java-monitoring-custom-metrics-clients</artifactId>
+		<version>3.0.0</version>
+	</parent>
 
 	<artifactId>cf-custom-metrics-clients-java</artifactId>
 	<packaging>jar</packaging>
@@ -14,7 +14,7 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <dropwizard.version>3.2.6</dropwizard.version>
+		<dropwizard.version>3.2.6</dropwizard.version>
 	</properties>
 
 	<build>
@@ -31,11 +31,11 @@
 	</build>
 
 	<dependencies>
-        <dependency>
-            <groupId>com.sap.hcp.cf.logging</groupId>
-            <artifactId>cf-custom-metrics-clients-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
+		<dependency>
+			<groupId>com.sap.hcp.cf.logging</groupId>
+			<artifactId>cf-custom-metrics-clients-core</artifactId>
+			<version>${project.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>io.dropwizard.metrics</groupId>
 			<artifactId>metrics-core</artifactId>

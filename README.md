@@ -48,7 +48,9 @@ Let's say you want to make use of the *servlet filter* feature, then you need to
 
 This feature only depends on the servlet API which you have included in your POM anyhow. You can find more information about the *servlet filter* feature (like e.g. how to adjust the web.xml) in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki/Instrumenting-Servlets).
 
-If you want to use the `custom metrics` `spring-boot client`, just define the following dependency:
+If you want to use the `custom metrics`, just define the following dependency:
+
+* `spring-boot client`:
 
 ``` xml
 
@@ -58,6 +60,18 @@ If you want to use the `custom metrics` `spring-boot client`, just define the fo
   <version>${cf-logging-version}</version>
 </dependency>
 ```
+
+* `java client`:
+
+``` xml
+
+<dependency>
+  <groupId>com.sap.hcp.cf.logging</groupId>
+  <artifactId>cf-custom-metrics-clients-java</artifactId>
+  <version>${cf-logging-version}</version>
+</dependency>
+```
+
 
 ## Implementation variants and logging configurations
 
@@ -160,7 +174,7 @@ Here are the minimal configurations you'd need:
 With the custom metrics clients you can send metrics defined inside your code. If you choose not to use one of these clients, you can still directly push the metrics using the REST API. Once send the metrics can be consumed in Kibana.
 To use the clients you'd need:
 
-*Using spring-boot client in Spring Boot 2 application:*
+1. *Using spring-boot client in Spring Boot 2 application:*
 
 ``` xml
 <dependency>
@@ -221,12 +235,50 @@ public class DemoController {
 ```
 In the example above, three custom metrics are defined and used. The metrics are `Counter`, `LongTaskTimer` and `Gauge`.
 
+2. *Using java client in Java application:*
+
+``` xml
+<dependency>
+  <groupId>com.sap.hcp.cf.logging</groupId>
+  <artifactId>cf-custom-metrics-clients-java</artifactId>
+  <version>${cf-logging-version}</version>
+</dependency>
+```
+
+The java client uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizar. The following metrics are available: com.codahale.metrics.Gauge, com.codahale.metrics.Counter, com.codahale.metrics.Histogram, com.codahale.metrics.Meter and com.codahale.metrics.Timer. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
+
+``` java
+import java.io.IOException;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.codahale.metrics.Counter;
+import com.codahale.metrics.Meter;
+import com.sap.cloud.cf.monitoring.java.CustomMetricRegistry;
+
+public class CustomMetricsServlet extends HttpServlet {
+    private static Counter counter = CustomMetricRegistry.get().counter("custom.metric.request.count");
+    private static Meter meter = CustomMetricRegistry.get().meter("custom.metric.request.meter");
+
+    @Override
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        counter.inc(3);
+        meter.mark();
+        response.getWriter().println("<p>Greetings from Custom Metrics</p>");
+    }
+}
+```
+
 ## Custom metrics client configurations
 
 This client library supports the following configurations regarding sending custom metrics:
   * `interval`: the interval for sending metrics, in millis. **Default value: `60000`**
   * `enabled`: enables or disables the sending of metrics. **Default value: `true`**
   * `metrics`: array of whitelisted metric names. Only mentioned metrics would be processed and sent. If it is an empty array all metrics are being sent. **Default value: `[]`**
+  * `metricQuantiles`: enables or disables the sending of metric's [quantiles](https://en.wikipedia.org/wiki/Quantile) like median, 95th percentile, 99th percentile. Spring-boot client does not support this configuration. **Default value: `false`**
 
   Configurations are read from environment variable named `CUSTOM_METRICS`. To change the default values, you should override the environment variable with your custom values. Example:
 
@@ -237,7 +289,8 @@ This client library supports the following configurations regarding sending cust
     "metrics": [
         "my.whitelist.metric.1",
         "my.whitelist.metric.2"
-    ]
+    ],
+    "metricQuantiles":true
 }
 ```
 
