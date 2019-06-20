@@ -11,7 +11,7 @@ import com.sap.cloud.cf.monitoring.client.model.Metric;
 public abstract class MetricConverter<T> {
     private static final String KEY_TYPE = "type";
 
-    enum MetricType {
+    public enum MetricType {
                      TIMER("timer"), HISTOGRAM("histogram"), GAUGE("gauge"), METER("meter"), COUNTER("counter");
 
         private final String metricTypeName;
@@ -33,9 +33,9 @@ public abstract class MetricConverter<T> {
         return result;
     }
 
-    abstract List<Metric> convertMetricEntry(Entry<String, T> metricEntry, long timestamp);
+    protected abstract List<Metric> convertMetricEntry(Entry<String, T> metricEntry, long timestamp);
 
-    Metric buildCustomMetric(String name, double value, MetricType type, long timestamp) {
+    protected Metric buildCustomMetric(String name, double value, MetricType type, long timestamp) {
         Map<String, String> tags = new HashMap<>();
         tags.put(KEY_TYPE, type.getMetricTypeName());
         return new Metric(name, value, timestamp, tags);

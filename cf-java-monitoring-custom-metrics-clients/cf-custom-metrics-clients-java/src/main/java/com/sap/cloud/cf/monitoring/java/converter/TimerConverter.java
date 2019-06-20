@@ -17,7 +17,7 @@ public final class TimerConverter extends MetricConverter<Timer> {
     }
 
     @Override
-    List<Metric> convertMetricEntry(Entry<String, Timer> metricEntry, long timestamp) {
+    protected List<Metric> convertMetricEntry(Entry<String, Timer> metricEntry, long timestamp) {
         ArrayList<Metric> result = new ArrayList<>();
         Timer timer = metricEntry.getValue();
         Snapshot snapshot = timer.getSnapshot();

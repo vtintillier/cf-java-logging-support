@@ -10,7 +10,7 @@ import com.sap.cloud.cf.monitoring.client.model.Metric;
 public final class GaugeConverter extends MetricConverter<Gauge> {
 
     @Override
-    List<Metric> convertMetricEntry(Entry<String, Gauge> metricEntry, long timestamp) {
+    protected List<Metric> convertMetricEntry(Entry<String, Gauge> metricEntry, long timestamp) {
         ArrayList<Metric> result = new ArrayList<>();
         Object gaugeValue = metricEntry.getValue().getValue();
         if (gaugeValue instanceof Number) {

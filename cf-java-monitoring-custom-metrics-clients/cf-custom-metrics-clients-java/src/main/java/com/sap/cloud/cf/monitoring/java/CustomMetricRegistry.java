@@ -37,12 +37,12 @@ public class CustomMetricRegistry extends MetricRegistry {
     }
 
     private CustomMetricRegistry() {
-        configProvider = getConfigProvider();
+        configProvider = initConfigProvider();
         customMetricsConfig = CustomMetricsConfigurationFactory.create();
         initializeAndStartReporter();
     }
 
-    private CFConfigurationProvider getConfigProvider() {
+    private static CFConfigurationProvider initConfigProvider() {
         try {
             return new CFConfigurationProvider();
         } catch (IllegalArgumentException e) {

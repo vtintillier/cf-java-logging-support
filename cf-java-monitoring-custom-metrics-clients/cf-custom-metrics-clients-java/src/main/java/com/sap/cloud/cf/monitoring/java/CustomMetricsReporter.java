@@ -1,9 +1,11 @@
 package com.sap.cloud.cf.monitoring.java;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,17 +73,16 @@ public class CustomMetricsReporter extends ScheduledReporter {
     private List<Metric> convert(SortedMap<String, Gauge> gauges, SortedMap<String, Counter> counters,
                                  SortedMap<String, Histogram> histograms, SortedMap<String, Meter> meters,
                                  SortedMap<String, Timer> timers) {
-        List<Metric> result = new ArrayList<>();
         long timestamp = System.currentTimeMillis();
         boolean metricQuantiles = customMetricsConfig.metricQuantiles();
 
-        result.addAll(new GaugeConverter().convert(gauges, timestamp));
-        result.addAll(new CounterConverter().convert(counters, timestamp));
-        result.addAll(new HistogramConverter(metricQuantiles).convert(histograms, timestamp));
-        result.addAll(new MeterConverter(metricQuantiles).convert(meters, timestamp));
-        result.addAll(new TimerConverter(metricQuantiles).convert(timers, timestamp));
-
-        return result;
+        return Stream.of(new GaugeConverter().convert(gauges, timestamp), 
+                  new CounterConverter().convert(counters, timestamp),
+                  new HistogramConverter(metricQuantiles).convert(histograms, timestamp), 
+                  new MeterConverter(metricQuantiles).convert(meters, timestamp),
+                  new TimerConverter(metricQuantiles).convert(timers, timestamp))
+        .flatMap(Collection::stream)
+        .collect(Collectors.toList());
     }
 
     private void sendMetrics(List<Metric> convertedMetrics) {

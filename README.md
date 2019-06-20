@@ -29,11 +29,11 @@ All in all, you should do the following:
 And
 4. Adjust your logging configuration accordingly.
 
-Let's say you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `3.0.1`):
+Let's say you want to make use of the *servlet filter* feature, then you need to add the following dependency to your POM with property `cf-logging-version` referring to the latest nexus version (currently `3.0.2`):
 
 ```xml
 <properties>
-	<cf-logging-version>3.0.1</cf-logging-version>
+	<cf-logging-version>3.0.2</cf-logging-version>
 </properties>
 ```
 
@@ -245,7 +245,7 @@ In the example above, three custom metrics are defined and used. The metrics are
 </dependency>
 ```
 
-The java client uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizar. The following metrics are available: com.codahale.metrics.Gauge, com.codahale.metrics.Counter, com.codahale.metrics.Histogram, com.codahale.metrics.Meter and com.codahale.metrics.Timer. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
+The java client uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizard. The following metrics are available: com.codahale.metrics.Gauge, com.codahale.metrics.Counter, com.codahale.metrics.Histogram, com.codahale.metrics.Meter and com.codahale.metrics.Timer. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
 
 ``` java
 import java.io.IOException;
