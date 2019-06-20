@@ -4,7 +4,7 @@
     <parent>
         <groupId>com.sap.hcp.cf.logging</groupId>
         <artifactId>cf-java-monitoring-custom-metrics-clients</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.2</version>
     </parent>
 
     <artifactId>cf-custom-metrics-clients-spring-boot</artifactId>
@@ -14,19 +14,6 @@
     <properties>
         <spring.boot.version>2.0.6.RELEASE</spring.boot.version>
     </properties>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <dependencies>
         <dependency>

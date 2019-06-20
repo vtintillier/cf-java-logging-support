@@ -10,7 +10,7 @@ import com.sap.cloud.cf.monitoring.client.model.Metric;
 public final class CounterConverter extends MetricConverter<Counter> {
 
     @Override
-    List<Metric> convertMetricEntry(Entry<String, Counter> metricEntry, long timestamp) {
+    protected List<Metric> convertMetricEntry(Entry<String, Counter> metricEntry, long timestamp) {
         Counter counter = metricEntry.getValue();
         return Arrays.asList(buildCustomMetric(metricEntry.getKey() + ".count", counter.getCount(), MetricType.COUNTER,
                                                timestamp));
