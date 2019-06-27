@@ -2,16 +2,14 @@ package com.sap.cloud.cf.monitoring.client.configuration;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class EnvUtils {
 
     public static void setEnvs(String[][] envs) throws Exception {
-        Map<String, String> envMap = new HashMap<>();
-        for (String[] env : envs) {
-            envMap.put(env[0], env[1]);
-        }
+        Map<String, String> envMap = Stream.of(envs).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
         setNewEnvs(envMap);
     }
@@ -31,5 +29,4 @@ public class EnvUtils {
             }
         }
     }
-
 }

@@ -18,7 +18,7 @@ public final class HistogramConverter extends MetricConverter<Histogram> {
 
     @Override
     protected List<Metric> convertMetricEntry(Entry<String, Histogram> metricEntry, long timestamp) {
-        ArrayList<Metric> result = new ArrayList<>();
+        List<Metric> result = new ArrayList<>();
         Histogram histogram = metricEntry.getValue();
         Snapshot snapshot = histogram.getSnapshot();
         String key = metricEntry.getKey();

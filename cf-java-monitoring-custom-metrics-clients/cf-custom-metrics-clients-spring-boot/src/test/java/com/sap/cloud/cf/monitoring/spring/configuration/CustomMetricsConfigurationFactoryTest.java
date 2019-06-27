@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.junit.Test;
 
+import com.sap.cloud.cf.monitoring.client.configuration.EnvUtils;
+
 public class CustomMetricsConfigurationFactoryTest {
 
     @Test

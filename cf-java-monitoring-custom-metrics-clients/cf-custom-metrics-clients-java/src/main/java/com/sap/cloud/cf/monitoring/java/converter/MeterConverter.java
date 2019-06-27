@@ -17,7 +17,7 @@ public final class MeterConverter extends MetricConverter<Meter> {
 
     @Override
     protected List<Metric> convertMetricEntry(Entry<String, Meter> metricEntry, long timestamp) {
-        ArrayList<Metric> result = new ArrayList<>();
+        List<Metric> result = new ArrayList<>();
         Meter meter = metricEntry.getValue();
         String key = metricEntry.getKey();
         MetricType type = MetricType.METER;

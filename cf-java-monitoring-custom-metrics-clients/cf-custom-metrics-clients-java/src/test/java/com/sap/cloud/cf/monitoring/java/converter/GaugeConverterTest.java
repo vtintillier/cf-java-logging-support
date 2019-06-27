@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 
 import com.codahale.metrics.Gauge;
 import com.sap.cloud.cf.monitoring.client.model.Metric;
@@ -19,6 +21,9 @@ public class GaugeConverterTest {
     private static final String GAUGE_METRIC = "gaugeMetric";
     private static final Double METRIC_VALUE = 5.00;
     private final long currentTimeMillis = System.currentTimeMillis();
+    
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
 
     @Test
     public void testGaugeMetric() {
@@ -39,7 +44,7 @@ public class GaugeConverterTest {
         assertEquals(1, metrics.size());
     }
 
-    @Test(expected = IllegalArgumentException.class)
+    @Test
     public void testGaugeMetricWithNonNumberValue() {
         SortedMap<String, Gauge> gauges = new TreeMap<>();
         Gauge<String> gauge = new Gauge<String>() {
@@ -47,9 +52,12 @@ public class GaugeConverterTest {
             public String getValue() {
                 return String.valueOf(METRIC_VALUE);
             }
-
         };
         gauges.put(GAUGE_METRIC, gauge);
+
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage(String.format("The type for Gauge {%s} is invalid. The supported type is {%s}", gauge.getValue().getClass().getName(), Number.class.getName()));
+
         new GaugeConverter().convert(gauges, currentTimeMillis);
     }
 }

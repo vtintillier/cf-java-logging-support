@@ -65,5 +65,13 @@
             <artifactId>mockito-all</artifactId>
             <scope>test</scope>
         </dependency>
+		<dependency>
+			<groupId>com.sap.hcp.cf.logging</groupId>
+			<artifactId>cf-custom-metrics-clients-core</artifactId>
+			<version>${project.version}</version>
+			<classifier>tests</classifier>
+			<type>test-jar</type>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 </project>

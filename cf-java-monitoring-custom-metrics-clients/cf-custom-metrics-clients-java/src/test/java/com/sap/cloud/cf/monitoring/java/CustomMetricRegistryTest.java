@@ -18,6 +18,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import com.codahale.metrics.MetricRegistry;
 import com.sap.cloud.cf.monitoring.client.configuration.CFConfigurationProvider;
+import com.sap.cloud.cf.monitoring.client.configuration.EnvUtils;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CustomMetricRegistryTest {

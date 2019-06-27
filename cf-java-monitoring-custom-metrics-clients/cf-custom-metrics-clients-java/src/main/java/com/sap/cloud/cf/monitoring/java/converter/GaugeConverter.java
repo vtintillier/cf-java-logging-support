@@ -11,14 +11,14 @@ public final class GaugeConverter extends MetricConverter<Gauge> {
 
     @Override
     protected List<Metric> convertMetricEntry(Entry<String, Gauge> metricEntry, long timestamp) {
-        ArrayList<Metric> result = new ArrayList<>();
+        List<Metric> result = new ArrayList<>();
         Object gaugeValue = metricEntry.getValue().getValue();
         if (gaugeValue instanceof Number) {
             Number number = (Number) gaugeValue;
             result.add(buildCustomMetric(metricEntry.getKey() + ".value", number.doubleValue(), MetricType.GAUGE,
                                          timestamp));
         } else {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(String.format("The type for Gauge {%s} is invalid. The supported type is {%s}", gaugeValue.getClass().getName(), Number.class.getName()));
         }
         return result;
     }

@@ -1,6 +1,6 @@
 package com.sap.cloud.cf.monitoring.java.converter;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -11,8 +11,10 @@ public final class CounterConverter extends MetricConverter<Counter> {
 
     @Override
     protected List<Metric> convertMetricEntry(Entry<String, Counter> metricEntry, long timestamp) {
+        List<Metric> result = new ArrayList<>();
         Counter counter = metricEntry.getValue();
-        return Arrays.asList(buildCustomMetric(metricEntry.getKey() + ".count", counter.getCount(), MetricType.COUNTER,
-                                               timestamp));
+        result.add(buildCustomMetric(metricEntry.getKey() + ".count", counter.getCount(), MetricType.COUNTER, timestamp));
+
+        return result;
     }
 }
