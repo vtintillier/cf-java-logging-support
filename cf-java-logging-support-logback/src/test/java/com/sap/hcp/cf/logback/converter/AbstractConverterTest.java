@@ -13,7 +13,6 @@ import org.slf4j.MDC;
 
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONObjectException;
-import com.sap.hcp.cf.logging.common.customfields.CustomField;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.spi.LoggingEvent;
@@ -47,23 +46,8 @@ public abstract class AbstractConverterTest {
         return JSON.std.arrayFrom(serialized);
     }
 
-    protected Map<String, Object> makeMap(CustomField[] custFields) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (CustomField cf: custFields) {
-            map.put(cf.getKey(), cf.getValue());
-        }
-        return map;
-    }
 
-    protected Map<String, Object> makeMap(String[] keys) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (String key: keys) {
-            map.put(key, MDC.get(key));
-        }
-        return map;
-    }
-
-    protected Map<String, Object> mapFrom(String serialized) throws JSONObjectException, IOException {
+	protected Map<String, Object> mapFrom(String serialized) throws JSONObjectException, IOException {
         return mapFrom(serialized, true);
     }
 

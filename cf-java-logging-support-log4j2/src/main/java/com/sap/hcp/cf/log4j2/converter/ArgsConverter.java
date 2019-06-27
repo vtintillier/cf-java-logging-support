@@ -5,7 +5,7 @@ import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.pattern.ConverterKeys;
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
 
-import com.sap.hcp.cf.logging.common.converter.DefaultArgsConverter;
+import com.sap.hcp.cf.logging.common.converter.DefaultCustomFieldsConverter;
 import com.sap.hcp.cf.logging.common.customfields.CustomField;
 
 /**
@@ -23,7 +23,7 @@ import com.sap.hcp.cf.logging.common.customfields.CustomField;
 public class ArgsConverter extends LogEventPatternConverter {
 
     public static final String WORD = "args";
-    private final DefaultArgsConverter converter = new DefaultArgsConverter();
+    private final DefaultCustomFieldsConverter converter = new DefaultCustomFieldsConverter();
 
     public ArgsConverter(String[] options) {
         super(WORD, WORD);
