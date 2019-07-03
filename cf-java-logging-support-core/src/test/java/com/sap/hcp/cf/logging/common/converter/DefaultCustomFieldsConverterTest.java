@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.common.converter;
 
+import static com.sap.hcp.cf.logging.common.converter.UnmarshallUtilities.unmarshal;
+import static com.sap.hcp.cf.logging.common.converter.UnmarshallUtilities.unmarshalPrefixed;
 import static com.sap.hcp.cf.logging.common.customfields.CustomField.customField;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasEntry;
@@ -12,8 +14,6 @@ import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import com.fasterxml.jackson.jr.ob.JSON;
 
 public class DefaultCustomFieldsConverterTest {
 
@@ -88,7 +88,8 @@ public class DefaultCustomFieldsConverterTest {
 
 		converter.convert(sb, mdcFields, customField("some key", "some value"));
 
-		assertThat(unmarshal(sb), allOf(hasEntry("some key", "some value"), hasEntry("mdc key", "mdc value")));
+		assertThat(unmarshal(sb),
+				allOf(hasEntry("some key", "some value"), hasEntry("mdc key", "mdc value")));
 	}
 
 	@Test
@@ -133,16 +134,6 @@ public class DefaultCustomFieldsConverterTest {
 		converter.convert(sb, Collections.emptyMap(), customField("some key", "some value"));
 
 		assertThat(unmarshalPrefixed(sb, HACK_ATTEMPT), hasEntry("some key", "some value"));
-	}
-
-	private static Map<String, Object> unmarshal(StringBuilder sb) throws Exception {
-		return JSON.std.mapFrom("{" + sb.toString() + "}");
-	}
-
-	@SuppressWarnings("unchecked")
-	private static Map<String, Object> unmarshalPrefixed(StringBuilder sb, String prefix)
-			throws Exception {
-		return (Map<String, Object>) unmarshal(sb).get(prefix);
 	}
 
 }
