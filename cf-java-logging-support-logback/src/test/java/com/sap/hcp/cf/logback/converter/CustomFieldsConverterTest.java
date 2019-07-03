@@ -10,6 +10,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,6 +36,13 @@ import ch.qos.logback.core.Context;
 @RunWith(MockitoJUnitRunner.class)
 public class CustomFieldsConverterTest extends AbstractConverterTest {
 
+	@SuppressWarnings("serial")
+	private static Map<String, String> MDC_PROPERTIES = new HashMap<String, String>() {
+		{
+			put("mdc key", "mdc value");
+		}
+	};
+
 	@Mock
 	private ILoggingEvent event;
 
@@ -43,6 +51,9 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 	@Mock
 	private DefaultCustomFieldsConverter defaultConverter;
+
+	@Mock
+	private CustomFieldsAdapter customFieldsAdapter;
 
 	@Captor
 	private ArgumentCaptor<Map<String, String>> mdcFields;
@@ -57,6 +68,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 	public void initConverter() {
 		converter.setContext(context);
 		converter.setConverter(defaultConverter);
+		converter.setCustomFieldsAdapter(customFieldsAdapter);
 	}
 
 	@Test
@@ -117,38 +129,27 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 		verfiyConverterCall(emptyMap(), nullValue());
 	}
 
-	@SuppressWarnings("serial")
 	@Test
 	public void singleConfiguredMdcField() throws Exception {
-		when(context.getObject(CustomFieldsConverter.OPTION_MDC_CUSTOM_FIELDS))
-				.thenReturn(asList("configured mdc key"));
+		Map<String, String> someMap = new HashMap<>();
+		when(event.getMDCPropertyMap()).thenReturn(someMap);
+		when(customFieldsAdapter.selectCustomFields(eq(someMap))).thenReturn(MDC_PROPERTIES);
 		converter.start();
-
-		when(event.getMDCPropertyMap()).thenReturn(new HashMap<String, String>() {
-			{
-				put("configured mdc key", "some value");
-			}
-		});
 
 		converter.convert(event);
 
-		verfiyConverterCall(hasEntry("configured mdc key", "some value"), nullValue());
+		verfiyConverterCall(hasEntry("mdc key", "mdc value"), nullValue());
 	}
 
-	@SuppressWarnings("serial")
 	@Test
 	public void mergesMdcFieldsAndArguments() throws Exception {
-		when(context.getObject(CustomFieldsConverter.OPTION_MDC_CUSTOM_FIELDS))
-				.thenReturn(asList("mdc key"));
+		Map<String, String> someMap = new HashMap<>();
+		when(event.getMDCPropertyMap()).thenReturn(someMap);
+		when(customFieldsAdapter.selectCustomFields(eq(someMap))).thenReturn(MDC_PROPERTIES);
 		converter.start();
 
 		CustomField customField = customField("some key", "some value");
 		mockArgumentArray(event, customField);
-		when(event.getMDCPropertyMap()).thenReturn(new HashMap<String, String>() {
-			{
-				put("mdc key", "mdc value");
-			}
-		});
 
 		converter.convert(event);
 

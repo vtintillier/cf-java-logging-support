@@ -7,9 +7,10 @@ import java.util.Map;
 
 import org.slf4j.Marker;
 
-import com.sap.hcp.cf.logback.converter.CustomFieldsConverter;
 import com.sap.hcp.cf.logback.converter.CategoriesConverter;
 import com.sap.hcp.cf.logback.converter.ContextPropsConverter;
+import com.sap.hcp.cf.logback.converter.CustomFieldsAdapter;
+import com.sap.hcp.cf.logback.converter.CustomFieldsConverter;
 import com.sap.hcp.cf.logback.converter.JsonMessageConverter;
 import com.sap.hcp.cf.logback.converter.LogbackStacktraceConverter;
 import com.sap.hcp.cf.logback.converter.TimestampConverter;
@@ -126,7 +127,7 @@ public class JsonEncoder extends LayoutWrappingEncoder<ILoggingEvent> {
 
 	@Override
 	public void start() {
-		context.putObject(CustomFieldsConverter.OPTION_MDC_CUSTOM_FIELDS, customFieldMdcKeyNames);
+		context.putObject(CustomFieldsAdapter.OPTION_MDC_CUSTOM_FIELDS, customFieldMdcKeyNames);
 
 		JsonLayout jsonLayout = new JsonLayout();
 		jsonLayout.setContext(context);
