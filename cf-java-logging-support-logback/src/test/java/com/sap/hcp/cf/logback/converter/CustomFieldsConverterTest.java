@@ -77,7 +77,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 		converter.convert(event);
 
-		verfiyConverterCall(emptyMap(), nullValue());
+		verifyConverterCall(emptyMap(), nullValue());
 	}
 
 
@@ -89,7 +89,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 		converter.convert(event);
 
-		verfiyConverterCall(emptyMap(), is("an argument"));
+		verifyConverterCall(emptyMap(), is("an argument"));
 	}
 
 
@@ -101,7 +101,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 		converter.convert(event);
 
-		verfiyConverterCall(emptyMap(), sameInstance(customField));
+		verifyConverterCall(emptyMap(), sameInstance(customField));
 	}
 
 	@Test
@@ -126,7 +126,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 		converter.convert(event);
 
-		verfiyConverterCall(emptyMap(), nullValue());
+		verifyConverterCall(emptyMap(), nullValue());
 	}
 
 	@Test
@@ -138,7 +138,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 		converter.convert(event);
 
-		verfiyConverterCall(hasEntry("mdc key", "mdc value"), nullValue());
+		verifyConverterCall(hasEntry("mdc key", "mdc value"), nullValue());
 	}
 
 	@Test
@@ -153,7 +153,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 		converter.convert(event);
 
-		verfiyConverterCall(hasEntry("mdc key", "mdc value"), sameInstance(customField));
+		verifyConverterCall(hasEntry("mdc key", "mdc value"), sameInstance(customField));
 	}
 
 	private static void mockArgumentArray(ILoggingEvent event, Object... arguments) {
@@ -164,7 +164,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 		return not(hasEntry(anything(), anything()));
 	}
 
-	private void verfiyConverterCall(Matcher<Map<? extends String, ? extends String>> mdcFieldsMatcher,
+	private void verifyConverterCall(Matcher<Map<? extends String, ? extends String>> mdcFieldsMatcher,
 			Matcher<Object> argumentsMatcher) {
 		verify(defaultConverter).convert(any(), mdcFields.capture(), arguments.capture());
 		assertThat(mdcFields.getValue(), mdcFieldsMatcher);

@@ -40,7 +40,7 @@ public class DefaultPropertiesConverterTest {
 	public void emptyProperties() throws Exception {
 		StringBuilder sb = new StringBuilder();
 
-		converter.convert(Collections.emptyMap(), sb);
+		converter.convert(sb, Collections.emptyMap());
 
 		assertThat(unmarshal(sb), hasDefaultProperties());
 	}
@@ -50,7 +50,7 @@ public class DefaultPropertiesConverterTest {
 		StringBuilder sb = new StringBuilder();
 		MDC.put("some key", "some value");
 
-		converter.convert(Collections.emptyMap(), sb);
+		converter.convert(sb, Collections.emptyMap());
 
 		assertThat(unmarshal(sb), hasEntry("some key", "some value"));
 	}
@@ -61,7 +61,7 @@ public class DefaultPropertiesConverterTest {
 		MDC.put("some key", "some value");
 		MDC.put("other key", "other value");
 
-		converter.convert(Collections.emptyMap(), sb);
+		converter.convert(sb, Collections.emptyMap());
 
 		assertThat(unmarshal(sb),
 				allOf(hasEntry("some key", "some value"), hasEntry("other key", "other value")));
@@ -77,7 +77,7 @@ public class DefaultPropertiesConverterTest {
 			}
 		};
 
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb), hasEntry("explicit key", "explicit value"));
 	}
@@ -93,7 +93,7 @@ public class DefaultPropertiesConverterTest {
 		};
 		MDC.put("some key", "some value");
 
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb),
 				allOf(hasEntry("some key", "some value"), hasEntry("explicit key", "explicit value")));
@@ -110,7 +110,7 @@ public class DefaultPropertiesConverterTest {
 		};
 		MDC.put("some key", "some value");
 
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb), hasEntry("some key", "explicit value"));
 	}
@@ -129,7 +129,7 @@ public class DefaultPropertiesConverterTest {
 		MDC.put("excluded mdc key", "excluded mdc value");
 
 		converter.setExclusions(Arrays.asList("excluded explicit key", "excluded mdc key"));
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb),
 				allOf(hasEntry("retained mdc key", "retained mdc value"),
@@ -150,7 +150,7 @@ public class DefaultPropertiesConverterTest {
 		};
 		MDC.put("mdc" + HACK_ATTEMPT, "mdc value");
 
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb),
 				allOf(hasEntry("mdc" + HACK_ATTEMPT, "mdc value"),
@@ -168,7 +168,7 @@ public class DefaultPropertiesConverterTest {
 		};
 		MDC.put("mdc key", "mdc" + HACK_ATTEMPT);
 
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb),
 				allOf(hasEntry("mdc key", "mdc" + HACK_ATTEMPT), hasEntry("explicit key", "explicit" + HACK_ATTEMPT)));
@@ -186,7 +186,7 @@ public class DefaultPropertiesConverterTest {
 		MDC.put("mdc" + HACK_ATTEMPT, "mdc value");
 
 		converter.setExclusions(Arrays.asList("explicit" + HACK_ATTEMPT, "mdc" + HACK_ATTEMPT));
-		converter.convert(explicitFields, sb);
+		converter.convert(sb, explicitFields);
 
 		assertThat(unmarshal(sb), allOf(not(hasEntry("mdc" + HACK_ATTEMPT, "mdc value")),
 				not(hasEntry("explicit" + HACK_ATTEMPT, "explicit value"))));

@@ -5,6 +5,8 @@
         <encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder">
         	<customFieldMdcKeyName>custom-field</customFieldMdcKeyName>
         	<customFieldMdcKeyName>test-field</customFieldMdcKeyName>
+        	<customFieldMdcKeyName>retained-field</customFieldMdcKeyName>
+        	<retainFieldMdcKeyName>retained-field</retainFieldMdcKeyName>
         </encoder>
     </appender>
     <root level="${LOG_ROOT_LEVEL:-WARN}">

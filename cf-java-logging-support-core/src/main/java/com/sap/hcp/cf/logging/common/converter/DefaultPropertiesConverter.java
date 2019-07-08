@@ -30,7 +30,7 @@ public class DefaultPropertiesConverter {
         }
     }
 
-    public void convert(Map<String, String> eventProperties, StringBuilder appendTo) {
+    public void convert(StringBuilder appendTo, Map<String, String> eventProperties) {
         Map<String, String> properties = mergeContextMaps(eventProperties);
         if (properties != null && !properties.isEmpty()) {
             try {

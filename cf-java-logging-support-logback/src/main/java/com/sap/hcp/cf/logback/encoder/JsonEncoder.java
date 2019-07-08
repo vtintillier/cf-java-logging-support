@@ -119,15 +119,21 @@ public class JsonEncoder extends LayoutWrappingEncoder<ILoggingEvent> {
 
 	}
 
-	private List<String> customFieldMdcKeyNames = new ArrayList<String>();
+	private List<String> customFieldMdcKeyNames = new ArrayList<>();
+	private List<String> retainFieldMdcKeyNames = new ArrayList<>();
 
 	public void addCustomFieldMdcKeyName(String name) {
 		customFieldMdcKeyNames.add(name);
 	}
 
+	public void addRetainFieldMdcKeyName(String name) {
+		retainFieldMdcKeyNames.add(name);
+	}
+
 	@Override
 	public void start() {
 		context.putObject(CustomFieldsAdapter.OPTION_MDC_CUSTOM_FIELDS, customFieldMdcKeyNames);
+		context.putObject(CustomFieldsAdapter.OPTION_MDC_RETAINED_FIELDS, retainFieldMdcKeyNames);
 
 		JsonLayout jsonLayout = new JsonLayout();
 		jsonLayout.setContext(context);
