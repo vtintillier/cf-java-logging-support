@@ -20,8 +20,7 @@ public class CustomMetricsConfigurationFactoryTest {
 
     @Test
     public void testMatches_WithEmptyEnv() throws Exception {
-        String[] CUSTOM_METRICS_ENV = new String[] { "CUSTOM_METRICS", "" };
-        EnvUtils.setEnvs(new String[][] { CUSTOM_METRICS_ENV });
+        EnvUtils.setEnvs(new String[][] { { "CUSTOM_METRICS", "" } });
 
         testDefault();
     }
@@ -78,10 +77,10 @@ public class CustomMetricsConfigurationFactoryTest {
 
     private static String getJson(String interval) {
         return "{\n" + //
-                "    \"interval\": \"" + interval + "\",\n" + //
-                "    \"enabled\": \"false\",\n" + //
-                "    \"metrics\": [\"timer\", \"summary\"],\n" + //
-                "    \"metricQuantiles\": \"true\"\n" + //
-                "}";
+               "    \"interval\": \"" + interval + "\",\n" + //
+               "    \"enabled\": \"false\",\n" + //
+               "    \"metrics\": [\"timer\", \"summary\"],\n" + //
+               "    \"metricQuantiles\": \"true\"\n" + //
+               "}";
     }
 }

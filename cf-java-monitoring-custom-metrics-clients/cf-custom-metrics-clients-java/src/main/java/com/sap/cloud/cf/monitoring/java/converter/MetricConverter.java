@@ -1,10 +1,10 @@
 package com.sap.cloud.cf.monitoring.java.converter;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import com.sap.cloud.cf.monitoring.client.model.Metric;
 
@@ -12,7 +12,7 @@ public abstract class MetricConverter<T> {
     private static final String KEY_TYPE = "type";
 
     public enum MetricType {
-                     TIMER("timer"), HISTOGRAM("histogram"), GAUGE("gauge"), METER("meter"), COUNTER("counter");
+                            TIMER("timer"), HISTOGRAM("histogram"), GAUGE("gauge"), METER("meter"), COUNTER("counter");
 
         private final String metricTypeName;
 
@@ -26,11 +26,11 @@ public abstract class MetricConverter<T> {
     }
 
     public List<Metric> convert(Map<String, T> metrics, long timestamp) {
-        ArrayList<Metric> result = new ArrayList<>();
-        for (Entry<String, T> entry: metrics.entrySet()) {
-            result.addAll(convertMetricEntry(entry, timestamp));
-        }
-        return result;
+        return metrics.entrySet()
+                .stream()
+                .map(entry -> convertMetricEntry(entry, timestamp))
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
     }
 
     protected abstract List<Metric> convertMetricEntry(Entry<String, T> metricEntry, long timestamp);

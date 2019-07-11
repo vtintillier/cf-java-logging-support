@@ -18,7 +18,7 @@ public final class GaugeConverter extends MetricConverter<Gauge> {
             result.add(buildCustomMetric(metricEntry.getKey() + ".value", number.doubleValue(), MetricType.GAUGE,
                                          timestamp));
         } else {
-            throw new IllegalArgumentException(String.format("The type for Gauge {%s} is invalid. The supported type is {%s}", gaugeValue.getClass().getName(), Number.class.getName()));
+            throw new IllegalArgumentException(String.format("The type {%s} for Gauge {%s} is invalid. The supported type is {%s}", gaugeValue.getClass().getName(), metricEntry.getKey(), Number.class.getName()));
         }
         return result;
     }

@@ -56,7 +56,7 @@ public class GaugeConverterTest {
         gauges.put(GAUGE_METRIC, gauge);
 
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage(String.format("The type for Gauge {%s} is invalid. The supported type is {%s}", gauge.getValue().getClass().getName(), Number.class.getName()));
+        expectedException.expectMessage(String.format("The type {%s} for Gauge {%s} is invalid. The supported type is {%s}", gauge.getValue().getClass().getName(), GAUGE_METRIC, Number.class.getName()));
 
         new GaugeConverter().convert(gauges, currentTimeMillis);
     }
