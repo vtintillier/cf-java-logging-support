@@ -43,7 +43,7 @@ public class ContextPropsConverter extends LogEventPatternConverter {
 
     @Override
     public void format(LogEvent event, StringBuilder toAppendTo) {
-        converter.convert(event.getContextMap(), toAppendTo);
+        converter.convert(toAppendTo, event.getContextMap());
     }
 
 }

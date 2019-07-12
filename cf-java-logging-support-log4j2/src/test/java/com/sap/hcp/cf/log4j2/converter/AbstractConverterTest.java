@@ -21,11 +21,8 @@ import org.slf4j.MDC;
 
 import com.fasterxml.jackson.jr.ob.JSON;
 import com.fasterxml.jackson.jr.ob.JSONObjectException;
-import com.sap.hcp.cf.logging.common.customfields.CustomField;
 
 public abstract class AbstractConverterTest {
-    protected static final String PREFIX = "prefix";
-    protected static final String EMPTY = "";
     protected static final String SOME_KEY = "some_key";
     protected static final String SOME_VALUE = "some value";
     protected static final String STRANGE_SEQ = "}{:\",\"";
@@ -69,21 +66,7 @@ public abstract class AbstractConverterTest {
         return JSON.std.arrayFrom(serialized);
     }
 
-    protected Map<String, Object> makeMap(CustomField[] custFields) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (CustomField cf: custFields) {
-            map.put(cf.getKey(), cf.getValue());
-        }
-        return map;
-    }
 
-    protected Map<String, Object> makeMap(String[] keys) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        for (String key: keys) {
-            map.put(key, MDC.get(key));
-        }
-        return map;
-    }
 
     protected Map<String, Object> mapFrom(String serialized) throws JSONObjectException, IOException {
         return mapFrom(serialized, true);
