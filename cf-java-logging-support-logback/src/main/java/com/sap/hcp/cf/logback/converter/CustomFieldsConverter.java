@@ -14,10 +14,10 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  * key/value pairs stored in {@link CustomField} instances which have been
  * passed as arguments.
  * <p>
- * We allow to types of addition to a log message, either <i>embedded</i>, i.e.
- * the key/value pairs appear as a list of JSON fields in the message, or as a
- * nested object where the field name has been specified as an option to this
- * converter.
+ * We allow two types of additions to a log message, either <i>embedded</i>,
+ * i.e. the key/value pairs appear as a list of JSON fields in the message, or
+ * as a nested object where the field name has been specified as an option to
+ * this converter.
  */
 
 public class CustomFieldsConverter extends ClassicConverter {
@@ -42,8 +42,8 @@ public class CustomFieldsConverter extends ClassicConverter {
 		Map<String, String> mdcCustomFields = getMdcCustomFields(event);
 		StringBuilder appendTo = new StringBuilder();
 		converter.convert(appendTo, mdcCustomFields, argumentArray);
-        return appendTo.toString();
-    }
+		return appendTo.toString();
+	}
 
 	private Map<String, String> getMdcCustomFields(ILoggingEvent event) {
 		LogContext.loadContextFields();
@@ -52,9 +52,9 @@ public class CustomFieldsConverter extends ClassicConverter {
 	}
 
 	@Override
-    public void start() {
-        converter.setFieldName(getFirstOption());
+	public void start() {
+		converter.setFieldName(getFirstOption());
 		customFieldsAdapter.initialize(getContext());
-        super.start();
-    }
+		super.start();
+	}
 }
