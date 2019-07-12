@@ -10,9 +10,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sap.cloud.cf.monitoring.client.MonitoringClient;
+import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfiguration;
 import com.sap.cloud.cf.monitoring.client.exceptions.MonitoringClientException;
 import com.sap.cloud.cf.monitoring.client.model.Metric;
-import com.sap.cloud.cf.monitoring.spring.configuration.CustomMetricsConfiguration;
 import com.sap.cloud.cf.monitoring.spring.configuration.metrics.DefaultMetricsConverter;
 import com.sap.cloud.cf.monitoring.spring.configuration.metrics.MetricsConverterFactory;
 

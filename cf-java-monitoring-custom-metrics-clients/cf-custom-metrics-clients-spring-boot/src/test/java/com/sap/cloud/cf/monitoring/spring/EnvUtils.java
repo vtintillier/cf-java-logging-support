@@ -1,4 +1,4 @@
-package com.sap.cloud.cf.monitoring.spring.configuration;
+package com.sap.cloud.cf.monitoring.spring;
 
 import java.lang.reflect.Field;
 import java.util.Collections;
@@ -14,7 +14,6 @@ public class EnvUtils {
         setNewEnvs(envMap);
     }
 
-    // https://stackoverflow.com/a/496849
     @SuppressWarnings({ "rawtypes", "unchecked" })
     private static void setNewEnvs(Map<String, String> newenv) throws Exception {
         Class[] classes = Collections.class.getDeclaredClasses();

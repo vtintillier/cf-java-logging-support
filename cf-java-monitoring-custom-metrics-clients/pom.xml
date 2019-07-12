@@ -9,7 +9,7 @@
     <parent>
         <groupId>com.sap.hcp.cf.logging</groupId>
         <artifactId>cf-java-logging-support-parent</artifactId>
-        <version>3.0.1</version>
+        <version>3.0.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -19,6 +19,7 @@
     <modules>
         <module>cf-custom-metrics-clients-core</module>
         <module>cf-custom-metrics-clients-spring-boot</module>
+        <module>cf-custom-metrics-clients-java</module>
     </modules>
 
     <dependencyManagement>

@@ -5,13 +5,13 @@
 	<artifactId>cf-java-logging-support-servlet</artifactId>
 	<packaging>jar</packaging>
 
-	<name>cf-java-logging-support-servlet</name>
-	<parent>
-		<groupId>com.sap.hcp.cf.logging</groupId>
-		<artifactId>cf-java-logging-support-parent</artifactId>
-		<version>3.0.1</version>
-		<relativePath>../pom.xml</relativePath>
-	</parent>
+    <name>cf-java-logging-support-servlet</name>
+    <parent>
+        <groupId>com.sap.hcp.cf.logging</groupId>
+        <artifactId>cf-java-logging-support-parent</artifactId>
+        <version>3.0.2</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
 	<properties>
 		<servlet.api.version>3.0.1</servlet.api.version>

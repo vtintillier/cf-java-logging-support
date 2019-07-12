@@ -11,6 +11,8 @@ import com.sap.cloud.cf.monitoring.client.MonitoringClient;
 import com.sap.cloud.cf.monitoring.client.MonitoringClientBuilder;
 import com.sap.cloud.cf.monitoring.client.configuration.CFConfigurationProvider;
 import com.sap.cloud.cf.monitoring.client.configuration.ConfigurationProvider;
+import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfiguration;
+import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfigurationFactory;
 import com.sap.cloud.cf.monitoring.spring.CustomMetricWriter;
 
 import io.micrometer.core.instrument.Clock;
