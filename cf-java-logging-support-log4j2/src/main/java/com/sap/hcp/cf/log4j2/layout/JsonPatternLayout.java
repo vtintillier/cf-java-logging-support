@@ -1,13 +1,16 @@
 package com.sap.hcp.cf.log4j2.layout;
 
+import static java.util.Collections.emptyList;
+
 import java.nio.charset.Charset;
+import java.util.List;
 
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.Configuration;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
-import org.apache.logging.log4j.core.config.plugins.PluginBuilderAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginConfiguration;
+import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 import org.apache.logging.log4j.core.layout.AbstractStringLayout;
 import org.apache.logging.log4j.core.layout.MarkerPatternSelector;
@@ -15,90 +18,70 @@ import org.apache.logging.log4j.core.layout.PatternMatch;
 import org.apache.logging.log4j.core.layout.PatternSelector;
 import org.apache.logging.log4j.core.pattern.PatternFormatter;
 
-import com.sap.hcp.cf.log4j2.layout.LayoutPatterns.PATTERN_KEY;
 import com.sap.hcp.cf.logging.common.Markers;
 
 @Plugin(name = "JsonPatternLayout", category = "Core", elementType = "Layout", printObject = true)
 public final class JsonPatternLayout extends AbstractStringLayout {
 
-    private final PatternSelector markerSelector;
-    private final PatternSelector execptionSelector;
+	private final PatternSelector markerSelector;
+	private final PatternSelector execptionSelector;
 
-    private final Configuration config;
+	private final Configuration config;
+	private final CustomFieldsAdapter customFieldsAdapter;
 
-    protected JsonPatternLayout(Configuration config, Charset charset) {
-        super(charset);
-        this.config = config;
-        markerSelector = createPatternSelector();
-        execptionSelector = createExceptionSelector();
-    }
+	protected JsonPatternLayout(Configuration config, Charset charset, CustomField... customFieldMdcKeyNames) {
+		super(charset);
+		this.config = config;
+		this.customFieldsAdapter = new CustomFieldsAdapter(customFieldMdcKeyNames);
+		markerSelector = createPatternSelector(customFieldMdcKeyNames);
+		execptionSelector = createExceptionSelector(customFieldMdcKeyNames);
+	}
 
-    @Override
-    public String toSerializable(LogEvent event) {
-        PatternSelector selector = getSelector(event);
-        final StringBuilder buf = getStringBuilder();
-        PatternFormatter[] formatters = selector.getFormatters(event);
-        final int len = formatters.length;
-        for (int i = 0; i < len; i++) {
-            formatters[i].format(event, buf);
-        }
-        String str = buf.toString();
-        return str;
-    }
+	@Override
+	public String toSerializable(LogEvent event) {
+		PatternSelector selector = getSelector(event);
+		final StringBuilder buf = getStringBuilder();
+		PatternFormatter[] formatters = selector.getFormatters(event);
+		final int len = formatters.length;
+		for (int i = 0; i < len; i++) {
+			formatters[i].format(event, buf);
+		}
+		String str = buf.toString();
+		return str;
+	}
 
-    @PluginFactory
-    public static JsonPatternLayout createLayout(@PluginAttribute(value = "charset") final Charset charset,
-                                                 @PluginConfiguration final Configuration config) {
-        return new Builder().withCharset(charset).withConfiguration(config).build();
-    }
+	@PluginFactory
+	public static JsonPatternLayout createLayout(@PluginAttribute(value = "charset") final Charset charset,
+			@PluginElement(value = "customField") CustomField[] customFieldMdcKeyNames,
+			@PluginConfiguration final Configuration config) {
+		return new JsonPatternLayout(config, charset, customFieldMdcKeyNames);
+	}
 
-    public static class Builder implements org.apache.logging.log4j.core.util.Builder<JsonPatternLayout> {
+	private MarkerPatternSelector createPatternSelector(CustomField... customFieldMdcKeyNames) {
+		PatternMatch[] pMatches = new PatternMatch[1];
+		String requestPattern = new LayoutPatternBuilder().addRequestMetrics().addContextProperties(emptyList())
+				.suppressExceptions().build();
+		pMatches[0] = new PatternMatch(Markers.REQUEST_MARKER.getName(), requestPattern);
+		List<String> customFields = customFieldsAdapter.getCustomFieldKeyNames();
+		List<String> excludedFields = customFieldsAdapter.getExcludedFieldKeyNames();
+		String applicationPattern = new LayoutPatternBuilder().addBasicApplicationLogs()
+				.addContextProperties(excludedFields).addCustomFields(customFields).suppressExceptions().build();
+		return new MarkerPatternSelector.Builder().setProperties(pMatches).setDefaultPattern(applicationPattern)
+				.setAlwaysWriteExceptions(false).setNoConsoleNoAnsi(false).setConfiguration(config).build();
+	}
 
-        @PluginBuilderAttribute
-        private Charset charset = Charset.defaultCharset();
+	private PatternSelector createExceptionSelector(CustomField... customFieldMdcKeyNames) {
+		List<String> customFields = customFieldsAdapter.getCustomFieldKeyNames();
+		List<String> excludedFields = customFieldsAdapter.getExcludedFieldKeyNames();
+		String exceptionPattern = new LayoutPatternBuilder().addBasicApplicationLogs()
+				.addContextProperties(excludedFields).addCustomFields(customFields).addStacktraces().build();
+		return new MarkerPatternSelector(new PatternMatch[0], exceptionPattern, false, false, config);
+	}
 
-        @PluginConfiguration
-        private Configuration configuration = null;
-
-        private Builder() {
-        }
-
-        public Builder withCharset(final Charset charset) {
-            if (charset != null) {
-                this.charset = charset;
-            }
-            return this;
-        }
-
-        public Builder withConfiguration(final Configuration configuration) {
-            this.configuration = configuration;
-            return this;
-        }
-
-        @Override
-        public JsonPatternLayout build() {
-            return new JsonPatternLayout(configuration, charset);
-        }
-    }
-
-    private MarkerPatternSelector createPatternSelector() {
-        PatternMatch[] pMatches = new PatternMatch[1];
-        pMatches[0] = new PatternMatch(Markers.REQUEST_MARKER.getName(), LayoutPatterns.getPattern(
-                                                                                                   PATTERN_KEY.REQUEST));
-
-        return new MarkerPatternSelector(pMatches, LayoutPatterns.getPattern(PATTERN_KEY.APPLICATION), false, false,
-                                         config);
-    }
-
-    private PatternSelector createExceptionSelector() {
-        return new MarkerPatternSelector(new PatternMatch[0], LayoutPatterns.getPattern(PATTERN_KEY.EXCEPTION), false,
-                                         false, config);
-    }
-
-    private PatternSelector getSelector(LogEvent event) {
-        if (event.getThrownProxy() != null || event.getThrown() != null) {
-            return execptionSelector;
-        }
-        return markerSelector;
-    }
+	private PatternSelector getSelector(LogEvent event) {
+		if (event.getThrownProxy() != null || event.getThrown() != null) {
+			return execptionSelector;
+		}
+		return markerSelector;
+	}
 }
