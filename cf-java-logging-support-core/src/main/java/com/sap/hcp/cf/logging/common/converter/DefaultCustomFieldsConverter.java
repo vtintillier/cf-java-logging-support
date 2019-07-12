@@ -24,10 +24,6 @@ public class DefaultCustomFieldsConverter {
         }
     }
 
-    public void convert(Object[] arguments, StringBuilder appendTo) {
-		convert(appendTo, Collections.emptyMap(), arguments);
-    }
-
 	public void convert(StringBuilder appendTo, Map<String, String> mdcCustomFields, Object... arguments) {
 		List<CustomField> customFields = getCustomFields(arguments);
 		if (!customFields.isEmpty() || !mdcCustomFields.isEmpty()) {
