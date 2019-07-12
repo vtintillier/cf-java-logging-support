@@ -1,5 +1,6 @@
 package com.sap.hcp.cf.logback.converter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.sap.hcp.cf.logging.common.LogContext;
@@ -23,23 +24,38 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  */
 public class ContextPropsConverter extends ClassicConverter {
 
-    public static final String WORD = "ctxp";
-    private final DefaultPropertiesConverter converter = new DefaultPropertiesConverter();
+	public static final String WORD = "ctxp";
+	private DefaultPropertiesConverter converter = new DefaultPropertiesConverter();
+	private CustomFieldsAdapter customFieldsAdapter = new CustomFieldsAdapter();
 
-    @Override
-    public String convert(ILoggingEvent event) {
-        StringBuilder appendTo = new StringBuilder();
-        LogContext.loadContextFields();
-        converter.convert(event.getMDCPropertyMap(), appendTo);
-        return appendTo.toString();
-    }
+	void setConverter(DefaultPropertiesConverter converter) {
+		this.converter = converter;
+	}
 
-    @Override
-    public void start() {
-        List<String> exclusionList = getOptionList();
-        if (exclusionList != null) {
-            converter.setExclusions(exclusionList);
-        }
-        super.start();
-    }
+	void setCustomFieldsAdapter(CustomFieldsAdapter customFieldsAdapter) {
+		this.customFieldsAdapter = customFieldsAdapter;
+	}
+
+	@Override
+	public String convert(ILoggingEvent event) {
+		StringBuilder appendTo = new StringBuilder();
+		LogContext.loadContextFields();
+		converter.convert(appendTo, event.getMDCPropertyMap());
+		return appendTo.toString();
+	}
+
+	@Override
+	public void start() {
+		customFieldsAdapter.initialize(getContext());
+		converter.setExclusions(calculateExclusions());
+		super.start();
+	}
+
+	private List<String> calculateExclusions() {
+		List<String> exclusions = new ArrayList<>(customFieldsAdapter.getCustomFieldExclusions());
+		if (getOptionList() != null) {
+			exclusions.addAll(getOptionList());
+		}
+		return exclusions;
+	}
 }

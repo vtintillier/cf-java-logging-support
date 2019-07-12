@@ -2,6 +2,7 @@ package com.sap.hcp.cf.logging.common;
 
 import static com.sap.hcp.cf.logging.common.customfields.CustomField.customField;
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.text.StringContainsInOrder.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
@@ -9,6 +10,7 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 public class TestCustomFields extends AbstractTest {
 
@@ -86,4 +88,27 @@ public class TestCustomFields extends AbstractTest {
     private String getCustomFields() {
         return getField("custom_fields");
     }
+
+	@Test
+	public void testCustomFieldFromMdcWithoutRetention() throws Exception {
+		// see logback-test.xml for valid field keys
+		MDC.put("test-field", "test-value");
+
+		LOGGER.info(TEST_MESSAGE);
+
+		assertThat(getCustomField("test-field"), is("test-value"));
+		assertThat(getField("test-field"), is(nullValue()));
+	}
+
+	@Test
+	public void testCustomFieldFromMdcWithRetention() throws Exception {
+		// see logback-test.xml for valid field keys
+		MDC.put("retained-field", "test-value");
+
+		LOGGER.info(TEST_MESSAGE);
+
+		assertThat(getCustomField("retained-field"), is("test-value"));
+		assertThat(getField("retained-field"), is("test-value"));
+	}
+
 }
