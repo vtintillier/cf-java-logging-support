@@ -96,6 +96,10 @@ public class RequestLoggingFilter implements Filter {
 
 			RequestRecord rr = requestRecordFactory.create(httpRequest);
 			httpRequest.setAttribute(MDC.class.getName(), MDC.getCopyOfContextMap());
+			
+			if (!httpResponse.isCommitted() && httpResponse.getHeader(HttpHeaders.CORRELATION_ID.getName()) == null) {
+				httpResponse.setHeader(HttpHeaders.CORRELATION_ID.getName(), LogContext.getCorrelationId());
+			}
 
 			/*
 			 * -- we essentially do three things here: -- a) we create a log
@@ -133,6 +137,7 @@ public class RequestLoggingFilter implements Filter {
 			if (dynamicLogLevelProcessor != null) {
 				dynamicLogLevelProcessor.removeDynamicLogLevelFromMDC();
 			}
+			LogContext.resetContextFields();
 		}
 	}
 

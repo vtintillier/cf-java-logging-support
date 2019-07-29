@@ -3,6 +3,7 @@ package com.sap.hcp.cf.logging.servlet.filter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.request.HttpHeader;
 
 public final class HttpHeaderUtilities {
@@ -25,12 +26,24 @@ public final class HttpHeaderUtilities {
 				return value;
 			}
 		}
+		String contextFieldValue = getLogContextFieldValue(header);
+		if (contextFieldValue != null) {
+			return contextFieldValue;
+		}
 		return defaultValue;
 	}
+
 
 	private static String getHeaderValueInternal(HttpServletRequest httpRequest, HttpHeader header) {
 		String headerName = header.getName();
 		return httpRequest.getHeader(headerName);
+	}
+
+	private static String getLogContextFieldValue(HttpHeader header) {
+		if (header.getField() == null) {
+			return null;
+		}
+		return LogContext.get(header.getField());
 	}
 
 	public static String getHeaderValue(HttpServletResponse httpResponse, HttpHeader header) {
