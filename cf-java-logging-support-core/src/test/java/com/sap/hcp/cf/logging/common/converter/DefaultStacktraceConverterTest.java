@@ -81,7 +81,7 @@ public class DefaultStacktraceConverterTest extends AbstractConverterTest {
                          "\"\\tat com.sap.hcp.cf.logging.common.helper.StacktraceGenerator.f1IsASimpleFunctionWithAnExceptionallyLongName(StacktraceGenerator.java:X)\"," + //
                          "\"\\tat com.sap.hcp.cf.logging.common.helper.StacktraceGenerator.generateException(StacktraceGenerator.java:X)\"," + //
                          "\"\\tat com.sap.hcp.cf.logging.common.converter.DefaultStacktraceConverterTest$X.run(DefaultStacktraceConverterTest.java:X)\"," + //
-                         "\"\\tat java.lang.Thread.run(Thread.java:X)\"]";
+				"\"\\tat " + getThreadClassName() + ".run(Thread.java:X)\"]";
         Assert.assertEquals(expectedString, stringBuilder.toString().replaceAll(":\\d+\\)", ":X)").//
                                                          replaceAll("\\$\\d", "\\$X"));
     }
@@ -99,7 +99,7 @@ public class DefaultStacktraceConverterTest extends AbstractConverterTest {
         });
         thread.start();
         thread.join();
-        expectedString = "[\"-------- STACK TRACE TRUNCATED --------\"," + //
+		expectedString = "[\"-------- STACK TRACE TRUNCATED --------\"," + //
                          "\"java.lang.IllegalArgumentException: too long\"," + //
                          "\"\\tat com.sap.hcp.cf.logging.common.helper.StacktraceGenerator.f3IsASimpleFunctionWithAnExceptionallyLongName(StacktraceGenerator.java:X)\"," + //
                          "\"\\tat com.sap.hcp.cf.logging.common.helper.StacktraceGenerator.f3IsASimpleFunctionWithAnExceptionallyLongName(StacktraceGenerator.java:X)\"," + //
@@ -115,9 +115,17 @@ public class DefaultStacktraceConverterTest extends AbstractConverterTest {
                          "\"\\tat com.sap.hcp.cf.logging.common.helper.StacktraceGenerator.f1IsASimpleFunctionWithAnExceptionallyLongName(StacktraceGenerator.java:X)\"," + //
                          "\"\\tat com.sap.hcp.cf.logging.common.helper.StacktraceGenerator.generateException(StacktraceGenerator.java:X)\"," + //
                          "\"\\tat com.sap.hcp.cf.logging.common.converter.DefaultStacktraceConverterTest$X.run(DefaultStacktraceConverterTest.java:X)\"," + //
-                         "\"\\tat java.lang.Thread.run(Thread.java:X)\"]";
+				"\"\\tat " + getThreadClassName() + ".run(Thread.java:X)\"]";
         Assert.assertEquals(expectedString, stringBuilder.toString().replaceAll(":\\d+\\)", ":X)").//
                                                          replaceAll("\\$\\d", "\\$X"));
     }
+
+	// This method is required to account for the module path in stacktraces
+	// after Java 9
+	private String getThreadClassName() {
+		String stackTraceElement = Thread.currentThread().getStackTrace()[0].toString();
+		int i = stackTraceElement.indexOf("Thread");
+		return stackTraceElement.subSequence(0, i) + Thread.class.getSimpleName();
+	}
 
 }

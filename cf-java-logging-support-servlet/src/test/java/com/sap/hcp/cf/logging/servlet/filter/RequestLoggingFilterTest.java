@@ -62,6 +62,7 @@ public class RequestLoggingFilterTest {
 
 	@Before
 	public void initMocks() throws IOException {
+		Mockito.reset(mockReq, mockResp, mockWriter);
 		when(mockResp.getWriter()).thenReturn(mockWriter);
 
 		Map<String, String> contextMap = new HashMap<>();

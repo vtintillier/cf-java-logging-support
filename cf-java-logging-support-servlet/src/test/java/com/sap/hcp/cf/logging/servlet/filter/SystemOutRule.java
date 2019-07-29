@@ -1,10 +1,15 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.util.Collections;
+import java.util.Map;
 
 import org.junit.rules.ExternalResource;
+
+import com.fasterxml.jackson.jr.ob.JSON;
 
 public class SystemOutRule extends ExternalResource {
 
@@ -27,4 +32,20 @@ public class SystemOutRule extends ExternalResource {
 	public String toString() {
 		return output.toString();
 	}
+
+	public Map<Object, Object> fineLineAsMapWith(String key, String expected) throws IOException {
+		for (String line : output.toString().split("\n")) {
+			Map<Object, Object> map = JSON.std.mapFrom(line);
+			if (expected.equals(getAsString(map, key))) {
+				return map;
+			}
+		}
+		return Collections.emptyMap();
+	}
+
+	private String getAsString(Map<Object, Object> map, String key) {
+		Object value = map.get(key);
+		return value != null ? value.toString() : null;
+	}
+
 }
