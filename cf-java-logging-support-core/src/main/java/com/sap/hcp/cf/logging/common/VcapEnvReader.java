@@ -34,6 +34,8 @@ public class VcapEnvReader {
     private static final String CF_INSTANCE_INDEX = "instance_index";
     private static final String CF_SPACE_ID = "space_id";
     private static final String CF_SPACE_NAME = "space_name";
+    private static final String CF_ORGANIZATION_ID = "organization_id";
+    private static final String CF_ORGANIZATION_NAME = "organization_name";
 
     /*
      * for testing purposes only!
@@ -80,6 +82,8 @@ public class VcapEnvReader {
                 addField(tags, envKeys, envMap, CF_INSTANCE_INDEX, Fields.COMPONENT_INSTANCE);
                 addField(tags, envKeys, envMap, CF_SPACE_ID, Fields.SPACE_ID);
                 addField(tags, envKeys, envMap, CF_SPACE_NAME, Fields.SPACE_NAME);
+                addField(tags, envKeys, envMap, CF_ORGANIZATION_ID, Fields.ORGANIZATION_ID);
+                addField(tags, envKeys, envMap, CF_ORGANIZATION_NAME, Fields.ORGANIZATION_NAME);
             } catch (Exception ex) {
                 LoggerFactory.getLogger(VcapEnvReader.class).error("Cannot get infos from environment", ex);
                 return;
