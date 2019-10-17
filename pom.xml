@@ -86,6 +86,13 @@
            <organization>SAP SE</organization>
            <organizationUrl>https://github.com/SAP</organizationUrl>
        </developer>
+       <developer>
+           <id>HariG</id>
+           <name>Hariharan Gandhi</name>
+           <email>hariharan.gandhi@sap.com</email>
+           <organization>SAP SE</organization>
+           <organizationUrl>https://github.com/SAP</organizationUrl>
+       </developer>
     </developers>
 
     <licenses>
