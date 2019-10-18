@@ -4,7 +4,7 @@
 
     <groupId>com.sap.hcp.cf.logging</groupId>
     <artifactId>cf-java-logging-support-parent</artifactId>
-    <version>3.0.4</version>
+    <version>3.0.5</version>
     <packaging>pom</packaging>
 
     <name>Cloud Foundry Java logging support components</name>
@@ -18,7 +18,7 @@
             <organizationUrl>https://github.com/SAP</organizationUrl>
         </developer>
         <developer>
-            <id>anklei</id>
+            <id>akl</id>
             <name>Andreas Klein</name>
             <email>andreas.klein@sap.com</email>
             <organization>SAP SE</organization>
@@ -83,6 +83,13 @@
            <id>martein</id>
            <name>Martin Nikolov</name>
            <email>martin.nikolov@sap.com</email>
+           <organization>SAP SE</organization>
+           <organizationUrl>https://github.com/SAP</organizationUrl>
+       </developer>
+       <developer>
+           <id>HariG</id>
+           <name>Hariharan Gandhi</name>
+           <email>hariharan.gandhi@sap.com</email>
            <organization>SAP SE</organization>
            <organizationUrl>https://github.com/SAP</organizationUrl>
        </developer>

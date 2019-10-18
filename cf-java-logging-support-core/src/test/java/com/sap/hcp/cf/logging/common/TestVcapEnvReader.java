@@ -20,6 +20,8 @@ public class TestVcapEnvReader {
         assertTrue(tags.get(Fields.COMPONENT_INSTANCE).equals(EnvMap.VCAP_INSTANCE_IDX));
         assertTrue(tags.get(Fields.SPACE_ID).equals(EnvMap.VCAP_SPACE_ID));
         assertTrue(tags.get(Fields.SPACE_NAME).equals(EnvMap.VCAP_SPACE_NAME));
+        assertTrue(tags.get(Fields.ORGANIZATION_ID).equals(EnvMap.VCAP_ORGANIZATION_ID));
+        assertTrue(tags.get(Fields.ORGANIZATION_NAME).equals(EnvMap.VCAP_ORGANIZATION_NAME));
         VcapEnvReader.setEnvMap(null);
     }
 
@@ -34,6 +36,8 @@ public class TestVcapEnvReader {
         assertTrue(tags.get(Fields.COMPONENT_INSTANCE).equals(EnvMap.VCAP_INSTANCE_IDX));
         assertTrue(tags.get(Fields.SPACE_ID).equals(EnvMap.VCAP_SPACE_ID));
         assertTrue(tags.get(Fields.SPACE_NAME).equals(EnvMap.VCAP_SPACE_NAME));
+        assertTrue(tags.get(Fields.ORGANIZATION_ID).equals(EnvMap.VCAP_ORGANIZATION_ID));
+        assertTrue(tags.get(Fields.ORGANIZATION_NAME).equals(EnvMap.VCAP_ORGANIZATION_NAME));
         VcapEnvReader.setEnvMap(null);
     }
 }
