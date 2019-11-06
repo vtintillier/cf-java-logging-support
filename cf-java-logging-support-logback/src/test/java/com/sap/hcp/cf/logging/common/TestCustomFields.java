@@ -31,6 +31,13 @@ public class TestCustomFields extends AbstractTest {
     }
 
     @Test
+	public void testCustomFieldWithFloatingPoint() {
+		LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_DOUBLE_VALUE));
+
+		assertThat(getMessage(), is(TEST_MESSAGE));
+		assertThat(getCustomField(SOME_KEY), is(SOME_DOUBLE_VALUE));
+	}
+    @Test
     public void testCustomFieldAsPartOfMessage() {
         String messageWithPattern = TEST_MESSAGE + " {}";
         String messageWithKeyValue = TEST_MESSAGE + " " + SOME_KEY + "=" + SOME_VALUE;

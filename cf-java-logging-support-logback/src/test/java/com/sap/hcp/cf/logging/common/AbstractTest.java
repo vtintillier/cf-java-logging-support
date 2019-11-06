@@ -15,6 +15,7 @@ public abstract class AbstractTest {
     public static final String TEST_MESSAGE = "this is a test message";
     public static final String SOME_KEY = "some_key";
     public static final String SOME_VALUE = "some value";
+    public static final Double SOME_DOUBLE_VALUE = 12.34;
     public static final String SOME_OTHER_KEY = "some_other_key";
     public static final String SOME_OTHER_VALUE = "some other value";
 
@@ -61,11 +62,11 @@ public abstract class AbstractTest {
         return lines[lines.length - 1];
     }
 
-    protected String getCustomField(String fieldName) {
+    protected Object getCustomField(String fieldName) {
         Map<String, Object> cfMap = getMap("custom_fields");
         Object fObj = cfMap.get(fieldName);
         if (fObj != null) {
-            return fObj.toString();
+             return fObj;
         }
         return null;
     }

@@ -30,8 +30,11 @@ public class CustomField {
         return key;
     }
 
-    public String getValue() {
-        return String.valueOf(value);
+    public Object getValue() {
+    	if (value instanceof Number) {
+    		return value;
+    	}
+    	return String.valueOf(value);
     }
 
     @Override
