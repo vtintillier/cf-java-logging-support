@@ -35,7 +35,7 @@ public class ContentLengthTrackingRequestWrapper extends HttpServletRequestWrapp
     @Override
     public BufferedReader getReader() throws IOException {
         wrappedReader = new WrappedInputReader(super.getReader());
-        return wrappedReader;
+		return new BufferedReader(wrappedReader);
     }
 
     @Override
