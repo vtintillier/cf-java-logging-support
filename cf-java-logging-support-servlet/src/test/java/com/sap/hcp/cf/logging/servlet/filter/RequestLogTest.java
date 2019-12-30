@@ -189,7 +189,7 @@ public class RequestLogTest {
 	}
 
 	private String getCorrelationIdGenerated() throws IOException {
-		Map<Object, Object> generationLog = systemOut.fineLineAsMapWith("logger", LogContext.class.getName());
+		Map<String, Object> generationLog = systemOut.fineLineAsMapWith("logger", LogContext.class.getName());
 		if (generationLog == null) {
 			return null;
 		}
@@ -197,11 +197,11 @@ public class RequestLogTest {
 				: generationLog.get(Fields.CORRELATION_ID).toString();
 	}
 
-	private Map<Object, Object> getRequestMessage() throws IOException {
+	private Map<String, Object> getRequestMessage() throws IOException {
 		return systemOut.fineLineAsMapWith("msg", REQUEST_RECEIVED);
 	}
 
-	private Map<Object, Object> getRequestLog() throws IOException {
+	private Map<String, Object> getRequestLog() throws IOException {
 		return systemOut.fineLineAsMapWith("layer", "[SERVLET]");
 	}
 

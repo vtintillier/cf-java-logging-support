@@ -33,9 +33,9 @@ public class SystemOutRule extends ExternalResource {
 		return output.toString();
 	}
 
-	public Map<Object, Object> fineLineAsMapWith(String key, String expected) throws IOException {
+	public Map<String, Object> fineLineAsMapWith(String key, String expected) throws IOException {
 		for (String line : output.toString().split("\n")) {
-			Map<Object, Object> map = JSON.std.mapFrom(line);
+			Map<String, Object> map = JSON.std.mapFrom(line);
 			if (expected.equals(getAsString(map, key))) {
 				return map;
 			}
@@ -43,7 +43,7 @@ public class SystemOutRule extends ExternalResource {
 		return Collections.emptyMap();
 	}
 
-	private String getAsString(Map<Object, Object> map, String key) {
+	private String getAsString(Map<String, Object> map, String key) {
 		Object value = map.get(key);
 		return value != null ? value.toString() : null;
 	}
