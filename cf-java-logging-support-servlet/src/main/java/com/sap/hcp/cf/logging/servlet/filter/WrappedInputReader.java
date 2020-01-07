@@ -1,16 +1,16 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
-import java.io.BufferedReader;
+import java.io.FilterReader;
 import java.io.IOException;
+import java.io.Reader;
 
-public class WrappedInputReader extends BufferedReader {
+public class WrappedInputReader extends FilterReader {
 
-    private final BufferedReader wrappedReader;
     private int contentLength = -1;
+	private int markContentLength = -1;
 
-    protected WrappedInputReader(BufferedReader in) {
-        super(in, 1); // unused
-        wrappedReader = in;
+	protected WrappedInputReader(Reader in) {
+		super(in);
     }
 
     public int getContentLength() {
@@ -19,7 +19,7 @@ public class WrappedInputReader extends BufferedReader {
 
     @Override
     public int read() throws IOException {
-        int c = wrappedReader.read();
+		int c = in.read();
         if (c != -1) {
             incrContentLength(1);
         }
@@ -28,21 +28,42 @@ public class WrappedInputReader extends BufferedReader {
 
     @Override
     public int read(char[] cbuf, int off, int len) throws IOException {
-        int c = wrappedReader.read(cbuf, off, len);
+		int c = in.read(cbuf, off, len);
         if (c != -1) {
             incrContentLength(c);
         }
         return c;
     }
 
-    @Override
-    public String readLine() throws IOException {
-        String s = wrappedReader.readLine();
-        if (s != null) {
-            incrContentLength(s.length());
-        }
-        return s;
-    }
+	@Override
+	public long skip(long n) throws IOException {
+		long skipped = in.skip(n);
+		incrContentLength(toIntExact(skipped));
+		return skipped;
+	}
+
+	private static int toIntExact(long value) {
+		if ((int) value != value) {
+			throw new ArithmeticException("integer overflow");
+		}
+		return (int) value;
+	}
+
+	@Override
+	public void mark(int readAheadLimit) throws IOException {
+		super.mark(readAheadLimit);
+		synchronized (lock) {
+			this.markContentLength = contentLength;
+		}
+	}
+
+	@Override
+	public void reset() throws IOException {
+		super.reset();
+		synchronized (lock) {
+			this.contentLength = markContentLength;
+		}
+	}
 
     private void incrContentLength(int i) {
         if (contentLength == -1) {

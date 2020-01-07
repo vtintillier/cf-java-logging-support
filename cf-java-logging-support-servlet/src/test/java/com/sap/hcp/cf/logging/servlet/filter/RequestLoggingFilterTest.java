@@ -12,6 +12,7 @@ import static org.mockito.Mockito.when;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -118,10 +119,9 @@ public class RequestLoggingFilterTest {
 
 	@Test
 	public void testReader() throws IOException, ServletException {
-		BufferedReader mockReader = mock(BufferedReader.class);
+		BufferedReader reader = new BufferedReader(new StringReader("TEST"));
 
-		when(mockReq.getReader()).thenReturn(mockReader);
-		when(mockReader.read()).thenReturn(1);
+		when(mockReq.getReader()).thenReturn(reader);
 		FilterChain mockFilterChain = new FilterChain() {
 			@Override
 			public void doFilter(ServletRequest request, ServletResponse response)
@@ -136,7 +136,7 @@ public class RequestLoggingFilterTest {
 		assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
-		assertThat(getField(Fields.REQUEST_SIZE_B), is("1"));
+		assertThat(getField(Fields.REQUEST_SIZE_B), is("4"));
 		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
