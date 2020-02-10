@@ -37,7 +37,7 @@ public class LayoutPatternBuilderTest {
 		String pattern = new LayoutPatternBuilder().addBasicApplicationLogs().build();
 
 		assertThat(pattern, specificPart(is(
-				",\"type\":\"log\",\"logger\":\"%logger\",\"thread\":\"%thread\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape}")));
+				",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape}")));
 	}
 
 	@Test
@@ -83,7 +83,7 @@ public class LayoutPatternBuilderTest {
 				.suppressExceptions().build();
 
 		assertThat(pattern, specificPart(is(
-				",\"type\":\"log\",\"logger\":\"%logger\",\"thread\":\"%thread\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{excluded-field},\"custom_fields\":{%cf{custom-field}}%ex{0} ")));
+				",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{excluded-field},\"custom_fields\":{%cf{custom-field}}%ex{0} ")));
 	}
 
 	@Test
@@ -93,7 +93,7 @@ public class LayoutPatternBuilderTest {
 				.build();
 
 		assertThat(pattern, specificPart(is(
-				",\"type\":\"log\",\"logger\":\"%logger\",\"thread\":\"%thread\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{excluded-field},\"custom_fields\":{%cf{custom-field}},\"stacktrace\":%stacktrace")));
+				",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{excluded-field},\"custom_fields\":{%cf{custom-field}},\"stacktrace\":%stacktrace")));
 	}
 
 	private static Matcher<String> specificPart(Matcher<String> expected) {

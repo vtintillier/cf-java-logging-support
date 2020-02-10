@@ -40,8 +40,8 @@ public final class LayoutPatternBuilder {
 
 	public LayoutPatternBuilder addBasicApplicationLogs() {
 		appendQuoted(Fields.TYPE, Defaults.TYPE_LOG).append(",");
-		appendQuoted(Fields.LOGGER, "%logger").append(",");
-		appendQuoted(Fields.THREAD, "%thread").append(",");
+		appendQuoted(Fields.LOGGER, "%replace{%logger}{\"}{\\\\\"}").append(",");
+		appendQuoted(Fields.THREAD, "%replace{%thread}{\"}{\\\\\"}").append(",");
 		appendQuoted(Fields.LEVEL, "%p").append(",");
 		appendUnquoted(Fields.CATEGORIES, "%categories").append(",");
 		appendUnquoted(Fields.MSG, "%jsonmsg{escape}").append(",");
