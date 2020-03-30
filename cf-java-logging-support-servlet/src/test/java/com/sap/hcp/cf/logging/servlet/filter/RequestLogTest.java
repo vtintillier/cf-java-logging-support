@@ -1,5 +1,6 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
@@ -35,6 +36,9 @@ import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.request.HttpHeader;
 import com.sap.hcp.cf.logging.common.request.HttpHeaders;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.LoggerContext;
 
 public class RequestLogTest {
 
@@ -73,115 +77,104 @@ public class RequestLogTest {
 	@Test
 	public void logsCorrelationIdFromRequestHeader() throws Exception {
 		String correlationId = UUID.randomUUID().toString();
-		HttpGet get = new HttpGet(getBaseUrl() + "/test");
-		get.setHeader(HttpHeaders.CORRELATION_ID.getName(), correlationId);
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
-
+		HttpGet get = createRequestWithHeader(HttpHeaders.CORRELATION_ID.getName(), correlationId);
+		try (CloseableHttpResponse response = client.execute(get)) {
 			assertNull("No correlation_id should be generated.", getCorrelationIdGenerated());
 
 			assertThat("Application log without correlation id.", getRequestMessage(),
 					hasEntry(Fields.CORRELATION_ID, correlationId));
 			assertThat("Request log without correlation id.", getRequestLog(),
 					hasEntry(Fields.CORRELATION_ID, correlationId));
-		} finally {
-			if (response != null) {
-				response.close();
-			}
 		}
+	}
+
+	private HttpGet createRequestWithHeader(String headerName, String headerValue) {
+		HttpGet get = createRequest();
+		get.setHeader(headerName, headerValue);
+		return get;
+	}
+
+	private HttpGet createRequest() {
+		return new HttpGet(getBaseUrl() + "/test");
 	}
 
 	@Test
 	public void logsGeneratedCorrelationId() throws Exception {
-		HttpGet get = new HttpGet(getBaseUrl() + "/test");
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
-
+		try (CloseableHttpResponse response = client.execute(createRequest())) {
 			String correlationId = getCorrelationIdGenerated();
 
 			assertThat("Application log without correlation id.", getRequestMessage(),
 					hasEntry(Fields.CORRELATION_ID, correlationId));
 			assertThat("Request log without correlation id.", getRequestLog(),
 					hasEntry(Fields.CORRELATION_ID, correlationId));
-		} finally {
-			if (response != null) {
-				response.close();
-			}
 		}
 	}
 
 	@Test
 	public void logsRequestIdFromRequestHeader() throws Exception {
 		String requestId = UUID.randomUUID().toString();
-		HttpGet get = new HttpGet(getBaseUrl() + "/test");
-		get.setHeader(HttpHeaders.X_VCAP_REQUEST_ID.getName(), requestId);
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
-
+		HttpGet get = createRequestWithHeader(HttpHeaders.X_VCAP_REQUEST_ID.getName(), requestId);
+		try (CloseableHttpResponse response = client.execute(get)) {
 			assertThat("Application log without request id.", getRequestMessage(),
 					hasEntry(Fields.REQUEST_ID, requestId));
 			assertThat("Request log without request id.", getRequestLog(),
 					hasEntry(Fields.REQUEST_ID, requestId));
-		} finally {
-			if (response != null) {
-				response.close();
-			}
 		}
 	}
 
 	@Test
 	public void logsTenantIdFromRequestHeader() throws Exception {
 		String tenantId = UUID.randomUUID().toString();
-		HttpGet get = new HttpGet(getBaseUrl() + "/test");
-		get.setHeader(HttpHeaders.TENANT_ID.getName(), tenantId);
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
-
+		HttpGet get = createRequestWithHeader(HttpHeaders.TENANT_ID.getName(), tenantId);
+		try (CloseableHttpResponse response = client.execute(get)) {
 			assertThat("Application log without tenant id.", getRequestMessage(),
 					hasEntry(Fields.TENANT_ID, tenantId));
 			assertThat("Request log without tenant id.", getRequestLog(), hasEntry(Fields.TENANT_ID, tenantId));
-		} finally {
-			if (response != null) {
-				response.close();
-			}
 		}
 	}
 
 	@Test
 	public void writesCorrelationIdFromHeadersAsResponseHeader() throws Exception {
 		String correlationId = UUID.randomUUID().toString();
-		HttpGet get = new HttpGet(getBaseUrl() + "/test");
-		get.setHeader(HttpHeaders.CORRELATION_ID.getName(), correlationId);
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
+		HttpGet get = createRequestWithHeader(HttpHeaders.CORRELATION_ID.getName(), correlationId);
+		try (CloseableHttpResponse response = client.execute(get)) {
 			assertFirstHeaderValue(correlationId, response, HttpHeaders.CORRELATION_ID);
-		} finally {
-			if (response != null) {
-				response.close();
-			}
 		}
 	}
 
 	@Test
 	public void writesGeneratedCorrelationIdAsResponseHeader() throws Exception {
-		HttpGet get = new HttpGet(getBaseUrl() + "/test");
-		CloseableHttpResponse response = null;
-		try {
-			response = client.execute(get);
-
+		try (CloseableHttpResponse response = client.execute(createRequest())) {
 			assertFirstHeaderValue(getCorrelationIdGenerated(), response, HttpHeaders.CORRELATION_ID);
-		} finally {
-			if (response != null) {
-				response.close();
-			}
 		}
 	}
 
+	@Test
+	public void writesNoRequestLogIfNotConfigured() throws Exception {
+		setRequestLogLevel(Level.OFF);
+		try (CloseableHttpResponse response = client.execute(createRequest())) {
+			assertThat(getRequestLog().entrySet(), is(empty()));
+		} finally {
+			setRequestLogLevel(Level.INFO);
+		}
+	}
+
+	@Test
+	public void logCorrelationIdFromHeaderEvenIfRequestLogNotConfigured() throws Exception {
+		setRequestLogLevel(Level.OFF);
+		String correlationId = UUID.randomUUID().toString();
+		HttpGet get = createRequestWithHeader(HttpHeaders.CORRELATION_ID.getName(), correlationId);
+		try (CloseableHttpResponse response = client.execute(get)) {
+			assertThat("Application log without correlation id.", getRequestMessage(),
+					hasEntry(Fields.CORRELATION_ID, correlationId));
+		} finally {
+			setRequestLogLevel(Level.INFO);
+		}
+	}
+
+	private void setRequestLogLevel(Level level) {
+		((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(RequestLogger.class).setLevel(level);
+	}
 
 	private String getBaseUrl() {
 		int port = ((ServerConnector) server.getConnectors()[0]).getLocalPort();

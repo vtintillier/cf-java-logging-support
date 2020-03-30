@@ -102,6 +102,15 @@ public class RequestLoggingFilter implements Filter {
 			}
 
 			/*
+			 * If request logging is disabled skip request instrumentation and continue the
+			 * filter chain immediately.
+			 */
+			if (!RequestLogger.isRequestLoggingEnabled()) {
+				doFilter(chain, httpRequest, httpResponse);
+				return;
+			}
+
+			/*
 			 * -- we essentially do three things here: -- a) we create a log
 			 * record using our library and log it via STDOUT -- b) keep track
 			 * of certain header fields so that they are available in later
@@ -123,9 +132,7 @@ public class RequestLoggingFilter implements Filter {
 
 			/* -- start measuring right before calling up the filter chain -- */
 			rr.start();
-			if (chain != null) {
-				chain.doFilter(httpRequest, httpResponse);
-			}
+			doFilter(chain, httpRequest, httpResponse);
 
 			if (!httpRequest.isAsyncStarted()) {
 				loggingVisitor.logRequest();
@@ -138,6 +145,13 @@ public class RequestLoggingFilter implements Filter {
 				dynamicLogLevelProcessor.removeDynamicLogLevelFromMDC();
 			}
 			LogContext.resetContextFields();
+		}
+	}
+
+	private void doFilter(FilterChain chain, HttpServletRequest httpRequest, HttpServletResponse httpResponse)
+			throws IOException, ServletException {
+		if (chain != null) {
+			chain.doFilter(httpRequest, httpResponse);
 		}
 	}
 

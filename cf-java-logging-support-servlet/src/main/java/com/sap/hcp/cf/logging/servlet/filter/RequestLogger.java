@@ -27,6 +27,10 @@ public class RequestLogger {
 	private HttpServletResponse httpResponse;
 	private RequestRecord requestRecord;
 
+	public static final boolean isRequestLoggingEnabled() {
+		return LOG.isInfoEnabled(Markers.REQUEST_MARKER);
+	}
+
 	public RequestLogger(RequestRecord requestRecord, HttpServletRequest httpRequest,
 			HttpServletResponse httpResponse) {
 		this.requestRecord = requestRecord;
