@@ -62,7 +62,7 @@ public class TokenCreator {
 
         else {
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-            keyGen.initialize(512);
+			keyGen.initialize(2048);
             keyPair = keyGen.generateKeyPair();
             // keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
         }
