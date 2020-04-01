@@ -53,11 +53,9 @@ the form of environment variables (or request headers).
 
 type: date
 
-format: YYYY-MM-DDTHH:MM:SS.milliZ
-
 required: True
 
-The date when this request metrics message was written.
+The human-readable date when the message was written.
 
 
 ==== written_ts
@@ -68,7 +66,7 @@ example: 1456820553816849408
 
 required: True
 
-The timestamp in nano-second precision when this request metric message was written.
+The timestamp in nano-second precision when the message was written.
 
 
 ==== correlation_id
@@ -79,27 +77,36 @@ example: db2d002e-2702-41ec-66f5-c002a80a3d3f
 
 required: True
 
-Should provide a unique identifier that can be used to correlate multiple
-requests into a larger logical unit (aka "business transaction").
+A unique identifier that can be used to correlate multiple messages into a logical unit.
+
+Currently, we use a UUID for that matter, but future versions may use
+a different key for this.
 
 "-" indicates that no proper value could be provided.
+
+NOTE: As these type of messages can be written at any time and outside
+a "request context" it may happen that this correlation id does not
+match with any other. Logging implementations may provide a way to
+inherit correlation ids from request processing layers further up in
+the processing stack. If so, that id should be used.
 
 
 ==== request_id
 
-type: string
+example: e24a5963-95eb-4568-b1ae-81b67c41e99a
 
-example: 59d76883-8cdc-434b-73c4-1825313cd918
+required: False
 
-required: True
+A unique identifier that can be used to correlate multiple messages to a request.
 
-Unique identifier for a request instance.
 
-NOTE: As request processing most likely happens at various "layers"
-(see below), chances are high that there is more than one message that
-is tagged with this id.
+==== tenant_id
 
-"-" indicates that no proper value could be provided.
+example: e24a5963-95eb-4568-b1ae-81b67c41e99a
+
+required: False
+
+A unique identifier that can be used to correlate multiple messages to a tenant.
 
 
 ==== component_id
@@ -110,8 +117,8 @@ example: 9e6f3ecf-def0-4baf-8fac-9339e61d5645
 
 required: True
 
-Uniquely identifies the software component that has processed the current
-request. It may either be a "service" or an "application" that can be deployed to
+A unique identifier of the software component that has written the message. 
+It may either be a "service" or an "application" that can be deployed to
 a container or VM, but it may not yet fully identify the actual "running instance" of
 that "component".
 
@@ -127,9 +134,7 @@ example: my-fancy-component
 
 required: False
 
-A human-friendly name representing the software component.
-
-NOTE: Most likely NOT unique!
+A human-friendly, not necessarily unique, name representing the software component.
 
 
 ==== component_type
@@ -140,8 +145,7 @@ example: application
 
 required: True
 
-Specifies the type of the sofware component that processed the current
-request.
+The type of the software component that has written the message.
 
 Either "application" or "service"
 
@@ -155,7 +159,7 @@ example: 7
 required: True
 
 CF allows us to scale out horizontally by running several instances of the
-same "component" (see above) in one container, this is identifying the instance.
+same "component" in one container, this is identifying the instance.
 Defaults to "0".
 
 
@@ -169,8 +173,7 @@ format: ???
 
 required: False
 
-Will allow us to identify the "box" or "container" onto which the component
-instance(s) were deployed.
+The unique identifier of the container on which the software component instance is running.
 
 NOTE: If security/privacy is not an issue, an IP address would be ok.
 
@@ -186,8 +189,7 @@ example: 280437b3-dd8b-40b1-bbab-1f05a44345f8
 
 required: True
 
-Uniquley identifies the CF organization to which the component belongs which
-emitted this message.
+The unique identifier of the Cloud Foundry organization to which the software component belongs.
 
 "-" indicates that no proper value could be provided.
 
@@ -200,7 +202,7 @@ example: acme
 
 required: True
 
-A human-friendly name representing the CF organization.
+The human-readable name of the Cloud Foundry organization.
 
 NOTE: Most likely NOT unique!
 
@@ -215,7 +217,7 @@ example: 280437b3-dd8b-40b1-bbab-1f05a44345f8
 
 required: True
 
-Uniquely identifies the CF space to which the component belongs which emitted this message.
+The unique identifier of the Cloud Foundry space to which the software component belongs.
 
 "-" indicates that no proper value could be provided.
 
@@ -228,7 +230,7 @@ example: test
 
 required: True
 
-A human-friendly name representing the CF space.
+The human-readable name of the Cloud Foundry space.
 
 NOTE: Most likely NOT unique!
 
@@ -254,6 +256,7 @@ type: string
 
 required: True
 
+The type of the message.
 To make the message self-contained this is the type tag.
 As we're talking about request metrics messages, it's always "request".
 
@@ -284,7 +287,8 @@ example: /get/api/v2
 
 required: True
 
-The actual request "command" that has been processed.
+The actual request "command" that has been processed. 
+For HTTP requests, it is the request path.
 
 "-" indicates that no proper value could be provided which is hopefully
 never the case.
@@ -294,13 +298,13 @@ never the case.
 
 type: date
 
-example: 2015-01-24 14:06:05.071000
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
 required: False
 
-The date when the consumer sent an outgoing request to the producer.
+The human-readable date when the request has been sent to the processing component.
 
 The precision is in milliseconds. The timezone is UTC.
 
@@ -312,13 +316,13 @@ shipped with the request (in the form of a header or meta data).
 
 type: date
 
-example: 2015-01-24 14:06:05.071000
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
 required: False
 
-The date when an incoming request was received by the producer.
+The human-readabe date when the request has been received by the processing component.
 
 The precision is in milliseconds. The timezone is UTC.
 
@@ -334,14 +338,13 @@ request has been received (preferred).
 
 type: date
 
-example: 2015-01-24 14:06:05.071000
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
 required: False
 
-The date when the response to an incoming request was sent to the
-consumer.
+The human-readable date when the response has been send back by the processing component.
 
 The precision is in milliseconds. The timezone is UTC.
 
@@ -354,14 +357,13 @@ has been sent.
 
 type: date
 
-example: 2015-01-24 14:06:05.071000
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
 required: False
 
-The date when an the response to an outgoing requests was received
-by the consumer.
+The human-readable date when the response has been received by the requesting component.
 
 The precision is in milliseconds. The timezone is UTC.
 
@@ -378,8 +380,7 @@ example: IN
 
 required: True
 
-Specifies whether the message talks about an "incoming" ("IN") or
-an "outgoing" ("OUT") request.
+Indicator of the request direction, i.e. "IN" for incoming and "OUT" for outgoing requests.
 
 Default is "IN"
 
@@ -392,7 +393,7 @@ example: 43.476
 
 required: True
 
-How many milliseconds it took the producer to prepare the response.
+The time in milli-seconds it has taken the processing component to compute the response.
 
 NOTE: If a consumer is reporting that for an outgoing requests, it's
 rather the time it took the consumer to wait until the (complete)
@@ -409,7 +410,7 @@ example: HTTP/1.1
 
 required: True
 
-Which protocol was used to issue a request to a producer. In most cases,
+The technical protocol that has been used to issue a request. In most cases,
 this will be HTTP (including a version specifier), but for outgoing
 requests reported by a producer it may contain other values. E.g. a
 database call via JDBC may report, e.g. "JDBC/1.2"
@@ -425,7 +426,7 @@ example: GET
 
 required: True
 
-The corresponding protocol method.
+The method of the protocol request, e.g. "GET".
 
 "-" indicates that no proper value could be provided.
 
@@ -473,8 +474,7 @@ example: 1234
 
 required: False
 
-Which TCP port is used by the consumer to establish a connection to the
-remote producer.
+The port number on which the request connection has been established.
 
 NOTE: As this is not really a measure/metric, type is defined as string!
 
@@ -497,8 +497,7 @@ type: long
 
 example: 1234
 
-The size in bytes of the request entity or "body" (e.g., in case of POST
-requests).
+The size of the request object, measured in bytes.
 
 If the request contains no entity, the value is -1.
 
@@ -509,7 +508,7 @@ type: integer
 
 example: 200
 
-The status code of the response.
+The numerical status code of the response.
 
 -1 indicates that the value could not be determined
 
@@ -522,7 +521,7 @@ type: long
 
 example: 1234
 
-The size in bytes of the response entity (e.g., in case of GET requests).
+The size of the response object returned to the requesting component, measured in bytes.
 
 If the response contains no entity, the value is -1
 
@@ -535,8 +534,7 @@ example: application/json
 
 required: False
 
-The MIME type associated with the entity of the response if
-available/specfied.
+The MIME type associated with the response object.
 
 "-" indicates that no proper value could be provided.
 
@@ -549,8 +547,7 @@ example: /index.html
 
 required: False
 
-For HTTP requests, identifies the address of the webpage (i.e. the URI
-or IRI) that linked to the resource being requested.
+The address from which the request originated.
 
 "-" indicates that no proper value could be provided.
 

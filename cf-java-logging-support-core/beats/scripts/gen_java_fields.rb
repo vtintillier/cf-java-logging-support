@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env ruby
 
 require 'yaml'
 require 'set'

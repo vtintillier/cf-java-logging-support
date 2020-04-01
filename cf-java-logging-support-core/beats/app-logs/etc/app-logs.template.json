@@ -93,6 +93,11 @@
           "index": "not_analyzed",
           "type": "string"
         },
+        "request_id": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
         "space_id": {
           "doc_values": true,
           "index": "not_analyzed",
@@ -103,7 +108,7 @@
           "index": "not_analyzed",
           "type": "string"
         },
-        "stacktrace": {
+        "tenant_id": {
           "doc_values": true,
           "index": "not_analyzed",
           "type": "string"
