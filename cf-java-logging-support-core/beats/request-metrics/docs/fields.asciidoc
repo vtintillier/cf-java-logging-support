@@ -298,7 +298,7 @@ never the case.
 
 type: date
 
-example: 2015-01-24 14:06:05.071000+00:00
+example: 2015-01-24 14:06:05.071Z
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -316,7 +316,7 @@ shipped with the request (in the form of a header or meta data).
 
 type: date
 
-example: 2015-01-24 14:06:05.071000+00:00
+example: 2015-01-24 14:06:05.071Z
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -338,7 +338,7 @@ request has been received (preferred).
 
 type: date
 
-example: 2015-01-24 14:06:05.071000+00:00
+example: 2015-01-24 14:06:05.071Z
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -357,7 +357,7 @@ has been sent.
 
 type: date
 
-example: 2015-01-24 14:06:05.071000+00:00
+example: 2015-01-24 14:06:05.071Z
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
