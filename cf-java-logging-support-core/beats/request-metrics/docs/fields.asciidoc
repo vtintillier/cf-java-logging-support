@@ -88,7 +88,7 @@ NOTE: As these type of messages can be written at any time and outside
 a "request context" it may happen that this correlation id does not
 match with any other. Logging implementations may provide a way to
 inherit correlation ids from request processing layers further up in
-the processing stack. If so, that id should be used.
+the processing stack. If so, this id should be used.
 
 
 ==== request_id

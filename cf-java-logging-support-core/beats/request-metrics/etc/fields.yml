@@ -76,7 +76,7 @@ ctx:
         a "request context" it may happen that this correlation id does not
         match with any other. Logging implementations may provide a way to
         inherit correlation ids from request processing layers further up in
-        the processing stack. If so, that id should be used.
+        the processing stack. If so, this id should be used.
 
     - name: "request_id"
       string: string
