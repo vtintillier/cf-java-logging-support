@@ -50,47 +50,55 @@ ctx:
     - name: "written_at"
       type: date
       required: true
-      format: YYYY-MM-DDTHH:MM:SS.milliZ
       description: |
-        The date when this request metrics message was written.
+        The human-readable date when the message was written.
 
     - name: "written_ts"
       type: long
       required: true
       example: 1456820553816849408
       description: |
-        The timestamp in nano-second precision when this request metric message was written.
+        The timestamp in nano-second precision when the message was written.
 
     - name: "correlation_id"
       type: string
       required: true
       example: "db2d002e-2702-41ec-66f5-c002a80a3d3f"
       description: |
-        Should provide a unique identifier that can be used to correlate multiple
-        requests into a larger logical unit (aka "business transaction").
+        A unique identifier that can be used to correlate multiple messages into a logical unit.
+        
+        Currently, we use a UUID for that matter, but future versions may use
+        a different key for this.
 
         "-" indicates that no proper value could be provided.
+
+        NOTE: As these type of messages can be written at any time and outside
+        a "request context" it may happen that this correlation id does not
+        match with any other. Logging implementations may provide a way to
+        inherit correlation ids from request processing layers further up in
+        the processing stack. If so, this id should be used.
 
     - name: "request_id"
-      type: string
-      required: true
-      example: "59d76883-8cdc-434b-73c4-1825313cd918"
+      string: string
+      required: false
+      example: "e24a5963-95eb-4568-b1ae-81b67c41e99a"
       description: |
-        Unique identifier for a request instance.
+        A unique identifier that can be used to correlate multiple messages to a request.
 
-        NOTE: As request processing most likely happens at various "layers"
-        (see below), chances are high that there is more than one message that
-        is tagged with this id.
-
-        "-" indicates that no proper value could be provided.
+    - name: "tenant_id"
+      string: string
+      required: false
+      example: "e24a5963-95eb-4568-b1ae-81b67c41e99a"
+      description: |
+        A unique identifier that can be used to correlate multiple messages to a tenant.
 
     - name: "component_id"
       type: string
       required: true
       example: "9e6f3ecf-def0-4baf-8fac-9339e61d5645"
       description: |
-        Uniquely identifies the software component that has processed the current
-        request. It may either be a "service" or an "application" that can be deployed to
+        A unique identifier of the software component that has written the message. 
+        It may either be a "service" or an "application" that can be deployed to
         a container or VM, but it may not yet fully identify the actual "running instance" of
         that "component".
 
@@ -102,17 +110,14 @@ ctx:
       required: false
       example: "my-fancy-component"
       description: |
-        A human-friendly name representing the software component.
-
-        NOTE: Most likely NOT unique!
+        A human-friendly, not necessarily unique, name representing the software component.
 
     - name: "component_type"
       type: string
       required: true
       example: "application"
       description: |
-        Specifies the type of the sofware component that processed the current
-        request.
+        The type of the software component that has written the message.
 
         Either "application" or "service"
 
@@ -122,7 +127,7 @@ ctx:
       example: "7"
       description: |
         CF allows us to scale out horizontally by running several instances of the
-        same "component" (see above) in one container, this is identifying the instance.
+        same "component" in one container, this is identifying the instance.
         Defaults to "0".
 
     - name: "container_id"
@@ -131,8 +136,7 @@ ctx:
       format: ???
       example: "???"
       description: |
-        Will allow us to identify the "box" or "container" onto which the component
-        instance(s) were deployed.
+        The unique identifier of the container on which the software component instance is running.
 
         NOTE: If security/privacy is not an issue, an IP address would be ok.
 
@@ -144,8 +148,7 @@ ctx:
       required: true
       example: "280437b3-dd8b-40b1-bbab-1f05a44345f8"
       description: |
-        Uniquley identifies the CF organization to which the component belongs which
-        emitted this message.
+        The unique identifier of the Cloud Foundry organization to which the software component belongs.
 
         "-" indicates that no proper value could be provided.
 
@@ -154,7 +157,7 @@ ctx:
       required: true
       example: "acme"
       description: |
-        A human-friendly name representing the CF organization.
+        The human-readable name of the Cloud Foundry organization.
 
         NOTE: Most likely NOT unique!
 
@@ -165,7 +168,7 @@ ctx:
       required: true
       example: "280437b3-dd8b-40b1-bbab-1f05a44345f8"
       description: |
-        Uniquely identifies the CF space to which the component belongs which emitted this message.
+        The unique identifier of the Cloud Foundry space to which the software component belongs.
 
         "-" indicates that no proper value could be provided.
 
@@ -174,7 +177,7 @@ ctx:
       required: true
       example: "test"
       description: |
-        A human-friendly name representing the CF space.
+        The human-readable name of the Cloud Foundry space.
 
         NOTE: Most likely NOT unique!
 
@@ -193,6 +196,7 @@ ctx:
       type: string
       required: true
       description: |
+        The type of the message.
         To make the message self-contained this is the type tag.
         As we're talking about request metrics messages, it's always "request".
 
@@ -218,7 +222,8 @@ request-metrics:
       required: true
       example: "/get/api/v2"
       description: |
-        The actual request "command" that has been processed.
+        The actual request "command" that has been processed. 
+        For HTTP requests, it is the request path.
 
         "-" indicates that no proper value could be provided which is hopefully
         never the case.
@@ -229,7 +234,7 @@ request-metrics:
       format: YYYY-MM-DDTHH:MM:SS.milliZ
       example: 2015-01-24T14:06:05.071Z
       description: |
-        The date when the consumer sent an outgoing request to the producer.
+        The human-readable date when the request has been sent to the processing component.
 
         The precision is in milliseconds. The timezone is UTC.
 
@@ -242,7 +247,7 @@ request-metrics:
       format: YYYY-MM-DDTHH:MM:SS.milliZ
       example: 2015-01-24T14:06:05.071Z
       description: |
-        The date when an incoming request was received by the producer.
+        The human-readabe date when the request has been received by the processing component.
 
         The precision is in milliseconds. The timezone is UTC.
 
@@ -259,8 +264,7 @@ request-metrics:
       format: YYYY-MM-DDTHH:MM:SS.milliZ
       example: 2015-01-24T14:06:05.071Z
       description: |
-        The date when the response to an incoming request was sent to the
-        consumer.
+        The human-readable date when the response has been send back by the processing component.
 
         The precision is in milliseconds. The timezone is UTC.
 
@@ -274,8 +278,7 @@ request-metrics:
       format: YYYY-MM-DDTHH:MM:SS.milliZ
       example: 2015-01-24T14:06:05.071Z
       description: |
-        The date when an the response to an outgoing requests was received
-        by the consumer.
+        The human-readable date when the response has been received by the requesting component.
 
         The precision is in milliseconds. The timezone is UTC.
 
@@ -288,8 +291,7 @@ request-metrics:
       required: true
       example: "IN"
       description: |
-        Specifies whether the message talks about an "incoming" ("IN") or
-        an "outgoing" ("OUT") request.
+        Indicator of the request direction, i.e. "IN" for incoming and "OUT" for outgoing requests.
 
         Default is "IN"
 
@@ -298,7 +300,7 @@ request-metrics:
       required: true
       example: 43.476
       description: |
-        How many milliseconds it took the producer to prepare the response.
+        The time in milli-seconds it has taken the processing component to compute the response.
 
         NOTE: If a consumer is reporting that for an outgoing requests, it's
         rather the time it took the consumer to wait until the (complete)
@@ -311,7 +313,7 @@ request-metrics:
       required: true
       example: "HTTP/1.1"
       description: |
-        Which protocol was used to issue a request to a producer. In most cases,
+        The technical protocol that has been used to issue a request. In most cases,
         this will be HTTP (including a version specifier), but for outgoing
         requests reported by a producer it may contain other values. E.g. a
         database call via JDBC may report, e.g. "JDBC/1.2"
@@ -323,7 +325,7 @@ request-metrics:
       required: true
       example: "GET"
       description: |
-        The corresponding protocol method.
+        The method of the protocol request, e.g. "GET".
 
         "-" indicates that no proper value could be provided.
 
@@ -359,8 +361,7 @@ request-metrics:
       required: false
       example: "1234"
       description: |
-        Which TCP port is used by the consumer to establish a connection to the
-        remote producer.
+        The port number on which the request connection has been established.
 
         NOTE: As this is not really a measure/metric, type is defined as string!
 
@@ -376,8 +377,7 @@ request-metrics:
       type: long
       example: 1234
       description: |
-        The size in bytes of the request entity or "body" (e.g., in case of POST
-        requests).
+        The size of the request object, measured in bytes.
 
         If the request contains no entity, the value is -1.
 
@@ -385,7 +385,7 @@ request-metrics:
       type: integer
       example: 200
       description: |
-        The status code of the response.
+        The numerical status code of the response.
 
         -1 indicates that the value could not be determined
 
@@ -395,7 +395,7 @@ request-metrics:
       type: long
       example: 1234
       description: |
-        The size in bytes of the response entity (e.g., in case of GET requests).
+        The size of the response object returned to the requesting component, measured in bytes.
 
         If the response contains no entity, the value is -1
 
@@ -404,8 +404,7 @@ request-metrics:
       required: false
       example: "application/json"
       description: |
-        The MIME type associated with the entity of the response if
-        available/specfied.
+        The MIME type associated with the response object.
 
         "-" indicates that no proper value could be provided.
 
@@ -414,8 +413,7 @@ request-metrics:
       required: false
       example: "/index.html"
       description: |
-        For HTTP requests, identifies the address of the webpage (i.e. the URI
-        or IRI) that linked to the resource being requested.
+        The address from which the request originated.
 
         "-" indicates that no proper value could be provided.
 

@@ -16,7 +16,7 @@ summary: |
   "application logs" written via a proper logging infrastructure implementation.
 
   NOTE: For Java applications running on CF, this is our logging support library, see
-  https://github.com/SAP/perfx/cf-java-logging-support
+  https://github.com/SAP/cf-java-logging-support
 
   Field names follow the convention that we're not using camel case names, but
   rather use "_" as a delimiter between parts.
@@ -42,25 +42,24 @@ ctx:
       type: date
       required: true
       description: |
-        The date when this log message was written.
+        The human-readable date when the message was written.
 
     - name: "written_ts"
       type: long
       required: true
       example: 1456820553816849408
       description: |
-        The timestamp in nano-second precision when this request metric message was written.
+        The timestamp in nano-second precision when the message was written.
 
     - name: "correlation_id"
       type: string
       required: true
       example: "db2d002e-2702-41ec-66f5-c002a80a3d3f"
       description: |
-        Should provide a unique identifier that can be used to correlate multiple
-        log messages into a logical unit (aka "business transaction")..
-
+        A unique identifier that can be used to correlate multiple messages into a logical unit.
+        
         Currently, we use a UUID for that matter, but future versions may use
-        SAP passport for this.
+        a different key for this.
 
         "-" indicates that no proper value could be provided.
 
@@ -70,13 +69,27 @@ ctx:
         inherit correlation ids from request processing layers further up in
         the processing stack. If so, that id should be used.
 
+    - name: "request_id"
+      string: string
+      required: false
+      example: "e24a5963-95eb-4568-b1ae-81b67c41e99a"
+      description: |
+        A unique identifier that can be used to correlate multiple messages to a request.
+
+    - name: "tenant_id"
+      string: string
+      required: false
+      example: "e24a5963-95eb-4568-b1ae-81b67c41e99a"
+      description: |
+        A unique identifier that can be used to correlate multiple messages to a tenant.
+
     - name: "component_id"
       type: string
       required: true
       example: "9e6f3ecf-def0-4baf-8fac-9339e61d5645"
       description: |
-        Uniquely identifies the software component that has processed the current
-        request. It may either be a "service" or an "application" that can be deployed to
+        A unique identifier of the software component that has written the message. 
+        It may either be a "service" or an "application" that can be deployed to
         a container or VM, but it may not yet fully identify the actual "running instance" of
         that "component".
 
@@ -88,17 +101,14 @@ ctx:
       required: false
       example: "my-fancy-component"
       description: |
-        A human-friendly name representing the software component.
-
-        NOTE: Most likely NOT unique!
+        A human-friendly, not necessarily unique, name representing the software component.
 
     - name: "component_type"
       type: string
       required: true
       example: "application"
       description: |
-        Specifies the type of the sofware component that processed the current
-        request.
+        The type of the software component that has written the message.
 
         Either "application" or "service"
 
@@ -108,7 +118,7 @@ ctx:
       example: "7"
       description: |
         CF allows us to scale out horizontally by running several instances of the
-        same "component" (see above) in one container, this is identifying the instance.
+        same "component" in one container, this is identifying the instance.
         Defaults to "0".
 
     - name: "container_id"
@@ -117,8 +127,7 @@ ctx:
       format: ???
       example: "???"
       description: |
-        Will allow us to identify the "box" or "container" onto which the component
-        instance(s) were deployed.
+        The unique identifier of the container on which the software component instance is running.
 
         NOTE: If security/privacy is not an issue, an IP address would be ok.
 
@@ -130,8 +139,7 @@ ctx:
       required: true
       example: "280437b3-dd8b-40b1-bbab-1f05a44345f8"
       description: |
-        Uniquley identifies the CF organization to which the component belongs which
-        emitted this message.
+        The unique identifier of the Cloud Foundry organization to which the software component belongs.
 
         "-" indicates that no proper value could be provided.
 
@@ -140,7 +148,7 @@ ctx:
       required: true
       example: "acme"
       description: |
-        A human-friendly name representing the CF organization.
+        The human-readable name of the Cloud Foundry organization.
 
         NOTE: Most likely NOT unique!
 
@@ -151,7 +159,7 @@ ctx:
       required: true
       example: "280437b3-dd8b-40b1-bbab-1f05a44345f8"
       description: |
-        Uniquely identifies the CF space to which the component belongs which emitted this message.
+        The unique identifier of the Cloud Foundry space to which the software component belongs.
 
         "-" indicates that no proper value could be provided.
 
@@ -160,7 +168,7 @@ ctx:
       required: true
       example: "test"
       description: |
-        A human-friendly name representing the CF space.
+        The human-readable name of the Cloud Foundry space.
 
         NOTE: Most likely NOT unique!
 
@@ -169,12 +177,13 @@ ctx:
       required: true
       example: "[JAVA:BusinessLogicController]"
       description: |
-        The execution layer in the overall setup that emitted the message.
+        The execution layer in the overall processing chain that has written the message.
 
     - name: "type"
       type: string
       required: true
       description: |
+        The type of the message.
         To make the message self-contained this is the type tag.
         As we're talking about log messages, it's always "logs".
 
@@ -190,7 +199,7 @@ app-logs:
       required: true
       example: "com.sap.demo.shine.OrderController"
       description: |
-        The actual entity that wrote the log message.
+        The actual application entity that wrote the log message, e.g. the Java class name.
 
         NOTE: In Java, this is the name that was passed to the LoggerFactory
         when instantiating a Logger.
@@ -200,7 +209,7 @@ app-logs:
       required: false
       example: "http-nio-4655"
       description: |
-        Identifies the execution thread in which this log message has been written.
+        The execution thread in which the log message has been written.
 
         "-" indicates that no proper value could be provided.
 
@@ -216,11 +225,12 @@ app-logs:
       required: true
       example: "This is a log messasge"
       description: |
-        The actual message string passed to the logger.
+        The original log message that has been written by the application.
 
     - name: "stacktrace"
-      type: string
+      type: array
       required: false
+      example: "stacktrace: [\"java.lang.NullPointerException\",\"at com.sap.demo.exception.NullPointerException\"]"
       description: |
         Stacktrace information in case the message is reporting an exception.
 
@@ -237,9 +247,6 @@ app-logs:
       required: false
       example: "cutom_fields: {\"some_key\": \"some_value\"}"
       description: |
-        A JSON object representing the custom arguments passed to the logging
-        framework.
-
-        NOTE: In Java, arguments have to be of type CustomField.
+        A collection of non-standard fields as key-value pairs.
 
         NOTE: As this is "custom" there are no predefined fields here!

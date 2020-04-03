@@ -46,7 +46,7 @@ type: date
 
 required: True
 
-The date when this log message was written.
+The human-readable date when the message was written.
 
 
 ==== written_ts
@@ -57,7 +57,7 @@ example: 1456820553816849408
 
 required: True
 
-The timestamp in nano-second precision when this request metric message was written.
+The timestamp in nano-second precision when the message was written.
 
 
 ==== correlation_id
@@ -68,11 +68,10 @@ example: db2d002e-2702-41ec-66f5-c002a80a3d3f
 
 required: True
 
-Should provide a unique identifier that can be used to correlate multiple
-log messages into a logical unit (aka "business transaction")..
+A unique identifier that can be used to correlate multiple messages into a logical unit.
 
 Currently, we use a UUID for that matter, but future versions may use
-SAP passport for this.
+a different key for this.
 
 "-" indicates that no proper value could be provided.
 
@@ -83,6 +82,24 @@ inherit correlation ids from request processing layers further up in
 the processing stack. If so, that id should be used.
 
 
+==== request_id
+
+example: e24a5963-95eb-4568-b1ae-81b67c41e99a
+
+required: False
+
+A unique identifier that can be used to correlate multiple messages to a request.
+
+
+==== tenant_id
+
+example: e24a5963-95eb-4568-b1ae-81b67c41e99a
+
+required: False
+
+A unique identifier that can be used to correlate multiple messages to a tenant.
+
+
 ==== component_id
 
 type: string
@@ -91,8 +108,8 @@ example: 9e6f3ecf-def0-4baf-8fac-9339e61d5645
 
 required: True
 
-Uniquely identifies the software component that has processed the current
-request. It may either be a "service" or an "application" that can be deployed to
+A unique identifier of the software component that has written the message. 
+It may either be a "service" or an "application" that can be deployed to
 a container or VM, but it may not yet fully identify the actual "running instance" of
 that "component".
 
@@ -108,9 +125,7 @@ example: my-fancy-component
 
 required: False
 
-A human-friendly name representing the software component.
-
-NOTE: Most likely NOT unique!
+A human-friendly, not necessarily unique, name representing the software component.
 
 
 ==== component_type
@@ -121,8 +136,7 @@ example: application
 
 required: True
 
-Specifies the type of the sofware component that processed the current
-request.
+The type of the software component that has written the message.
 
 Either "application" or "service"
 
@@ -136,7 +150,7 @@ example: 7
 required: True
 
 CF allows us to scale out horizontally by running several instances of the
-same "component" (see above) in one container, this is identifying the instance.
+same "component" in one container, this is identifying the instance.
 Defaults to "0".
 
 
@@ -150,8 +164,7 @@ format: ???
 
 required: False
 
-Will allow us to identify the "box" or "container" onto which the component
-instance(s) were deployed.
+The unique identifier of the container on which the software component instance is running.
 
 NOTE: If security/privacy is not an issue, an IP address would be ok.
 
@@ -167,8 +180,7 @@ example: 280437b3-dd8b-40b1-bbab-1f05a44345f8
 
 required: True
 
-Uniquley identifies the CF organization to which the component belongs which
-emitted this message.
+The unique identifier of the Cloud Foundry organization to which the software component belongs.
 
 "-" indicates that no proper value could be provided.
 
@@ -181,7 +193,7 @@ example: acme
 
 required: True
 
-A human-friendly name representing the CF organization.
+The human-readable name of the Cloud Foundry organization.
 
 NOTE: Most likely NOT unique!
 
@@ -196,7 +208,7 @@ example: 280437b3-dd8b-40b1-bbab-1f05a44345f8
 
 required: True
 
-Uniquely identifies the CF space to which the component belongs which emitted this message.
+The unique identifier of the Cloud Foundry space to which the software component belongs.
 
 "-" indicates that no proper value could be provided.
 
@@ -209,7 +221,7 @@ example: test
 
 required: True
 
-A human-friendly name representing the CF space.
+The human-readable name of the Cloud Foundry space.
 
 NOTE: Most likely NOT unique!
 
@@ -222,7 +234,7 @@ example: [JAVA:BusinessLogicController]
 
 required: True
 
-The execution layer in the overall setup that emitted the message.
+The execution layer in the overall processing chain that has written the message.
 
 
 ==== type
@@ -231,6 +243,7 @@ type: string
 
 required: True
 
+The type of the message.
 To make the message self-contained this is the type tag.
 As we're talking about log messages, it's always "logs".
 
@@ -251,7 +264,7 @@ example: com.sap.demo.shine.OrderController
 
 required: True
 
-The actual entity that wrote the log message.
+The actual application entity that wrote the log message, e.g. the Java class name.
 
 NOTE: In Java, this is the name that was passed to the LoggerFactory
 when instantiating a Logger.
@@ -265,7 +278,7 @@ example: http-nio-4655
 
 required: False
 
-Identifies the execution thread in which this log message has been written.
+The execution thread in which the log message has been written.
 
 "-" indicates that no proper value could be provided.
 
@@ -289,12 +302,14 @@ example: This is a log messasge
 
 required: True
 
-The actual message string passed to the logger.
+The original log message that has been written by the application.
 
 
 ==== stacktrace
 
-type: string
+type: array
+
+example: stacktrace: ["java.lang.NullPointerException","at com.sap.demo.exception.NullPointerException"]
 
 required: False
 
@@ -314,10 +329,7 @@ A list of names to further categorize this log message.
 
 === custom_fields Fields
 
-A JSON object representing the custom arguments passed to the logging
-framework.
-
-NOTE: In Java, arguments have to be of type CustomField.
+A collection of non-standard fields as key-value pairs.
 
 NOTE: As this is "custom" there are no predefined fields here!
 
