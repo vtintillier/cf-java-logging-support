@@ -14,6 +14,7 @@ public interface Fields {
   public String CORRELATION_ID = "correlation_id";
   public String REQUEST_ID = "request_id";
   public String TENANT_ID = "tenant_id";
+  public String TENANT_SUBDOMAIN = "tenant_subdomain";
   public String COMPONENT_ID = "component_id";
   public String COMPONENT_NAME = "component_name";
   public String COMPONENT_TYPE = "component_type";
