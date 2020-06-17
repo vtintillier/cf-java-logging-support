@@ -14,7 +14,7 @@ public class TimestampConverter extends ClassicConverter {
     @Override
     public String convert(ILoggingEvent event) {
         StringBuilder appendTo = new StringBuilder();
-        appendTo.append(System.nanoTime());
+        appendTo.append(System.currentTimeMillis() * 1000000);
         return appendTo.toString();
     }
 

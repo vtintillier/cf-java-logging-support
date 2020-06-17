@@ -59,9 +59,9 @@ public class TestAppLog extends AbstractTest {
         MDC.put(SOME_KEY, SOME_VALUE);
         MDC.put("testNumeric", "200");
         logMsg = "Running testMDC()";
-        long beforeTS = System.nanoTime();
+        long beforeTS = System.currentTimeMillis() * 1000000;
         LOGGER.info(logMsg);
-        long afterTS = System.nanoTime();
+        long afterTS = System.currentTimeMillis() * 1000000;
         assertThat(getMessage(), is(logMsg));
         assertThat(getField(Fields.COMPONENT_ID), is("-"));
         assertThat(getField(Fields.COMPONENT_NAME), is("-"));

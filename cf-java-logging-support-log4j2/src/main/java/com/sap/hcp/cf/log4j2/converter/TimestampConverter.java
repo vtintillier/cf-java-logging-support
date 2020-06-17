@@ -21,7 +21,7 @@ public class TimestampConverter extends LogEventPatternConverter {
 
     @Override
     public void format(LogEvent event, StringBuilder toAppendTo) {
-        toAppendTo.append(System.nanoTime());
+        toAppendTo.append(System.currentTimeMillis() * 1000000);
     }
 
 }
