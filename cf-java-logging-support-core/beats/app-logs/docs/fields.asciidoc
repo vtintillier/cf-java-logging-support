@@ -100,6 +100,15 @@ required: False
 A unique identifier that can be used to correlate multiple messages to a tenant.
 
 
+==== tenant_subdomain
+
+example: e24a5963-95eb-4568-b1ae-81b67c41e99a
+
+required: False
+
+A field adding the possibility to add the specific tenant subdmain of the xsuaa.
+
+
 ==== component_id
 
 type: string

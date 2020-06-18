@@ -113,6 +113,11 @@
           "index": "not_analyzed",
           "type": "string"
         },
+        "tenant_subdomain": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
         "thread": {
           "doc_values": true,
           "index": "not_analyzed",

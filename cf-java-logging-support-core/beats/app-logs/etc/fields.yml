@@ -83,6 +83,13 @@ ctx:
       description: |
         A unique identifier that can be used to correlate multiple messages to a tenant.
 
+    - name: "tenant_subdomain"
+      string: string
+      required: false
+      example: "e24a5963-95eb-4568-b1ae-81b67c41e99a"
+      description: |
+        A field adding the possibility to add the specific tenant subdmain of the xsuaa.
+
     - name: "component_id"
       type: string
       required: true
