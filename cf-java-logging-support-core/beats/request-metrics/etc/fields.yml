@@ -92,6 +92,13 @@ ctx:
       description: |
         A unique identifier that can be used to correlate multiple messages to a tenant.
 
+    - name: "tenant_subdomain"
+      string: string
+      required: false
+      example: "acme-inc"
+      description: |
+        A unique identifier that represents the subdomain of the current tenant specific request url, e.g. acme-inc in https://acme-inc.eu10.cloud.alm.sap/home
+
     - name: "component_id"
       type: string
       required: true

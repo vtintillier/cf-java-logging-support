@@ -100,6 +100,15 @@ required: False
 A unique identifier that can be used to correlate multiple messages to a tenant.
 
 
+==== tenant_subdomain
+
+example: acme-inc
+
+required: False
+
+A unique identifier that represents the subdomain of the current tenant specific request url, e.g. acme-inc in https://acme-inc.eu10.cloud.alm.sap/home
+
+
 ==== component_id
 
 type: string
