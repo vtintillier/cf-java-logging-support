@@ -109,6 +109,15 @@ required: False
 A unique identifier that can be used to correlate multiple messages to a tenant.
 
 
+==== tenant_subdomain
+
+example: acme-inc
+
+required: False
+
+A unique identifier that represents the subdomain of the current tenant specific request url, e.g. acme-inc in https://acme-inc.eu10.cloud.alm.sap/home
+
+
 ==== component_id
 
 type: string
@@ -298,7 +307,7 @@ never the case.
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -316,7 +325,7 @@ shipped with the request (in the form of a header or meta data).
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -338,7 +347,7 @@ request has been received (preferred).
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -357,7 +366,7 @@ has been sent.
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 

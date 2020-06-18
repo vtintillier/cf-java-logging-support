@@ -86,10 +86,10 @@ ctx:
     - name: "tenant_subdomain"
       string: string
       required: false
-      example: "e24a5963-95eb-4568-b1ae-81b67c41e99a"
+      example: "acme-inc"
       description: |
-        A field adding the possibility to add the specific tenant subdmain of the xsuaa.
-
+        A unique identifier that represents the subdomain of the current tenant specific request url, e.g. acme-inc in https://acme-inc.eu10.cloud.alm.sap/home
+    
     - name: "component_id"
       type: string
       required: true
