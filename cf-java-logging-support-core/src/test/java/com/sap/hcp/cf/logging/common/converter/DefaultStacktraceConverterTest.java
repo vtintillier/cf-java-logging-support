@@ -5,8 +5,19 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertThat;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.Reader;
+
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.mockito.Matchers;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 
 import com.sap.hcp.cf.logging.common.helper.StacktraceGenerator;
 
@@ -126,6 +137,37 @@ public class DefaultStacktraceConverterTest extends AbstractConverterTest {
 		String stackTraceElement = Thread.currentThread().getStackTrace()[0].toString();
 		int i = stackTraceElement.indexOf("Thread");
 		return stackTraceElement.subSequence(0, i) + Thread.class.getSimpleName();
+	}
+
+	/**
+	 * This test case can be used for failure analysis. Paste a custom stacktrace
+	 * into src/test/resources/com/sap/hcp/cf/logging/converter/stacktrace.txt and
+	 * unignore this test. It will print the formatted stacktrace to the console.
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	@Ignore("Use this test for failure analysis of custom stacktraces.")
+	public void customStacktrace() throws Exception {
+		try (InputStream input = getClass().getResourceAsStream("stacktrace.txt");
+				Reader reader = new InputStreamReader(input);
+				BufferedReader stacktrace = new BufferedReader(reader)) {
+			Throwable exception = Mockito.mock(Throwable.class);
+			Mockito.when(exception.getMessage()).thenReturn("Test-Message");
+			Mockito.doAnswer(new Answer<Void>() {
+
+				@Override
+				public Void answer(InvocationOnMock invocation) throws Throwable {
+					PrintWriter writer = (PrintWriter) invocation.getArguments()[0];
+					stacktrace.lines().forEach(l -> writer.println(l));
+					return null;
+				}
+			}).when(exception).printStackTrace(Matchers.any(PrintWriter.class));
+			DefaultStacktraceConverter converter = new DefaultStacktraceConverter();
+			StringBuilder sb = new StringBuilder();
+			converter.convert(exception, sb);
+			System.out.print(sb.toString());
+		}
 	}
 
 }
