@@ -336,9 +336,23 @@ required: False
 A list of names to further categorize this log message.
 
 
-=== custom_fields Fields
+==== #cf
 
-A collection of non-standard fields as key-value pairs.
+type: object
+
+example: "#cf": {
+  "string": [
+    {"l":"some_label", "v":"some_value", "i": 0},
+    {"l":"other_label", "v":"other_value", "i": 1}
+  ]
+}
+
+
+required: False
+
+An object containing collections of non-standard fields.
+The field "string" contains custom fields with label "l", value "v" and an index "i".
+The index can be used for field order during parsing.
 
 NOTE: As this is "custom" there are no predefined fields here!
 

@@ -86,7 +86,7 @@ public class TestCustomFields extends AbstractTest {
     }
 
     private String getCustomFields() {
-        return getField("custom_fields");
+		return getField(Fields.CUSTOM_FIELDS);
     }
 
 	@Test

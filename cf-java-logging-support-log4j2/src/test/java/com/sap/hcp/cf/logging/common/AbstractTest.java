@@ -66,7 +66,7 @@ public abstract class AbstractTest {
     }
 
     protected String getCustomField(String fieldName) {
-        Map<String, Object> cfMap = getMap("custom_fields");
+		Map<String, Object> cfMap = getMap(Fields.CUSTOM_FIELDS);
         Object fObj = cfMap.get(fieldName);
         if (fObj != null) {
             return fObj.toString();
