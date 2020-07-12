@@ -1,13 +1,16 @@
 package com.sap.hcp.cf.log4j2.converter;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import org.apache.logging.log4j.core.LogEvent;
 import org.apache.logging.log4j.core.config.plugins.Plugin;
 import org.apache.logging.log4j.core.pattern.ConverterKeys;
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
+import org.apache.logging.log4j.message.Message;
 
 import com.sap.hcp.cf.logging.common.converter.DefaultPropertiesConverter;
+import com.sap.hcp.cf.logging.common.customfields.CustomField;
 
 /**
  * A simple {@link LogEventPatternConverter} implementation that converts
@@ -43,7 +46,23 @@ public class ContextPropsConverter extends LogEventPatternConverter {
 
     @Override
     public void format(LogEvent event, StringBuilder toAppendTo) {
-        converter.convert(toAppendTo, event.getContextMap());
-    }
+		Map<String, String> contextData = event.getContextData().toMap();
+		addCustomFieldsFromArguments(contextData, event);
+		converter.convert(toAppendTo, contextData);
+	}
+
+	private void addCustomFieldsFromArguments(Map<String, String> contextData, LogEvent event) {
+		Message message = event.getMessage();
+		Object[] parameters = message.getParameters();
+		if (parameters == null) {
+			return;
+		}
+		for (Object current : parameters) {
+			if (current instanceof CustomField) {
+				CustomField field = (CustomField) current;
+				contextData.put(field.getKey(), field.getValue());
+			}
+		}
+	}
 
 }

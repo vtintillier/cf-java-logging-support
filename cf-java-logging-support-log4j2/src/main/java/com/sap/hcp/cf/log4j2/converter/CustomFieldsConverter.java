@@ -5,7 +5,6 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +14,6 @@ import org.apache.logging.log4j.core.pattern.ConverterKeys;
 import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
 import org.apache.logging.log4j.core.pattern.PatternConverter;
 import org.apache.logging.log4j.message.Message;
-import org.apache.logging.log4j.util.BiConsumer;
 import org.apache.logging.log4j.util.ReadOnlyStringMap;
 
 import com.sap.hcp.cf.logging.common.converter.DefaultCustomFieldsConverter;
@@ -44,6 +42,7 @@ public class CustomFieldsConverter extends LogEventPatternConverter {
 		super(WORD, WORD);
 
 		customFieldMdcKeyNames = options == null ? emptyList() : unmodifiableList(asList(options));
+		converter.setCustomFieldKeyNames(customFieldMdcKeyNames);
 	}
 	
 	public static CustomFieldsConverter newInstance(final String[] options) {
@@ -66,26 +65,6 @@ public class CustomFieldsConverter extends LogEventPatternConverter {
 
 	private Map<String, String> getCustomFieldsFromMdc(LogEvent event) {
 		ReadOnlyStringMap contextData = event.getContextData();
-		if (contextData == null || contextData.isEmpty()) {
-			return Collections.emptyMap();
-		}
-		CustomFieldsMdcCollector mdcCollector = new CustomFieldsMdcCollector();
-		contextData.forEach(mdcCollector);
-		return mdcCollector.getCustomFields();
-	}
-
-	private class CustomFieldsMdcCollector implements BiConsumer<String, String> {
-		private Map<String, String> customFields = new HashMap<>(customFieldMdcKeyNames.size());
-
-		@Override
-		public void accept(String key, String value) {
-			if (customFieldMdcKeyNames.contains(key)) {
-				customFields.put(key, value);
-			}
-		}
-
-		public Map<String, String> getCustomFields() {
-			return customFields;
-		}
+		return contextData != null ? contextData.toMap() : Collections.emptyMap();
 	}
 }

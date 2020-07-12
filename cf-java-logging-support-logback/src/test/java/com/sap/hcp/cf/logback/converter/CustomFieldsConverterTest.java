@@ -10,7 +10,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.Matchers.sameInstance;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -114,26 +113,10 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 	}
 
 
-	@SuppressWarnings("serial")
-	@Test
-	public void singleUnconfiguredMdcField() throws Exception {
-		converter.start();
-		when(event.getMDCPropertyMap()).thenReturn(new HashMap<String, String>() {
-			{
-				put("some key", "some value");
-			}
-		});
-
-		converter.convert(event);
-
-		verifyConverterCall(emptyMap(), nullValue());
-	}
 
 	@Test
-	public void singleConfiguredMdcField() throws Exception {
-		Map<String, String> someMap = new HashMap<>();
-		when(event.getMDCPropertyMap()).thenReturn(someMap);
-		when(customFieldsAdapter.selectCustomFields(eq(someMap))).thenReturn(MDC_PROPERTIES);
+	public void singleMdcField() throws Exception {
+		when(event.getMDCPropertyMap()).thenReturn(MDC_PROPERTIES);
 		converter.start();
 
 		converter.convert(event);
@@ -143,9 +126,7 @@ public class CustomFieldsConverterTest extends AbstractConverterTest {
 
 	@Test
 	public void mergesMdcFieldsAndArguments() throws Exception {
-		Map<String, String> someMap = new HashMap<>();
-		when(event.getMDCPropertyMap()).thenReturn(someMap);
-		when(customFieldsAdapter.selectCustomFields(eq(someMap))).thenReturn(MDC_PROPERTIES);
+		when(event.getMDCPropertyMap()).thenReturn(MDC_PROPERTIES);
 		converter.start();
 
 		CustomField customField = customField("some key", "some value");

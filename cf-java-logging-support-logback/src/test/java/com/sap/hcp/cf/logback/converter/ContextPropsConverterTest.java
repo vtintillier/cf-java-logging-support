@@ -1,15 +1,17 @@
 package com.sap.hcp.cf.logback.converter;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.same;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +26,7 @@ import org.slf4j.MDC;
 import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.converter.DefaultPropertiesConverter;
+import com.sap.hcp.cf.logging.common.customfields.CustomField;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.core.Context;
@@ -46,6 +49,9 @@ public class ContextPropsConverterTest {
 	@Captor
 	private ArgumentCaptor<List<String>> exclusions;
 
+	@Captor
+	private ArgumentCaptor<Map<String, String>> eventProperties;
+
 	@InjectMocks
 	private ContextPropsConverter converter;
 
@@ -64,7 +70,7 @@ public class ContextPropsConverterTest {
 
 		converter.convert(event);
 
-		verify(defaultConverter).convert(any(), same(mdcMap));
+		verify(defaultConverter).convert(any(), eq(mdcMap));
 	}
 
 	@Test
@@ -105,6 +111,18 @@ public class ContextPropsConverterTest {
 
 		verify(defaultConverter).setExclusions(exclusions.capture());
 		assertThat(exclusions.getValue(), hasItems("this key", "that key"));
+	}
+
+	@Test
+	public void testAddsCustomField() throws Exception {
+		converter.start();
+		when(event.getArgumentArray()).thenReturn(new Object[] {CustomField.customField("this key", "this value")});
+		
+		converter.convert(event);
+		
+		verify(defaultConverter).convert(any(StringBuilder.class), eventProperties.capture());
+		assertThat(eventProperties.getValue(), hasEntry("this key", "this value"));
+		
 	}
 
 }

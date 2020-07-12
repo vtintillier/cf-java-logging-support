@@ -116,7 +116,7 @@ public class CustomFieldsConverterTest {
 		converter.format(event, sb);
 
 		verifyConverterCall(allOf(hasEntry("this key", "this value"), hasEntry("that key", "that value"),
-				not(hasEntry("other key", "other value"))));
+				hasEntry("other key", "other value")));
 	}
 
 	@Test
@@ -129,7 +129,7 @@ public class CustomFieldsConverterTest {
 		converter.format(event, sb);
 
 		verifyConverterCall(allOf(hasEntry("this key", "this value"), hasEntry("that key", "that value"),
-				not(hasEntry("other key", "other value"))), is(sameInstance(customField)));
+				hasEntry("other key", "other value")), is(sameInstance(customField)));
 
 	}
 
