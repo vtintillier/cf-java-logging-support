@@ -30,6 +30,14 @@ public class TestCustomFields extends AbstractTest {
 	}
 
 	@Test
+	public void testCustomFieldWithoutRegistration() throws Exception {
+		LOGGER.info(TEST_MESSAGE, customField("ungregistered", SOME_VALUE));
+
+		assertThat(getField("ungregistered"), is(SOME_VALUE));
+		assertThat(getCustomField("unregistered"), is(nullValue()));
+	}
+
+	@Test
 	public void testCustomFieldAsPartOfMessage() throws Exception {
 		String messageWithPattern = TEST_MESSAGE + " {}";
 		String messageWithKeyValue = TEST_MESSAGE + " " + CUSTOM_FIELD_KEY + "=" + SOME_VALUE;
