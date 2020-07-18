@@ -1,10 +1,9 @@
 package com.sap.hcp.cf.logging.common;
 
+import static com.sap.hcp.cf.logging.common.converter.CustomFieldMatchers.hasCustomField;
 import static com.sap.hcp.cf.logging.common.customfields.CustomField.customField;
-import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.text.StringContainsInOrder.stringContainsInOrder;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
@@ -14,101 +13,97 @@ import org.slf4j.MDC;
 
 public class TestCustomFields extends AbstractTest {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(TestCustomFields.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(TestCustomFields.class);
 
-    @Test
-    public void testLogMessage() {
-        LOGGER.info(TEST_MESSAGE);
-        assertThat(getMessage(), is(TEST_MESSAGE));
-    }
+	@Test
+	public void testLogMessage() {
+		LOGGER.info(TEST_MESSAGE);
+		assertThat(getMessage(), is(TEST_MESSAGE));
+	}
 
-    @Test
-    public void testLogMessageWithCustomField() {
-        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE));
+	@Test
+	public void testLogMessageWithCustomField() throws Exception {
+		LOGGER.info(TEST_MESSAGE, customField(CUSTOM_FIELD_KEY, SOME_VALUE));
 
-        assertThat(getMessage(), is(TEST_MESSAGE));
-        assertThat(getCustomField(SOME_KEY), is(SOME_VALUE));
-    }
+		assertThat(getMessage(), is(TEST_MESSAGE));
+		assertThat(getCustomField(CUSTOM_FIELD_KEY), hasCustomField(CUSTOM_FIELD_KEY, SOME_VALUE, CUSTOM_FIELD_INDEX));
+	}
 
-    @Test
-    public void testCustomFieldAsPartOfMessage() {
-        String messageWithPattern = TEST_MESSAGE + " {}";
-        String messageWithKeyValue = TEST_MESSAGE + " " + SOME_KEY + "=" + SOME_VALUE;
+	@Test
+	public void testCustomFieldWithoutRegistration() throws Exception {
+		LOGGER.info(TEST_MESSAGE, customField("ungregistered", SOME_VALUE));
 
-        LOGGER.info(messageWithPattern, customField(SOME_KEY, SOME_VALUE));
+		assertThat(getField("ungregistered"), is(SOME_VALUE));
+		assertThat(getCustomField("unregistered"), is(nullValue()));
+	}
 
-        assertThat(getMessage(), is(messageWithKeyValue));
-        assertThat(getCustomField(SOME_KEY), is(SOME_VALUE));
-    }
+	@Test
+	public void testCustomFieldAsPartOfMessage() throws Exception {
+		String messageWithPattern = TEST_MESSAGE + " {}";
+		String messageWithKeyValue = TEST_MESSAGE + " " + CUSTOM_FIELD_KEY + "=" + SOME_VALUE;
 
-    @Test
-    public void testEscape() {
-        String messageWithPattern = TEST_MESSAGE + " {}";
-        String strangeCharacters = "}{:\",\"";
-        String messageWithKeyValue = TEST_MESSAGE + " " + SOME_KEY + "=" + strangeCharacters;
+		LOGGER.info(messageWithPattern, customField(CUSTOM_FIELD_KEY, SOME_VALUE));
 
-        LOGGER.info(messageWithPattern, customField(SOME_KEY, strangeCharacters));
+		assertThat(getMessage(), is(messageWithKeyValue));
+		assertThat(getCustomField(CUSTOM_FIELD_KEY), hasCustomField(CUSTOM_FIELD_KEY, SOME_VALUE, CUSTOM_FIELD_INDEX));
+	}
 
-        assertThat(getMessage(), is(messageWithKeyValue));
-        assertThat(getCustomField(SOME_KEY), is(strangeCharacters));
-    }
+	@Test
+	public void testEscape() throws Exception {
+		String messageWithPattern = TEST_MESSAGE + " {}";
+		String messageWithKeyValue = TEST_MESSAGE + " " + CUSTOM_FIELD_KEY + "=" + HACK_ATTEMPT;
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testNullKey() {
-        customField(null, SOME_VALUE);
-    }
+		LOGGER.info(messageWithPattern, customField(CUSTOM_FIELD_KEY, HACK_ATTEMPT));
 
-    @Test
-    public void testNullValue() {
-        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, null));
+		assertThat(getMessage(), is(messageWithKeyValue));
+		assertThat(getCustomField(CUSTOM_FIELD_KEY),
+				hasCustomField(CUSTOM_FIELD_KEY, HACK_ATTEMPT, CUSTOM_FIELD_INDEX));
+	}
 
-        assertThat(getMessage(), is(TEST_MESSAGE));
-        assertThat(getCustomField(SOME_KEY), is("null"));
-    }
+	@Test(expected = IllegalArgumentException.class)
+	public void testNullKey() {
+		customField(null, SOME_VALUE);
+	}
 
-    @Test
-    public void testLogMessageWithTwoCustomFields() {
-        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE), customField(SOME_OTHER_KEY, SOME_OTHER_VALUE));
+	@Test
+	public void testNullValue() throws Exception {
+		LOGGER.info(TEST_MESSAGE, customField(CUSTOM_FIELD_KEY, null));
 
-        assertThat(getMessage(), is(TEST_MESSAGE));
+		assertThat(getMessage(), is(TEST_MESSAGE));
+		assertThat(getCustomField(CUSTOM_FIELD_KEY), hasCustomField(CUSTOM_FIELD_KEY, "null", CUSTOM_FIELD_INDEX));
+	}
 
-        assertThat(getCustomField(SOME_KEY), is(SOME_VALUE));
-        assertThat(getCustomField(SOME_OTHER_KEY), is(SOME_OTHER_VALUE));
-    }
+	@Test
+	public void testLogMessageWithTwoCustomFields() throws Exception {
+		LOGGER.info(TEST_MESSAGE, customField(TEST_FIELD_KEY, SOME_VALUE),
+				customField(CUSTOM_FIELD_KEY, SOME_OTHER_VALUE));
 
-    @Test
-    public void testOrderOfLogMessageWithTwoCustomFields() {
-        LOGGER.info(TEST_MESSAGE, customField(SOME_KEY, SOME_VALUE), customField(SOME_OTHER_KEY, SOME_OTHER_VALUE));
+		assertThat(getMessage(), is(TEST_MESSAGE));
 
-        String jsonString = getCustomFields();
-        assertThat(jsonString, stringContainsInOrder(asList(SOME_KEY, SOME_OTHER_KEY)));
-        assertThat(jsonString, stringContainsInOrder(asList(SOME_VALUE, SOME_OTHER_VALUE)));
-    }
-
-    private String getCustomFields() {
-        return getField("custom_fields");
-    }
+		assertThat(getCustomField(TEST_FIELD_KEY), hasCustomField(TEST_FIELD_KEY, SOME_VALUE, TEST_FIELD_INDEX));
+		assertThat(getCustomField(CUSTOM_FIELD_KEY),
+				hasCustomField(CUSTOM_FIELD_KEY, SOME_OTHER_VALUE, CUSTOM_FIELD_INDEX));
+	}
 
 	@Test
 	public void testCustomFieldFromMdcWithoutRetention() throws Exception {
-		// see log4j2-test.xml for valid field keys
-		MDC.put("test-field", "test-value");
+		MDC.put(TEST_FIELD_KEY, SOME_VALUE);
 
 		LOGGER.info(TEST_MESSAGE);
 
-		assertThat(getCustomField("test-field"), is("test-value"));
-		assertThat(getField("test-field"), is(nullValue()));
+		assertThat(getCustomField(TEST_FIELD_KEY), hasCustomField(TEST_FIELD_KEY, SOME_VALUE, TEST_FIELD_INDEX));
+		assertThat(getField(TEST_FIELD_KEY), is(nullValue()));
 	}
 
 	@Test
 	public void testCustomFieldFromMdcWithRetention() throws Exception {
-		// see log4j2-test.xml for valid field keys
-		MDC.put("retained-field", "test-value");
+		MDC.put(RETAINED_FIELD_KEY, SOME_VALUE);
 
 		LOGGER.info(TEST_MESSAGE);
 
-		assertThat(getCustomField("retained-field"), is("test-value"));
-		assertThat(getField("retained-field"), is("test-value"));
+		assertThat(getCustomField(RETAINED_FIELD_KEY),
+				hasCustomField(RETAINED_FIELD_KEY, SOME_VALUE, RETAINED_FIELD_INDEX));
+		assertThat(getField(RETAINED_FIELD_KEY), is(SOME_VALUE));
 	}
 
 }

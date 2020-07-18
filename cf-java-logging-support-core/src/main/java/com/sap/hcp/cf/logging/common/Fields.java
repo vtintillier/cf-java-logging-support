@@ -32,7 +32,7 @@ public interface Fields {
   public String MSG = "msg";
   public String STACKTRACE = "stacktrace";
   public String CATEGORIES = "categories";
-  public String CUSTOM_FIELDS = "custom_fields";
+  public String CUSTOM_FIELDS = "#cf";
   public String REQUEST = "request";
   public String REQUEST_SENT_AT = "request_sent_at";
   public String REQUEST_RECEIVED_AT = "request_received_at";

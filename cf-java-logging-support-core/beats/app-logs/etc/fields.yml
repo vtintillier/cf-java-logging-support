@@ -249,11 +249,20 @@ app-logs:
       description: |
         A list of names to further categorize this log message.
 
-    - name: "custom_fields"
-      type: group
+    - name: "#cf"
+      java_alias: "CUSTOM_FIELDS"
+      type: object
       required: false
-      example: "cutom_fields: {\"some_key\": \"some_value\"}"
+      example: |
+        "#cf": {
+          "string": [
+            {"l":"some_label", "v":"some_value", "i": 0},
+            {"l":"other_label", "v":"other_value", "i": 1}
+          ]
+        }
       description: |
-        A collection of non-standard fields as key-value pairs.
+        An object containing collections of non-standard fields.
+        The field "string" contains custom fields with label "l", value "v" and an index "i".
+        The index can be used for field order during parsing.
 
         NOTE: As this is "custom" there are no predefined fields here!

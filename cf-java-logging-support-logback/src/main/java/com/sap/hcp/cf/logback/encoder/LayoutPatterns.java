@@ -38,7 +38,8 @@ public final class LayoutPatterns {
 			+ JSON_FIELD(Fields.LOGGER, "%replace(%logger){'\"','\\\\\"'}", true, true)
 			+ JSON_FIELD(Fields.THREAD, "%replace(%thread){'\"','\\\\\"'}", true, true)
 			+ JSON_FIELD(Fields.LEVEL, "%p", true, true) + JSON_FIELD(Fields.CATEGORIES, "%categories", false, true)
-			+ JSON_FIELD(Fields.MSG, "%jsonmsg{escape}%replace(%args{custom_fields}){'(.+)', ',$1'}", false, false);
+			+ JSON_FIELD(Fields.MSG, "%jsonmsg{escape}%replace(%args{" + Fields.CUSTOM_FIELDS + "}){'(.+)', ',$1'}",
+					false, false);
 
 	/*
 	 * -- a simple application log message does not include exception/stack trace

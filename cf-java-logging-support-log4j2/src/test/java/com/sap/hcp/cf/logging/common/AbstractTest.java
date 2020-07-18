@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.common;
 
+import static com.sap.hcp.cf.logging.common.converter.UnmarshallUtilities.unmarshalCustomFields;
+
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.List;
@@ -12,11 +14,18 @@ import com.fasterxml.jackson.jr.ob.JSON;
 
 public abstract class AbstractTest {
 
-    public static final String TEST_MESSAGE = "this is a test message";
+	public static final String TEST_MESSAGE = "this is a test message";
+	// see log4j2-test.xml for valid field keys and indices
+	public static final String CUSTOM_FIELD_KEY = "custom-field";
+	public static final int CUSTOM_FIELD_INDEX = 0;
+	public static final String TEST_FIELD_KEY = "test-field";
+	public static final int TEST_FIELD_INDEX = 1;
+	public static final String RETAINED_FIELD_KEY = "retained-field";
+	public static final int RETAINED_FIELD_INDEX = 2;
     public static final String SOME_KEY = "some_key";
     public static final String SOME_VALUE = "some value";
-    public static final String SOME_OTHER_KEY = "some_other_key";
     public static final String SOME_OTHER_VALUE = "some other value";
+	public static final String HACK_ATTEMPT = "}{:\",\"";
 
     protected final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
     protected final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
@@ -65,14 +74,16 @@ public abstract class AbstractTest {
         return lines[lines.length - 1];
     }
 
-    protected String getCustomField(String fieldName) {
-        Map<String, Object> cfMap = getMap("custom_fields");
-        Object fObj = cfMap.get(fieldName);
-        if (fObj != null) {
-            return fObj.toString();
-        }
-        return null;
-    }
+	protected Map<String, Object> getCustomField(String fieldName) throws Exception {
+		List<Map<String, Object>> fields = unmarshalCustomFields(outContent.toString(),
+				Fields.CUSTOM_FIELDS);
+		for (Map<String, Object> field : fields) {
+			if (fieldName.equals(field.get("k"))) {
+				return field;
+			}
+		}
+		return null;
+	}
 
     @SuppressWarnings("unchecked")
     protected Map<String, Object> getMap(String fieldName) {

@@ -43,7 +43,7 @@ public abstract class AbstractConverterTest {
         return sb.toString();
     }
 
-    protected LogEvent makeEvent(String msg, Object[] args) {
+	protected LogEvent makeEvent(String msg, Object... args) {
         return makeEvent(msg, null, args);
     }
 

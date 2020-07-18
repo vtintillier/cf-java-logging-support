@@ -27,7 +27,6 @@ public class CustomFieldsConverter extends ClassicConverter {
 	private DefaultCustomFieldsConverter converter = new DefaultCustomFieldsConverter();
 	private CustomFieldsAdapter customFieldsAdapter = new CustomFieldsAdapter();
 	
-
 	void setConverter(DefaultCustomFieldsConverter converter) {
 		this.converter = converter;
 	}
@@ -47,14 +46,14 @@ public class CustomFieldsConverter extends ClassicConverter {
 
 	private Map<String, String> getMdcCustomFields(ILoggingEvent event) {
 		LogContext.loadContextFields();
-		Map<String, String> mdcPropertyMap = event.getMDCPropertyMap();
-		return customFieldsAdapter.selectCustomFields(mdcPropertyMap);
+		return event.getMDCPropertyMap();
 	}
 
 	@Override
 	public void start() {
-		converter.setFieldName(getFirstOption());
 		customFieldsAdapter.initialize(getContext());
+		converter.setFieldName(getFirstOption());
+		converter.setCustomFieldKeyNames(customFieldsAdapter.getCustomFieldMdcKeyNames());
 		super.start();
 	}
 }

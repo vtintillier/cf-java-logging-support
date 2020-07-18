@@ -5,10 +5,7 @@ import static java.util.Collections.unmodifiableList;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import com.sap.hcp.cf.logging.common.LogContext;
 
@@ -54,16 +51,8 @@ public class CustomFieldsAdapter {
 		return customFieldExclusions;
 	}
 
-	public Map<String, String> selectCustomFields(Map<String, String> in) {
-		if (in == null) {
-			return Collections.emptyMap();
-		}
-		HashMap<String, String> result = new HashMap<>(in.size());
-		for (Map.Entry<String, String> current : in.entrySet()) {
-			if (customFieldMdcKeyNames.contains(current.getKey())) {
-				result.put(current.getKey(), current.getValue());
-			}
-		}
-		return result;
+	public List<String> getCustomFieldMdcKeyNames() {
+		return customFieldMdcKeyNames;
 	}
+
 }

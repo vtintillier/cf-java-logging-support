@@ -17,7 +17,9 @@ ARGV.each do |fname|
   spec.keys.each do |k|
     if spec[k].class == Hash && spec[k].has_key?('fields')
       spec[k]['fields'].each do |f|
-        fields.add(f['name'])
+        if fields.select { |c| c['name'].upcase == f['name'].upcase}.empty?
+          fields.add(f)
+        end
       end
     end
   end
@@ -37,7 +39,8 @@ public interface Fields {
 EOD
 
 fields.each do |f|
-  puts "  public String #{f.upcase} = \"#{f}\";"
+  key = f.has_key?('java_alias') ? f['java_alias'] : f['name']
+  puts "  public String #{key.upcase} = \"#{f['name']}\";"
 end
 
 puts "}"
