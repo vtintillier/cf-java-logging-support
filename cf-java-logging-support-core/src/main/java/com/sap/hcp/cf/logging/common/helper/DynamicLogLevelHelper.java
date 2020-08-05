@@ -7,5 +7,6 @@ public class DynamicLogLevelHelper {
      * from mdc
      */
     public static final String MDC_DYNAMIC_LOG_LEVEL_KEY = "dynamic_log_level";
+	public static final String MDC_DYNAMIC_LOG_LEVEL_PREFIXES = "dynamic_log_level_prefixes";
 
 }
