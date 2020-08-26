@@ -1,6 +1,7 @@
 # Java Logging Support for Cloud Foundry
 
-[![Build Status](https://travis-ci.org/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.org/SAP/cf-java-logging-support)
+[![Build Status](https://travis-ci.org/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.org/SAP/cf-java-logging-support)[![REUSE status](https://api.reuse.software/badge/github.com/SAP/cf-java-logging-support)](https://api.reuse.software/info/github.com/SAP/cf-java-logging-support)
+
 ## Summary
 
 This is a collection of support libraries for Java applications running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) java clients for producing *custom metrics*.
