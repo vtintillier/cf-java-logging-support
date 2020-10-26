@@ -177,7 +177,7 @@
         <junit.version>4.13.1</junit.version>
         <mockito.version>1.9.5</mockito.version>
         <surefire.plugin.version>2.18.1</surefire.plugin.version>
-        <animal.sniffer.version>1.18</animal.sniffer.version>
+        <animal.sniffer.version>1.19</animal.sniffer.version>
         <exec.plugin.version>1.4.0</exec.plugin.version>
         <javadoc.plugin.version>3.1.1</javadoc.plugin.version>
         <gpg.plugin.version>1.6</gpg.plugin.version>
@@ -268,7 +268,7 @@
                 <configuration>
                     <signature>
                         <groupId>org.codehaus.mojo.signature</groupId>
-                        <artifactId>java16</artifactId>
+                        <artifactId>java18</artifactId>
                         <version>1.0</version>
                     </signature>
                 </configuration>
