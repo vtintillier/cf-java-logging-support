@@ -2,11 +2,12 @@ package com.sap.hcp.cf.log4j2.layout;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.isEmptyString;
-import static org.junit.Assert.assertThat;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import org.hamcrest.FeatureMatcher;
 import org.hamcrest.Matcher;
@@ -52,6 +53,20 @@ public class LayoutPatternBuilderTest {
 		String pattern = new LayoutPatternBuilder().addCustomFields(Arrays.asList("this key", "that key")).build();
 
 		assertThat(pattern, specificPart(is(",\"#cf\":{%cf{this key}{that key}}")));
+	}
+
+	@Test
+	public void emptyCustomFields() throws Exception {
+		String pattern = new LayoutPatternBuilder().addCustomFields(Collections.emptyList()).build();
+
+		assertThat(pattern, specificPart(is("")));
+	}
+
+	@Test
+	public void nullCustomFields() throws Exception {
+		String pattern = new LayoutPatternBuilder().addCustomFields(null).build();
+
+		assertThat(pattern, specificPart(is("")));
 	}
 
 	@Test

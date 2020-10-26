@@ -56,6 +56,9 @@ public final class LayoutPatternBuilder {
 	}
 
 	public LayoutPatternBuilder addCustomFields(List<String> mdcKeyNames) {
+		if (mdcKeyNames == null || mdcKeyNames.isEmpty()) {
+			return this;
+		}
 		sb.append("\"").append(Fields.CUSTOM_FIELDS).append("\":");
 		sb.append("{%").append(CustomFieldsConverter.WORD);
 		appendParameters(mdcKeyNames);
