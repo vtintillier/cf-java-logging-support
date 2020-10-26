@@ -39,8 +39,10 @@ public class DynamicLogLevelProcessor {
             try {
                 DecodedJWT jwt = tokenDecoder.validateAndDecodeToken(logLevelToken);
                 String dynamicLogLevel = jwt.getClaim("level").asString();
+				String packages = jwt.getClaim("packages").asString();
                 if (ALLOWED_DYNAMIC_LOGLEVELS.contains(dynamicLogLevel)) {
                     MDC.put(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY, dynamicLogLevel);
+					MDC.put(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_PREFIXES, packages);
                 } else {
                     throw new DynamicLogLevelException("Dynamic Log-Level [" + dynamicLogLevel +
                                                        "] provided in header is not valid. Allowed Values are " +

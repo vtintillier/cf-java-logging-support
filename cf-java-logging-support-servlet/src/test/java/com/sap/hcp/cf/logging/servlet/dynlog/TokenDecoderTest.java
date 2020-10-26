@@ -26,7 +26,7 @@ public class TokenDecoderTest {
         invalidKeyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
         Date issuedAt = new Date();
         Date expiresAt = new Date(new Date().getTime() + 10000);
-        token = TokenCreator.createToken(validKeyPair, "issuer", issuedAt, expiresAt, "TRACE");
+		token = TokenCreator.createToken(validKeyPair, "issuer", issuedAt, expiresAt, "TRACE", "myPrefix");
     }
 
     @Test
@@ -34,6 +34,7 @@ public class TokenDecoderTest {
         TokenDecoder tokenDecoder = new TokenDecoder((RSAPublicKey) validKeyPair.getPublic());
         DecodedJWT jwt = tokenDecoder.validateAndDecodeToken(token);
         assertEquals(jwt.getClaim("level").asString(), "TRACE");
+		assertEquals(jwt.getClaim("packages").asString(), "myPrefix");
     }
 
     @Test(expected = DynamicLogLevelException.class)
