@@ -1,12 +1,14 @@
 package com.sap.hcp.cf.logging.common;
 
 import static com.sap.hcp.cf.logging.common.converter.CustomFieldMatchers.hasCustomField;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
-import static org.junit.Assert.assertThat;
+
+import java.time.Instant;
 
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -63,9 +65,9 @@ public class TestAppLog extends AbstractTest {
         MDC.put(SOME_KEY, SOME_VALUE);
         MDC.put("testNumeric", "200");
         logMsg = "Running testMDC()";
-        long beforeTS = System.currentTimeMillis() * 1000000;
+		long beforeTS = now();
         LOGGER.info(logMsg);
-        long afterTS = System.currentTimeMillis() * 1000000;
+		long afterTS = now();
         assertThat(getMessage(), is(logMsg));
         assertThat(getField(Fields.COMPONENT_ID), is("-"));
         assertThat(getField(Fields.COMPONENT_NAME), is("-"));
@@ -78,7 +80,7 @@ public class TestAppLog extends AbstractTest {
 	@Test
 	public void testUnregisteredCustomField() {
 		logMsg = "Running testUnregisteredCustomField()";
-		long beforeTS = System.currentTimeMillis() * 1000000;
+		long beforeTS = now();
 		LOGGER.info(logMsg, CustomField.customField(SOME_KEY, SOME_VALUE));
 		assertThat(getMessage(), is(logMsg));
 		assertThat(getField(SOME_KEY), is(SOME_VALUE));
@@ -96,7 +98,7 @@ public class TestAppLog extends AbstractTest {
 		MDC.put(RETAINED_FIELD_KEY, SOME_VALUE);
 		MDC.put(SOME_KEY, SOME_VALUE);
 		logMsg = "Running testCustomFieldOverwritesMdc()";
-		long beforeTS = System.currentTimeMillis() * 1000000;
+		long beforeTS = now();
 		LOGGER.info(logMsg, CustomField.customField(CUSTOM_FIELD_KEY, SOME_OTHER_VALUE),
 				CustomField.customField(RETAINED_FIELD_KEY, SOME_OTHER_VALUE),
 				CustomField.customField(SOME_KEY, SOME_OTHER_VALUE));
@@ -137,4 +139,9 @@ public class TestAppLog extends AbstractTest {
         LOGGER.info(jsonMsg);
         assertThat(getMessage(), is(jsonMsg));
     }
+
+	private static long now() {
+		Instant now = Instant.now();
+		return now.getEpochSecond() * 1_000_000_000L + now.getNano();
+	}
 }
