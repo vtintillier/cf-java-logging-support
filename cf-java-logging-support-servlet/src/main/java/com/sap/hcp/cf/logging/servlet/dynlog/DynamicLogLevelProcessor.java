@@ -3,8 +3,6 @@ package com.sap.hcp.cf.logging.servlet.dynlog;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
@@ -24,25 +22,22 @@ public class DynamicLogLevelProcessor {
     private static final List<String> ALLOWED_DYNAMIC_LOGLEVELS = Arrays.asList("TRACE", "DEBUG", "INFO", "WARN",
                                                                                 "ERROR");
     private final TokenDecoder tokenDecoder;
-    private final DynLogEnvironment dynLogEnvironment;
 
-    public DynamicLogLevelProcessor(DynLogEnvironment dynLogEnvironment) {
-        this.dynLogEnvironment = dynLogEnvironment;
-        this.tokenDecoder = new TokenDecoder(dynLogEnvironment.getRsaPublicKey());
+    public DynamicLogLevelProcessor(DynLogConfiguration dynLogConfig) {
+        this.tokenDecoder = new TokenDecoder(dynLogConfig.getRsaPublicKey());
     }
 
-    public void copyDynamicLogLevelToMDC(HttpServletRequest httpRequest) {
-        String logLevelToken = httpRequest.getHeader(dynLogEnvironment.getDynLogHeaderKey());
+    public void copyDynamicLogLevelToMDC(String logLevelToken) {
         if (logLevelToken == null) {
             return;
         } else {
             try {
                 DecodedJWT jwt = tokenDecoder.validateAndDecodeToken(logLevelToken);
                 String dynamicLogLevel = jwt.getClaim("level").asString();
-				String packages = jwt.getClaim("packages").asString();
+                String packages = jwt.getClaim("packages").asString();
                 if (ALLOWED_DYNAMIC_LOGLEVELS.contains(dynamicLogLevel)) {
                     MDC.put(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY, dynamicLogLevel);
-					MDC.put(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_PREFIXES, packages);
+                    MDC.put(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_PREFIXES, packages);
                 } else {
                     throw new DynamicLogLevelException("Dynamic Log-Level [" + dynamicLogLevel +
                                                        "] provided in header is not valid. Allowed Values are " +

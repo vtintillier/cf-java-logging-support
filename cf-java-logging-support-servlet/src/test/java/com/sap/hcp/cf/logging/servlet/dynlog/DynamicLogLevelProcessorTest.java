@@ -8,7 +8,6 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.Date;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.bind.DatatypeConverter;
 
 import org.junit.After;
@@ -28,10 +27,10 @@ public class DynamicLogLevelProcessorTest extends Mockito {
 
     @Mock
     private Environment environment;
-    @Mock
-    private HttpServletRequest httpRequest;
 
     private DynamicLogLevelProcessor processor;
+
+    private String token;
 
     @Before
     public void setup() throws NoSuchAlgorithmException, NoSuchProviderException, DynamicLogLevelException {
@@ -39,10 +38,9 @@ public class DynamicLogLevelProcessorTest extends Mockito {
         String keyBase64 = DatatypeConverter.printBase64Binary(keyPair.getPublic().getEncoded());
         Date issuedAt = new Date();
         Date expiresAt = new Date(new Date().getTime() + 10000);
-		String token = TokenCreator.createToken(keyPair, "issuer", issuedAt, expiresAt, "TRACE", "myPrefix");
+		this.token = TokenCreator.createToken(keyPair, "issuer", issuedAt, expiresAt, "TRACE", "myPrefix");
         when(environment.getVariable("DYN_LOG_LEVEL_KEY")).thenReturn(keyBase64);
         when(environment.getVariable("DYN_LOG_HEADER")).thenReturn("SAP-LOG-LEVEL");
-        when(httpRequest.getHeader("SAP-LOG-LEVEL")).thenReturn(token);
         processor = new DynamicLogLevelProcessor(new DynLogEnvironment(environment));
     }
 
@@ -52,20 +50,20 @@ public class DynamicLogLevelProcessorTest extends Mockito {
 
     @Test
     public void testCopyDynamicLogLevelToMDC() throws Exception {
-        processor.copyDynamicLogLevelToMDC(httpRequest);
+        processor.copyDynamicLogLevelToMDC(token);
         assertEquals("TRACE", MDC.get(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY));
     }
 
     @Test
     public void testDeleteDynamicLogLevelFromMDC() throws Exception {
-        processor.copyDynamicLogLevelToMDC(httpRequest);
+        processor.copyDynamicLogLevelToMDC(token);
         processor.removeDynamicLogLevelFromMDC();
         assertEquals(null, MDC.get(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY));
     }
 
 	@Test
 	public void testCopyDynamicLogPackagesToMDC() throws Exception {
-		processor.copyDynamicLogLevelToMDC(httpRequest);
+		processor.copyDynamicLogLevelToMDC(token);
 		assertEquals("myPrefix", MDC.get(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_PREFIXES));
 
 	}

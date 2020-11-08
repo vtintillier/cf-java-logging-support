@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sap.hcp.cf.logging.common.helper.Environment;
 
-public class DynLogEnvironment {
+public class DynLogEnvironment implements DynLogConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynLogEnvironment.class);
     private final RSAPublicKey rsaPublicKey;
@@ -46,10 +46,12 @@ public class DynLogEnvironment {
         }
     }
 
+    @Override
     public RSAPublicKey getRsaPublicKey() {
         return rsaPublicKey;
     }
 
+    @Override
     public String getDynLogHeaderKey() {
         return dynLogHeaderKey;
     }
