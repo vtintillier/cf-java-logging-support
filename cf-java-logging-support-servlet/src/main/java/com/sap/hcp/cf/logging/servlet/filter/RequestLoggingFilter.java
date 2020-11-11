@@ -15,6 +15,7 @@ import org.slf4j.MDC;
 
 import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.LogOptionalFieldsSettings;
+import com.sap.hcp.cf.logging.common.request.HttpHeader;
 import com.sap.hcp.cf.logging.common.request.HttpHeaders;
 import com.sap.hcp.cf.logging.common.request.RequestRecord;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynLogEnvironment;
@@ -144,10 +145,19 @@ public class RequestLoggingFilter implements Filter {
 			if (dynamicLogLevelProcessor != null) {
 				dynamicLogLevelProcessor.removeDynamicLogLevelFromMDC();
 			}
-			LogContext.resetContextFields();
+			resetLogContext();
 		}
 	}
 
+
+    private void resetLogContext() {
+        for (HttpHeader header : HttpHeaders.propagated()) {
+            LogContext.remove(header.getField());
+        }
+        LogContext.resetContextFields();
+    }
+
+	
 	private void doFilter(FilterChain chain, HttpServletRequest httpRequest, HttpServletResponse httpResponse)
 			throws IOException, ServletException {
 		if (chain != null) {

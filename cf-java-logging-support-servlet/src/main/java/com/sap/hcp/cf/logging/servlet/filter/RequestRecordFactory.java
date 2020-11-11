@@ -28,7 +28,6 @@ public class RequestRecordFactory {
 		RequestRecordBuilder rrb =  requestRecord("[SERVLET]").addTag(Fields.REQUEST, getFullRequestUri(request))
 				.addTag(Fields.METHOD, request.getMethod())
 				.addTag(Fields.PROTOCOL, getValue(request.getProtocol()))
-				.addContextTag(Fields.REQUEST_ID, getHeader(request, HttpHeaders.X_VCAP_REQUEST_ID))
 				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_IP, getValue(request.getRemoteAddr()))
 				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_HOST, getValue(request.getRemoteHost()))
 				.addOptionalTag(isSensitiveConnectionData, Fields.REMOTE_PORT,
@@ -38,7 +37,7 @@ public class RequestRecordFactory {
 				.addOptionalTag(isLogRemoteUserField, Fields.REMOTE_USER, getValue(request.getRemoteUser()))
 				.addOptionalTag(isLogRefererField, Fields.REFERER, getHeader(request, HttpHeaders.REFERER));
 		for (HttpHeader header : HttpHeaders.propagated()) {
-			rrb.addContextTag(header.getField(), getHeader(request, header));
+			rrb.addContextTag(header.getField(), getHeaderValue(request, header, null));
 		}
 		return rrb.build();
 	}
