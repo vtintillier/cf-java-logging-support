@@ -42,6 +42,7 @@ public class RequestLogger {
 		requestRecord.stop();
 		addRequestHandlingParameters();
 		generateLog();
+		requestRecord.resetContext();
 	}
 
 	private void addRequestHandlingParameters() {

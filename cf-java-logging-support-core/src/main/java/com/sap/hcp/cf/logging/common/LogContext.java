@@ -21,7 +21,6 @@ public class LogContext {
             put(Fields.CORRELATION_ID, Defaults.UNKNOWN);
             put(Fields.TENANT_ID, Defaults.UNKNOWN);
             put(Fields.TENANT_SUBDOMAIN, Defaults.UNKNOWN);
-            put(Fields.REQUEST_ID, null);
             put(Fields.COMPONENT_ID, Defaults.UNKNOWN);
             put(Fields.COMPONENT_NAME, Defaults.UNKNOWN);
             put(Fields.COMPONENT_TYPE, Defaults.COMPONENT_TYPE);

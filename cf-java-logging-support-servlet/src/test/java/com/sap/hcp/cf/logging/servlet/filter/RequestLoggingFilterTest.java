@@ -1,5 +1,6 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import static org.hamcrest.Matchers.nullValue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.text.IsEmptyString.isEmptyOrNullString;
@@ -24,6 +25,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -84,10 +86,11 @@ public class RequestLoggingFilterTest {
 	@Test
 	public void testSimple() throws IOException, ServletException {
 		FilterChain mockFilterChain = mock(FilterChain.class);
+		
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
-		assertThat(getField(Fields.REQUEST_ID), is(Defaults.UNKNOWN));
+		assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
 		assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
@@ -110,7 +113,7 @@ public class RequestLoggingFilterTest {
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
-		assertThat(getField(Fields.REQUEST_ID), is(Defaults.UNKNOWN));
+		assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
 		assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
@@ -132,7 +135,7 @@ public class RequestLoggingFilterTest {
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
-		assertThat(getField(Fields.REQUEST_ID), is(Defaults.UNKNOWN));
+		assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
 		assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.COMPONENT_ID), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CONTAINER_ID), is(Defaults.UNKNOWN));
@@ -204,6 +207,7 @@ public class RequestLoggingFilterTest {
 		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.CORRELATION_ID), is(CORRELATION_ID));
 		assertThat(getField(Fields.CORRELATION_ID), not(REQUEST_ID));
+		assertThat(getField(Fields.REQUEST_ID), is(REQUEST_ID));
 		assertThat(getField(Fields.TENANT_ID), is(Defaults.UNKNOWN));
 	}
 
@@ -217,7 +221,8 @@ public class RequestLoggingFilterTest {
 	}
 	
 	protected String getField(String fieldName) throws JSONObjectException, IOException {
-		return JSON.std.mapFrom(getLastLine()).get(fieldName).toString();
+		Object fieldValue = JSON.std.mapFrom(getLastLine()).get(fieldName);
+        return fieldValue == null ? null : fieldValue.toString();
 	}
 
 	private String getLastLine() {
