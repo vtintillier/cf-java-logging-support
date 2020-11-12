@@ -7,14 +7,20 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
 
-import org.hamcrest.MatcherAssert;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
+import com.sap.hcp.cf.logging.common.LogContext;
 
 public class HttpHeadersTest {
+
+    @Before
+    public void resetLogContext() {
+        LogContext.resetContextFields();
+        HttpHeaders.propagated().stream().map(HttpHeader::getField).forEach(LogContext::remove);
+    }
 
     @Test
     public void hasCorrectNumberOfTypes() throws Exception {
