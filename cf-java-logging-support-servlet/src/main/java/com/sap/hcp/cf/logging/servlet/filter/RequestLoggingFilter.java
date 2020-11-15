@@ -105,7 +105,8 @@ public class RequestLoggingFilter implements Filter {
 
             @Override
             protected DynamicLogLevelProcessor initialize() throws ConcurrentException {
-                return new DynamicLogLevelProcessor(getDynLogEnvironment().get());
+                return getDynLogEnvironment().map(DynLogEnvironment::getRsaPublicKey).map(DynamicLogLevelProcessor::new)
+                                             .get();
             }
         };
     }
@@ -228,7 +229,7 @@ public class RequestLoggingFilter implements Filter {
              */
         } finally {
             deactivateDynamicLogLevels();
-			resetLogContext();
+            resetLogContext();
         }
     }
 
@@ -244,7 +245,7 @@ public class RequestLoggingFilter implements Filter {
     }
 
     private void resetLogContext() {
-        for (HttpHeader header : HttpHeaders.propagated()) {
+        for (HttpHeader header: HttpHeaders.propagated()) {
             LogContext.remove(header.getField());
         }
         LogContext.resetContextFields();
