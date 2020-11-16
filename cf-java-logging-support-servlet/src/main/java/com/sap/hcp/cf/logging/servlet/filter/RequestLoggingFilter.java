@@ -96,7 +96,7 @@ public class RequestLoggingFilter implements Filter {
     public RequestLoggingFilter(ConcurrentInitializer<DynLogEnvironment> dynLogEnvironment) {
         this(createDefaultRequestRecordFactory(), dynLogEnvironment);
     }
-
+    
     public RequestLoggingFilter(RequestRecordFactory requestRecordFactory,
                                 ConcurrentInitializer<DynLogEnvironment> dynLogEnvironment) {
         this.requestRecordFactory = requestRecordFactory;

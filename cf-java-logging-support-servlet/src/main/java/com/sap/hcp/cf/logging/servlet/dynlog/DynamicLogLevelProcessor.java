@@ -32,8 +32,8 @@ public class DynamicLogLevelProcessor {
      *             {@link DynamicLogLevelProcessor#DynamicLogLevelProcessor(RSAPublicKey)}
      *             instead.
      * @param dynLogConfig
-     *            then {@link DynLogConfiguration} to read the public RSA key
-     *            for JWT validation from.
+     *            the {@link DynLogConfiguration} to read the public RSA key for
+     *            JWT validation from.
      */
     @Deprecated
     public DynamicLogLevelProcessor(DynLogConfiguration dynLogConfig) {
@@ -90,8 +90,9 @@ public class DynamicLogLevelProcessor {
     }
 
     /**
-     * Removes the MDC fields for dynamic log levels. This needs to be called to
-     * remove the changed log level configuration.
+     * Resets the current dynamic log level configuration by removing the
+     * corresponding fields from the MDC. This needs to be called to remove the
+     * changed log level configuration.
      */
     public void removeDynamicLogLevelFromMDC() {
         MDC.remove(DynamicLogLevelHelper.MDC_DYNAMIC_LOG_LEVEL_KEY);
