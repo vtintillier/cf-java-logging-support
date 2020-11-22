@@ -1,0 +1,12 @@
+---
+keystore:
+  token:
+    type: jks
+    location: "classpath:token_keystore.jks"
+    password: "0bzhBRNUXBR5"
+    keyAlias: jwt-token
+    keyPassword: "0bzhBRNUXBR5"
+defaults:
+  token:
+    expiration: P2D
+    issuer: sample-app-spring-boot

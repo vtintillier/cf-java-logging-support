@@ -192,6 +192,7 @@
         <module>cf-java-logging-support-jersey</module>
         <module>cf-java-monitoring-custom-metrics-clients</module>
         <module>sample</module>
+        <module>sample-spring-boot</module>
     </modules>
 
     <dependencies>
