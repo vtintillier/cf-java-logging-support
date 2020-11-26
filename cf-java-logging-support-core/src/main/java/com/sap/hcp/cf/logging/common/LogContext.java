@@ -15,8 +15,6 @@ import org.slf4j.MDC;
 
 public class LogContext {
 
-	private static final Logger LOG = LoggerFactory.getLogger(LogContext.class);
-
     @SuppressWarnings("serial")
     private static Map<String, String> CTX_FIELDS = new HashMap<String, String>() {
         {
@@ -114,10 +112,14 @@ public class LogContext {
         }
     }
 
+    private static class LoggerHolder {
+        static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     private static void generateAndSetCorrelationId() {
         String generatedCorrelationId = String.valueOf(UUID.randomUUID());
         setCorrelationId(generatedCorrelationId);
 
-        LOG.info("generated new correlation id");
+        LoggerHolder.LOG.info("generated new correlation id");
     }
 }
