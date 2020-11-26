@@ -23,7 +23,7 @@ public class DefaultStacktraceConverter extends StacktraceConverter {
     }
 
     private static class LoggerHolder {
-    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+        static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
     }
 
     @Override

@@ -31,7 +31,7 @@ public class DefaultMessageConverter {
     }
 
     private static class LoggerHolder {
-    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+        static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
     }
 
     public void convert(String message, StringBuilder appendTo) {

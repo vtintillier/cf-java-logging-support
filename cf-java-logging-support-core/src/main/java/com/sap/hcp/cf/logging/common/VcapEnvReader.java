@@ -23,7 +23,7 @@ import com.fasterxml.jackson.jr.ob.JSON;
  */
 public class VcapEnvReader {
 
-	private static final Logger LOG = LoggerFactory.getLogger(VcapEnvReader.class);
+    private static final Logger LOG = LoggerFactory.getLogger(VcapEnvReader.class);
 
     public static final String ENV_VCAP_APPLICATION = "VCAP_APPLICATION";
     public static final String ENV_CF_INSTANCE_IP = "CF_INSTANCE_IP";

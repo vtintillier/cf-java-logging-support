@@ -20,8 +20,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  */
 public class CategoriesConverter extends ClassicConverter {
 
-	private static final Logger LOG = LoggerFactory.getLogger(CategoriesConverter.class);
-			
+    private static final Logger LOG = LoggerFactory.getLogger(CategoriesConverter.class);
+
     public static final String WORD = "categories";
 
     @Override

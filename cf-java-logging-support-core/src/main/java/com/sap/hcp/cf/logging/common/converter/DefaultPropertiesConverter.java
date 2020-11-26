@@ -32,7 +32,7 @@ public class DefaultPropertiesConverter {
     }
 
     private static class LoggerHolder {
-    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+        static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
     }
 
     public void convert(StringBuilder appendTo, Map<String, String> eventProperties) {
