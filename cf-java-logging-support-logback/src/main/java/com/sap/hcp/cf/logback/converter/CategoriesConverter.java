@@ -3,6 +3,7 @@ package com.sap.hcp.cf.logback.converter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
@@ -19,6 +20,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  */
 public class CategoriesConverter extends ClassicConverter {
 
+	private static final Logger LOG = LoggerFactory.getLogger(CategoriesConverter.class);
+			
     public static final String WORD = "categories";
 
     @Override
@@ -39,7 +42,7 @@ public class CategoriesConverter extends ClassicConverter {
             getMarkersRecursively(marker, ac);
             appendTo.append(ac.end().finish());
         } catch (IOException ex) {
-            LoggerFactory.getLogger(CategoriesConverter.class).error("conversion failed", ex);
+            LOG.error("conversion failed", ex);
         }
     }
 

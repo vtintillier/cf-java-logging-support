@@ -112,11 +112,14 @@ public class LogContext {
         }
     }
 
+    private static class LoggerHolder {
+    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     private static void generateAndSetCorrelationId() {
         String generatedCorrelationId = String.valueOf(UUID.randomUUID());
         setCorrelationId(generatedCorrelationId);
 
-        Logger logger = LoggerFactory.getLogger(LogContext.class);
-        logger.info("generated new correlation id");
+        LoggerHolder.LOG.info("generated new correlation id");
     }
 }

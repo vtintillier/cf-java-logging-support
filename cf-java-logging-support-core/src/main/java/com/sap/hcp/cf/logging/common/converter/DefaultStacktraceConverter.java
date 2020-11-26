@@ -3,6 +3,7 @@ package com.sap.hcp.cf.logging.common.converter;
 import java.io.PrintWriter;
 import java.util.List;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.jr.ob.JSON;
@@ -19,6 +20,10 @@ public class DefaultStacktraceConverter extends StacktraceConverter {
 
     DefaultStacktraceConverter(int maxSize) {
         this.maxSize = maxSize;
+    }
+
+    private static class LoggerHolder {
+    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
     }
 
     @Override
@@ -50,7 +55,7 @@ public class DefaultStacktraceConverter extends StacktraceConverter {
             appendTo.append(ac.end().finish());
         } catch (Exception ex) {
             /* -- avoids substitute logger warnings on startup -- */
-            LoggerFactory.getLogger(DefaultStacktraceConverter.class).error("Conversion failed ", ex);
+            LoggerHolder.LOG.error("Conversion failed ", ex);
         }
     }
 }

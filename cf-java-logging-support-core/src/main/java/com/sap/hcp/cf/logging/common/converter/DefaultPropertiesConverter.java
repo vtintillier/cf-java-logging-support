@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 
@@ -30,6 +31,10 @@ public class DefaultPropertiesConverter {
         }
     }
 
+    private static class LoggerHolder {
+    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     public void convert(StringBuilder appendTo, Map<String, String> eventProperties) {
         Map<String, String> properties = mergeContextMaps(eventProperties);
         if (properties != null && !properties.isEmpty()) {
@@ -48,7 +53,7 @@ public class DefaultPropertiesConverter {
                 appendTo.append(result.substring(1, result.length() - 1));
             } catch (Exception ex) {
                 /* -- avoids substitute logger warnings on startup -- */
-                LoggerFactory.getLogger(DefaultPropertiesConverter.class).error("Conversion failed ", ex);
+                LoggerHolder.LOG.error("Conversion failed ", ex);
             }
         }
     }

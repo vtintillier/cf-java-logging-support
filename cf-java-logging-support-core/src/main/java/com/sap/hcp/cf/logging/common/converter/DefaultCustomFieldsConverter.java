@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -33,6 +34,10 @@ public class DefaultCustomFieldsConverter {
 		this.customFieldKeyNames = customFieldKeyNames;
 	}
 
+    private static class LoggerHolder {
+    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
 	public void convert(StringBuilder appendTo, Map<String, String> mdcPropertiesMap, Object... arguments) {
 		if (customFieldKeyNames.isEmpty()) {
 			return;
@@ -46,7 +51,7 @@ public class DefaultCustomFieldsConverter {
 				finishJson(oc, appendTo);
 			} catch (Exception ex) {
 				/* -- avoids substitute logger warnings on startup -- */
-				LoggerFactory.getLogger(DefaultCustomFieldsConverter.class).error("Conversion failed ", ex);
+				LoggerHolder.LOG.error("Conversion failed ", ex);
 			}
 		}
 	}

@@ -1,5 +1,6 @@
 package com.sap.hcp.cf.logging.common.converter;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.jr.ob.JSON;
@@ -29,6 +30,10 @@ public class DefaultMessageConverter {
         this.escape = escape;
     }
 
+    private static class LoggerHolder {
+    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     public void convert(String message, StringBuilder appendTo) {
         if (message != null) {
             String result;
@@ -42,7 +47,7 @@ public class DefaultMessageConverter {
                     appendTo.append(JSON.std.asString(result));
                 } catch (Exception ex) {
                     /* -- avoids substitute logger warnings on startup -- */
-                    LoggerFactory.getLogger(DefaultMessageConverter.class).error("Conversion failed ", ex);
+                    LoggerHolder.LOG.error("Conversion failed ", ex);
                     appendTo.append(result);
                 }
             } else {

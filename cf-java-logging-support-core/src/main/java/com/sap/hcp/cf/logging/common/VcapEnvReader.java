@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.jr.ob.JSON;
@@ -55,6 +56,10 @@ public class VcapEnvReader {
         return result;
     }
 
+    private static class LoggerHolder {
+    	static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     /**
      * Retrieves Cloud Foundry environment variables and fills tag map
      * accordingly. Also returns the tag keys that have been found in those
@@ -85,7 +90,7 @@ public class VcapEnvReader {
                 addField(tags, envKeys, envMap, CF_ORGANIZATION_ID, Fields.ORGANIZATION_ID);
                 addField(tags, envKeys, envMap, CF_ORGANIZATION_NAME, Fields.ORGANIZATION_NAME);
             } catch (Exception ex) {
-                LoggerFactory.getLogger(VcapEnvReader.class).error("Cannot get infos from environment", ex);
+                LoggerHolder.LOG.error("Cannot get infos from environment", ex);
                 return;
             }
         }
