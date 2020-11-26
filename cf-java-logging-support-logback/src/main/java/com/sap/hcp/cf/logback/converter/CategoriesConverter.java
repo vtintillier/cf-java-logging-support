@@ -20,8 +20,6 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
  */
 public class CategoriesConverter extends ClassicConverter {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CategoriesConverter.class);
-
     public static final String WORD = "categories";
 
     @Override
@@ -36,13 +34,17 @@ public class CategoriesConverter extends ClassicConverter {
         super.start();
     }
 
+    private static class LoggerHolder {
+        static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     private void getMarkers(Marker marker, StringBuilder appendTo) {
         try {
             ArrayComposer<JSONComposer<String>> ac = JSON.std.composeString().startArray();
             getMarkersRecursively(marker, ac);
             appendTo.append(ac.end().finish());
         } catch (IOException ex) {
-            LOG.error("conversion failed", ex);
+            LoggerHolder.LOG.error("conversion failed", ex);
         }
     }
 
