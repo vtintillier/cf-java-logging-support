@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.fasterxml.jackson.jr.ob.JSON;
@@ -21,6 +22,8 @@ import com.fasterxml.jackson.jr.ob.JSON;
  *
  */
 public class VcapEnvReader {
+
+    private static final Logger LOG = LoggerFactory.getLogger(VcapEnvReader.class);
 
     public static final String ENV_VCAP_APPLICATION = "VCAP_APPLICATION";
     public static final String ENV_CF_INSTANCE_IP = "CF_INSTANCE_IP";
@@ -85,7 +88,7 @@ public class VcapEnvReader {
                 addField(tags, envKeys, envMap, CF_ORGANIZATION_ID, Fields.ORGANIZATION_ID);
                 addField(tags, envKeys, envMap, CF_ORGANIZATION_NAME, Fields.ORGANIZATION_NAME);
             } catch (Exception ex) {
-                LoggerFactory.getLogger(VcapEnvReader.class).error("Cannot get infos from environment", ex);
+                LOG.error("Cannot get infos from environment", ex);
                 return;
             }
         }

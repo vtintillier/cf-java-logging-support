@@ -3,6 +3,7 @@ package com.sap.hcp.cf.logback.converter;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
 
@@ -33,13 +34,17 @@ public class CategoriesConverter extends ClassicConverter {
         super.start();
     }
 
+    private static class LoggerHolder {
+        static final Logger LOG = LoggerFactory.getLogger(LoggerHolder.class.getEnclosingClass());
+    }
+
     private void getMarkers(Marker marker, StringBuilder appendTo) {
         try {
             ArrayComposer<JSONComposer<String>> ac = JSON.std.composeString().startArray();
             getMarkersRecursively(marker, ac);
             appendTo.append(ac.end().finish());
         } catch (IOException ex) {
-            LoggerFactory.getLogger(CategoriesConverter.class).error("conversion failed", ex);
+            LoggerHolder.LOG.error("conversion failed", ex);
         }
     }
 
