@@ -30,16 +30,11 @@ public class DynLogEnvironment implements DynLogConfiguration {
             LOGGER.info("The header key used to retrieve the dynamic log level token has been set to the default value: {}",
                         dynLogHeaderKey);
         }
-        PublicKeyReader publicKeyReader = new PublicKeyReader();
 
         RSAPublicKey tempKey = null;
         try {
-            tempKey = publicKeyReader.readPublicKey(environment);
-        } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("Could not read RSAPublicKey from environment", e);
-        } catch (InvalidKeySpecException e) {
-            LOGGER.error("Could not read RSAPublicKey from environment", e);
-        } catch (IOException e) {
+            tempKey = PublicKeyReader.readPublicKey(environment);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | IOException e) {
             LOGGER.error("Could not read RSAPublicKey from environment", e);
         } finally {
             rsaPublicKey = tempKey;
