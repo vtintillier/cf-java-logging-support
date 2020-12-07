@@ -10,8 +10,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.UUID;
 
 import javax.servlet.FilterChain;
@@ -22,9 +20,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
 import org.slf4j.MDC;
 
 import com.sap.hcp.cf.logging.common.request.HttpHeader;
@@ -42,12 +38,17 @@ public class CorrelationIdFilterTest {
     @Mock
     private FilterChain chain;
 
-    private CorrelationIdFromMDCExtractor mdcExtractor;
+    private ContextMapExtractor mdcExtractor;
 
     @Before
     public void setUp() throws Exception {
-        mdcExtractor = new CorrelationIdFromMDCExtractor(HttpHeaders.CORRELATION_ID.getField());
+        MDC.clear();
+        mdcExtractor = new ContextMapExtractor();
         doAnswer(mdcExtractor).when(chain).doFilter(request, response);
+    }
+
+    public String getExtractedCorrelationId() {
+        return mdcExtractor.getField(HttpHeaders.CORRELATION_ID.getField());
     }
 
     @Test
@@ -56,7 +57,7 @@ public class CorrelationIdFilterTest {
 
         new CorrelationIdFilter().doFilter(request, response, chain);
 
-        assertThat(mdcExtractor.getCorrelationId(), is(equalTo(KNOWN_CORRELATION_ID)));
+        assertThat(getExtractedCorrelationId(), is(equalTo(KNOWN_CORRELATION_ID)));
     }
 
     @Test
@@ -64,8 +65,8 @@ public class CorrelationIdFilterTest {
 
         new CorrelationIdFilter().doFilter(request, response, chain);
 
-        assertThat(mdcExtractor.getCorrelationId(), is(not(nullValue())));
-        assertThat(mdcExtractor.getCorrelationId(), is(not(equalTo(KNOWN_CORRELATION_ID))));
+        assertThat(getExtractedCorrelationId(), is(not(nullValue())));
+        assertThat(getExtractedCorrelationId(), is(not(equalTo(KNOWN_CORRELATION_ID))));
     }
 
     @Test
@@ -105,65 +106,15 @@ public class CorrelationIdFilterTest {
         verify(response).getHeader(HttpHeaders.CORRELATION_ID.getName());
         verifyNoMoreInteractions(response);
     }
-    
+
     @Test
     public void usesCustomHeader() throws Exception {
-        HttpHeader myHeader = new HttpHeader() {
-            
-            @Override
-            public boolean isPropagated() {
-                return true;
-            }
-            
-            @Override
-            public String getName() {
-                return "my-header";
-            }
-            
-            @Override
-            public String getFieldValue() {
-                return null;
-            }
-            
-            @Override
-            public String getField() {
-                return "my-field";
-            }
-            
-            @Override
-            public List<HttpHeader> getAliases() {
-                return Collections.emptyList();
-            }
-        };
+        HttpHeader myHeader = new HttpTestHeader("my-header", "my-field", null, false);
         when(request.getHeader("my-header")).thenReturn(KNOWN_CORRELATION_ID);
-        CorrelationIdFromMDCExtractor myMdcExtractor = new CorrelationIdFromMDCExtractor("my-field");
-        doAnswer(myMdcExtractor).when(chain).doFilter(request, response);
 
         new CorrelationIdFilter(myHeader).doFilter(request, response, chain);
-        
-        assertThat(myMdcExtractor.getCorrelationId(), is(equalTo(KNOWN_CORRELATION_ID)));
+
+        assertThat(mdcExtractor.getField("my-field"), is(equalTo(KNOWN_CORRELATION_ID)));
         verify(response).setHeader("my-header", KNOWN_CORRELATION_ID);
-
     }
-
-    private static class CorrelationIdFromMDCExtractor implements Answer<Void> {
-
-        private String correlationId;
-        private String field;
-        
-        private CorrelationIdFromMDCExtractor(String field) {
-            this.field = field;
-        }
-
-        public String getCorrelationId() {
-            return correlationId;
-        }
-
-        @Override
-        public Void answer(InvocationOnMock invocation) throws Throwable {
-            correlationId = MDC.get(field);
-            return null;
-        }
-    }
-
 }
