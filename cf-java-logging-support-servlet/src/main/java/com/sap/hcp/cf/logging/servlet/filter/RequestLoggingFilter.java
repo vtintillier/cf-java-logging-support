@@ -14,7 +14,7 @@ import org.apache.commons.lang3.concurrent.LazyInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.hcp.cf.logging.servlet.dynlog.DynLogConfiguration;
+import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelConfiguration;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynLogEnvironment;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelProcessor;
 
@@ -59,7 +59,7 @@ public class RequestLoggingFilter extends RequestLoggingBaseFilter {
     public static final String WRAP_RESPONSE_INIT_PARAM = RequestLoggingBaseFilter.WRAP_REQUEST_INIT_PARAM;
     public static final String WRAP_REQUEST_INIT_PARAM = RequestLoggingBaseFilter.WRAP_REQUEST_INIT_PARAM;
 
-    private ConcurrentInitializer<DynLogConfiguration> dynLogEnvironment;
+    private ConcurrentInitializer<DynamicLogLevelConfiguration> dynLogEnvironment;
     private ConcurrentInitializer<DynamicLogLevelProcessor> dynamicLogLevelProcessor;
 
     public RequestLoggingFilter() {
@@ -70,43 +70,43 @@ public class RequestLoggingFilter extends RequestLoggingBaseFilter {
         this(requestRecordFactory, createDefaultDynLogEnvironment());
     }
 
-    private static ConcurrentInitializer<DynLogConfiguration> createDefaultDynLogEnvironment() {
+    private static ConcurrentInitializer<DynamicLogLevelConfiguration> createDefaultDynLogEnvironment() {
         DynLogEnvironment environment = new DynLogEnvironment();
         return () -> environment;
     }
 
-    public RequestLoggingFilter(ConcurrentInitializer<DynLogConfiguration> dynLogEnvironment) {
+    public RequestLoggingFilter(ConcurrentInitializer<DynamicLogLevelConfiguration> dynLogEnvironment) {
         this(createDefaultRequestRecordFactory(), dynLogEnvironment);
     }
     
     public RequestLoggingFilter(RequestRecordFactory requestRecordFactory,
-                                ConcurrentInitializer<DynLogConfiguration> dynLogEnvironment) {
+                                ConcurrentInitializer<DynamicLogLevelConfiguration> dynLogEnvironment) {
         super(requestRecordFactory);
         this.dynLogEnvironment = dynLogEnvironment;
         this.dynamicLogLevelProcessor = new LazyInitializer<DynamicLogLevelProcessor>() {
 
             @Override
             protected DynamicLogLevelProcessor initialize() throws ConcurrentException {
-                return getDynLogConfiguration().map(DynLogConfiguration::getRsaPublicKey).map(DynamicLogLevelProcessor::new)
+                return getDynLogConfiguration().map(DynamicLogLevelConfiguration::getRsaPublicKey).map(DynamicLogLevelProcessor::new)
                                              .get();
             }
         };
     }
 
-    public RequestLoggingFilter(ConcurrentInitializer<DynLogConfiguration> dynLogEnvironment,
+    public RequestLoggingFilter(ConcurrentInitializer<DynamicLogLevelConfiguration> dynLogEnvironment,
                                 ConcurrentInitializer<DynamicLogLevelProcessor> dynamicLogLevelProcessor) {
         this(createDefaultRequestRecordFactory(), dynLogEnvironment, dynamicLogLevelProcessor);
     }
 
     public RequestLoggingFilter(RequestRecordFactory requestRecordFactory,
-                                ConcurrentInitializer<DynLogConfiguration> dynLogEnvironment,
+                                ConcurrentInitializer<DynamicLogLevelConfiguration> dynLogEnvironment,
                                 ConcurrentInitializer<DynamicLogLevelProcessor> dynamicLogLevelProcessor) {
         super(requestRecordFactory);
         this.dynLogEnvironment = dynLogEnvironment;
         this.dynamicLogLevelProcessor = dynamicLogLevelProcessor;
     }
 
-    protected Optional<DynLogConfiguration> getDynLogConfiguration() {
+    protected Optional<DynamicLogLevelConfiguration> getDynLogConfiguration() {
         try {
             return Optional.of(dynLogEnvironment.get());
         } catch (ConcurrentException cause) {
@@ -117,7 +117,7 @@ public class RequestLoggingFilter extends RequestLoggingBaseFilter {
 
     protected Optional<DynamicLogLevelProcessor> getDynLogLevelProcessor() {
         try {
-            if (getDynLogConfiguration().map(DynLogConfiguration::getRsaPublicKey).isPresent()) {
+            if (getDynLogConfiguration().map(DynamicLogLevelConfiguration::getRsaPublicKey).isPresent()) {
                 return Optional.of(dynamicLogLevelProcessor.get());
             }
         } catch (ConcurrentException cause) {

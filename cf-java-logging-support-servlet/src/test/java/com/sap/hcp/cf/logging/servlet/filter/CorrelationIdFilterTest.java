@@ -47,7 +47,7 @@ public class CorrelationIdFilterTest {
         doAnswer(mdcExtractor).when(chain).doFilter(request, response);
     }
 
-    public String getExtractedCorrelationId() {
+    private String getExtractedCorrelationId() {
         return mdcExtractor.getField(HttpHeaders.CORRELATION_ID.getField());
     }
 
