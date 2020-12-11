@@ -57,6 +57,7 @@ public abstract class AbstractLoggingFilter implements Filter {
      * 
      * @param request
      * @param response
+     * @throws IOException
      */
     protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
     }

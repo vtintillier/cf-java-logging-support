@@ -19,7 +19,7 @@ public class ContentLengthTrackingResponseWrapper extends HttpServletResponseWra
     private WrappedOutputStream wrappedOS = null;
     private WrappedPrintWriter wrappedWriter = null;
 
-    public ContentLengthTrackingResponseWrapper(HttpServletResponse response) throws IOException {
+    public ContentLengthTrackingResponseWrapper(HttpServletResponse response) {
         super(response);
         this.response = response;
     }
