@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import static com.sap.hcp.cf.logging.common.customfields.CustomField.customField;
+
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,7 +29,7 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
     public CorrelationIdFilter() {
         this(HttpHeaders.CORRELATION_ID);
     }
-    
+
     public CorrelationIdFilter(HttpHeader correlationHeader) {
         this.correlationHeader = correlationHeader;
     }
@@ -43,7 +45,10 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
         String correlationId = HttpHeaderUtilities.getHeaderValue(request, correlationHeader);
         if (correlationId == null || correlationId.isEmpty() || correlationId.equals(Defaults.UNKNOWN)) {
             correlationId = String.valueOf(UUID.randomUUID());
-            LOG.debug("Generated new correlation-id <{}>", correlationId);
+            // add correlation-id as custom field, since it is added to MDC only
+            // in the next step
+            LOG.debug("Generated new correlation-id <{}>", correlationId, customField(correlationHeader.getField(),
+                                                                                      correlationId));
         }
         return correlationId;
     }
@@ -53,7 +58,7 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
             response.setHeader(correlationHeader.getName(), correlationId);
         }
     }
-    
+
     @Override
     protected void postProcess(HttpServletRequest request, HttpServletResponse response) {
         LogContext.remove(correlationHeader.getField());
