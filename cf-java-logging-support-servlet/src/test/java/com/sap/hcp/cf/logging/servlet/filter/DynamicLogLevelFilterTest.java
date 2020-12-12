@@ -56,4 +56,14 @@ public class DynamicLogLevelFilterTest {
 
     }
 
+    @Test
+    public void doesNotFailOnDefaultConfiguration() throws Exception {
+        new DynamicLogLevelFilter().doFilter(request, response, chain);
+    }
+
+    @Test
+    public void doesNotFailOnAbsentConfiguration() throws Exception {
+        new DynamicLogLevelFilter(() -> null).doFilter(request, response, chain);
+
+    }
 }

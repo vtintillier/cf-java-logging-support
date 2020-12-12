@@ -11,8 +11,8 @@ import org.apache.commons.lang3.concurrent.LazyInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelConfiguration;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynLogEnvironment;
+import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelConfiguration;
 import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelProcessor;
 
 /**
@@ -64,7 +64,7 @@ public class DynamicLogLevelFilter extends AbstractLoggingFilter {
             protected DynamicLogLevelProcessor initialize() throws ConcurrentException {
                 return getConfiguration().map(DynamicLogLevelConfiguration::getRsaPublicKey).map(
                                                                                                  DynamicLogLevelProcessor::new)
-                                         .get();
+                                         .orElse(null);
             }
         };
     }
@@ -94,7 +94,7 @@ public class DynamicLogLevelFilter extends AbstractLoggingFilter {
      */
     protected Optional<DynamicLogLevelConfiguration> getConfiguration() {
         try {
-            return Optional.of(configuration.get());
+            return Optional.ofNullable(configuration.get());
         } catch (ConcurrentException cause) {
             LOG.debug("Cannot initialize dynamic log level environment. Will continue without this feature", cause);
             return Optional.empty();
@@ -109,7 +109,7 @@ public class DynamicLogLevelFilter extends AbstractLoggingFilter {
      */
     protected Optional<DynamicLogLevelProcessor> getProcessor() {
         try {
-            return Optional.of(processor.get());
+            return Optional.ofNullable(processor.get());
         } catch (ConcurrentException cause) {
             LOG.debug("Cannot initialize dynamic log level processor. Will continue without this feature", cause);
         }

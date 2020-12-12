@@ -25,7 +25,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -87,7 +86,7 @@ public class RequestLoggingFilterTest {
 	public void testSimple() throws IOException, ServletException {
 		FilterChain mockFilterChain = mock(FilterChain.class);
 		
-		new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
+        new NewRequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
 		assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
 		assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
 		assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
