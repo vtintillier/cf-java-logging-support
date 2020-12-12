@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.sap.hcp.cf.logging.servlet.dynlog.DynLogConfiguration;
+import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelConfiguration;
 
 /**
  * Provides the public key for JWT validation out of the keystore.
@@ -14,7 +14,7 @@ import com.sap.hcp.cf.logging.servlet.dynlog.DynLogConfiguration;
  *
  */
 @Component
-public class KeyStoreDynLogConfiguration implements DynLogConfiguration {
+public class KeyStoreDynLogConfiguration implements DynamicLogLevelConfiguration {
 
 	private TokenKeyProvider keyProvider;
 	private String dynLogHeaderKey;

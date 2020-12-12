@@ -12,7 +12,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.sap.hcp.cf.logging.sample.springboot.keystore.KeyStoreDynLogConfiguration;
-import com.sap.hcp.cf.logging.servlet.dynlog.DynLogConfiguration;
+import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelConfiguration;
+import com.sap.hcp.cf.logging.servlet.filter.AddHttpHeadersToLogContextFilter;
+import com.sap.hcp.cf.logging.servlet.filter.AddVcapEnvironmentToLogContextFilter;
+import com.sap.hcp.cf.logging.servlet.filter.CompositeFilter;
+import com.sap.hcp.cf.logging.servlet.filter.CorrelationIdFilter;
+import com.sap.hcp.cf.logging.servlet.filter.DynamicLogLevelFilter;
+import com.sap.hcp.cf.logging.servlet.filter.GenerateRequestLogFilter;
 import com.sap.hcp.cf.logging.servlet.filter.RequestLoggingFilter;
 
 @SpringBootApplication
@@ -31,9 +37,10 @@ public class SampleAppSpringBootApplication {
 	 * @return a registration of the {@link RequestLoggingFilter}
 	 */
 	@Bean
-	public FilterRegistrationBean<RequestLoggingFilter> loggingFilter(@Autowired DynLogConfiguration dynLogConfig) {
-		FilterRegistrationBean<RequestLoggingFilter> registrationBean = new FilterRegistrationBean<>();
-		registrationBean.setFilter(new RequestLoggingFilter(() -> dynLogConfig));
+	public FilterRegistrationBean<MyLoggingFilter> loggingFilter(
+			@Autowired DynamicLogLevelConfiguration dynLogConfig) {
+		FilterRegistrationBean<MyLoggingFilter> registrationBean = new FilterRegistrationBean<>();
+		registrationBean.setFilter(new MyLoggingFilter(dynLogConfig));
 		registrationBean.setName("request-logging");
 		registrationBean.addUrlPatterns("/*");
 		registrationBean.setDispatcherTypes(DispatcherType.REQUEST);
@@ -47,5 +54,14 @@ public class SampleAppSpringBootApplication {
 	@Bean
 	public Clock clock() {
 		return Clock.systemUTC();
+	}
+
+	private class MyLoggingFilter extends CompositeFilter {
+		
+		private MyLoggingFilter(DynamicLogLevelConfiguration dynLogConfig) {
+			super(new AddVcapEnvironmentToLogContextFilter(), new AddHttpHeadersToLogContextFilter(),
+					new CorrelationIdFilter(), new DynamicLogLevelFilter(() -> dynLogConfig),
+					new GenerateRequestLogFilter());
+		}
 	}
 }
