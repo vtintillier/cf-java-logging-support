@@ -36,6 +36,7 @@ public class LogContextToRequestAttributeFilterTest {
 
     @Test
     public void addsContextMapAsRequestAttribute() throws Exception {
+        MDC.clear();
         MDC.put("this key", "this value");
         MDC.put("that key", "that value");
 

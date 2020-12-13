@@ -126,6 +126,9 @@ public class GenerateRequestLogFilterTest {
 
         verify(chain).doFilter(request, response);
         assertThat(systemOut.toString(), isEmptyOrNullString());
+
+        ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(RequestLogger.class).setLevel(Level.INFO);
+
     }
     
 }
