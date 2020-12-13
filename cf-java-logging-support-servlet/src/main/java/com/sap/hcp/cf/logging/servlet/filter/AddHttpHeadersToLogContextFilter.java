@@ -6,6 +6,7 @@ import static java.util.stream.Collectors.toList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 import javax.servlet.http.HttpServletRequest;
@@ -53,8 +54,8 @@ public class AddHttpHeadersToLogContextFilter extends AbstractLoggingFilter {
     public AddHttpHeadersToLogContextFilter(List<? extends HttpHeader> list, HttpHeader... custom) {
         Stream<HttpHeader> allHeaders = Stream.concat(list.stream(), Arrays.stream(custom));
         this.headers = unmodifiableList(allHeaders.filter(HttpHeader::isPropagated).collect(toList()));
-        this.fields = unmodifiableList(headers.stream().map(HttpHeader::getField).filter(f -> f != null).collect(
-                                                                                                                 toList()));
+        this.fields = unmodifiableList(headers.stream().map(HttpHeader::getField).filter(Objects::nonNull).collect(
+                                                                                                                   toList()));
     }
 
     @Override

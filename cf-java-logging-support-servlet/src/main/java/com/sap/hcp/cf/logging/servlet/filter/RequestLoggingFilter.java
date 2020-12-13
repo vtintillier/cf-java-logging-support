@@ -44,6 +44,24 @@ import org.slf4j.MDC;
  */
 public class RequestLoggingFilter extends CompositeFilter {
 
+    /**
+     * This is no longer used.
+     */
+    @Deprecated
+    public static final String LOG_PROVIDER = "[SERVLET]";
+
+    /**
+     * Please use {@link GenerateRequestLogFilter#WRAP_RESPONSE_INIT_PARAM}.
+     */
+    @Deprecated
+    public static final String WRAP_RESPONSE_INIT_PARAM = "wrapResponse";
+
+    /**
+     * Please use {@link GenerateRequestLogFilter#WRAP_REQUEST_INIT_PARAM}.
+     */
+    @Deprecated
+    public static final String WRAP_REQUEST_INIT_PARAM = "wrapRequest";
+
     public RequestLoggingFilter() {
         super(new AddVcapEnvironmentToLogContextFilter(), new AddHttpHeadersToLogContextFilter(),
               new CorrelationIdFilter(), new DynamicLogLevelFilter(), new GenerateRequestLogFilter());

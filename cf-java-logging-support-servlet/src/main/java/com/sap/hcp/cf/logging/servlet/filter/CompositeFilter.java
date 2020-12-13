@@ -2,7 +2,6 @@ package com.sap.hcp.cf.logging.servlet.filter;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -18,31 +17,35 @@ import javax.servlet.ServletResponse;
  * <p>
  * The {@link CompositeFilter} allows to group several servlet {@link Filter}
  * into one. This is used to allow customizable filters and provide a backwards
- * compatible {@link RequestLoggingFilter}.
+ * compatible {@link RequestLoggingFilter}. The {@link FilterConfig} is
+ * forwarded to all filters, that are grouped. This may lead to
+ * incompatibilities between those shared configurations.
  * </p>
  * 
  * <p>
  * You can easily create a subclass of {@link CompositeFilter} and add all the
  * filters from com.sap.hcp.cf.logging.servlet.filter you wish. You can even
- * bring your own filters.
+ * bring your own filters. Make sure, there are no incompatible
+ * {@link FilterConfig} initializations.
  * </p>
  */
 public class CompositeFilter implements Filter {
 
-    private List<? extends Filter> filters;
+    private final List<Filter> filters;
 
     public CompositeFilter(Filter... filters) {
-        this.filters = Arrays.asList(filters);
-    }
-
-    public void setFilters(List<? extends Filter> filters) {
-        this.filters = new ArrayList<>(filters);
+        this.filters = new ArrayList<>(filters.length);
+        Collections.addAll(this.filters, filters);
     }
 
     public List<? extends Filter> getFilters() {
         return Collections.unmodifiableList(filters);
     }
 
+    /**
+     * Forwards the {@link FilterConfig} to all grouped filters. Be care to use
+     * only filters, that are compatible to each other.
+     */
     @Override
     public void init(FilterConfig config) throws ServletException {
         for (Filter filter: this.filters) {

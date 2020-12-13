@@ -26,8 +26,8 @@ import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 public class GenerateRequestLogFilter extends AbstractLoggingFilter {
 
-    private static final String WRAP_RESPONSE_INIT_PARAM = "wrapResponse";
-    private static final String WRAP_REQUEST_INIT_PARAM = "wrapRequest";
+    public static final String WRAP_RESPONSE_INIT_PARAM = "wrapResponse";
+    public static final String WRAP_REQUEST_INIT_PARAM = "wrapRequest";
 
     private final RequestRecordFactory requestRecordFactory;
 
