@@ -117,7 +117,7 @@ public class DynamicLogLevelFilter extends AbstractLoggingFilter {
     }
 
     @Override
-    protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void beforeFilter(HttpServletRequest request, HttpServletResponse response) {
         getProcessor().ifPresent(processor -> extractHeader(request).ifPresent(processor::copyDynamicLogLevelToMDC));
     }
 
@@ -126,7 +126,7 @@ public class DynamicLogLevelFilter extends AbstractLoggingFilter {
     }
 
     @Override
-    protected void postProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void cleanup(HttpServletRequest request, HttpServletResponse response) {
         getProcessor().ifPresent(DynamicLogLevelProcessor::removeDynamicLogLevelFromMDC);
     }
 

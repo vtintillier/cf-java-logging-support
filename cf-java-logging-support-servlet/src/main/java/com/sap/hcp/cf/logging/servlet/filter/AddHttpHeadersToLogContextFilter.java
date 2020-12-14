@@ -59,7 +59,7 @@ public class AddHttpHeadersToLogContextFilter extends AbstractLoggingFilter {
     }
 
     @Override
-    protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void beforeFilter(HttpServletRequest request, HttpServletResponse response) {
         for (HttpHeader header: headers) {
             String headerValue = HttpHeaderUtilities.getHeaderValue(request, header);
             if (header.getField() != null && headerValue != null) {
@@ -69,7 +69,7 @@ public class AddHttpHeadersToLogContextFilter extends AbstractLoggingFilter {
     }
 
     @Override
-    protected void postProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void cleanup(HttpServletRequest request, HttpServletResponse response) {
         fields.forEach(LogContext::remove);
     }
 }

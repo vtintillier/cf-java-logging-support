@@ -27,8 +27,8 @@ public abstract class AbstractLoggingFilter implements Filter {
      * Provides a default implementation for handling servlet requests already
      * cast to {@link HttpServletRequest} and {@link HttpServletResponse}.
      * Custom implementations of {@link AbstractLoggingFilter} should overwrite
-     * {@link #preProcess(HttpServletRequest, HttpServletResponse)} and/or
-     * {@link #postProcess(HttpServletRequest, HttpServletResponse)}.
+     * {@link #beforeFilter(HttpServletRequest, HttpServletResponse)} and/or
+     * {@link #cleanup(HttpServletRequest, HttpServletResponse)}.
      * 
      * @param request
      *            cast as {@link HttpServletRequest}
@@ -43,34 +43,36 @@ public abstract class AbstractLoggingFilter implements Filter {
                                                                                                                 throws IOException,
                                                                                                                 ServletException {
         try {
-            preProcess(request, response);
+            beforeFilter(request, response);
             chain.doFilter(request, response);
         } finally {
-            postProcess(request, response);
+            cleanup(request, response);
 
         }
     }
 
     /**
-     * Pre-process the request/response before it is passed along the filter
-     * chain.
+     * Processes the request/response before it is passed along the filter
+     * chain. Even if {@link #beforeFilter} fails, {@link #cleanup} will be
+     * executed.
      * 
      * @param request
      * @param response
-     * @throws IOException
      */
-    protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void beforeFilter(HttpServletRequest request, HttpServletResponse response) {
     }
 
     /**
-     * Post-process the request/response after it was handled by the filter
-     * chain. This is executed even in cases of failures during handling. Use
-     * this method to reset or clean-up state, e.g. MDC.
+     * Cleanup after the request/response was handled by the filter chain. This
+     * is executed even in cases of failures during handling or
+     * {@link #beforeFilter}. Use this method to reset or clean-up state, e.g.
+     * MDC. Be aware, that there may be partially initalized state from
+     * {@link #beforeFilter}.
      * 
      * @param request
      * @param response
      */
-    protected void postProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void cleanup(HttpServletRequest request, HttpServletResponse response) {
     }
 
     /**

@@ -25,7 +25,7 @@ import org.slf4j.MDC;
 public class LogContextToRequestAttributeFilter extends AbstractLoggingFilter {
 
     @Override
-    protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void beforeFilter(HttpServletRequest request, HttpServletResponse response) {
         request.setAttribute(MDC.class.getName(), MDC.getCopyOfContextMap());
     }
 

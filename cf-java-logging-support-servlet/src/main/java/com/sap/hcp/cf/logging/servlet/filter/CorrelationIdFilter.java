@@ -35,7 +35,7 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
     }
 
     @Override
-    protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void beforeFilter(HttpServletRequest request, HttpServletResponse response) {
         String correlationId = determineCorrelationId(request);
         LogContext.add(correlationHeader.getField(), correlationId);
         addCorrelationIdHeader(response, correlationId);
@@ -60,7 +60,7 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
     }
 
     @Override
-    protected void postProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void cleanup(HttpServletRequest request, HttpServletResponse response) {
         LogContext.remove(correlationHeader.getField());
     }
 

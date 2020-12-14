@@ -23,12 +23,12 @@ import com.sap.hcp.cf.logging.common.LogContext;
 public class AddVcapEnvironmentToLogContextFilter extends AbstractLoggingFilter {
 
     @Override
-    protected void preProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void beforeFilter(HttpServletRequest request, HttpServletResponse response) {
         LogContext.loadContextFields();
     }
 
     @Override
-    protected void postProcess(HttpServletRequest request, HttpServletResponse response) {
+    protected void cleanup(HttpServletRequest request, HttpServletResponse response) {
         LogContext.resetContextFields();
     }
 }

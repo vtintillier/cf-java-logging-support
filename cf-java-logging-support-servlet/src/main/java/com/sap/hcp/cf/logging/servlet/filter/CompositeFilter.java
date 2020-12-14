@@ -38,7 +38,7 @@ public class CompositeFilter implements Filter {
         Collections.addAll(this.filters, filters);
     }
 
-    public List<? extends Filter> getFilters() {
+    public List<Filter> getFilters() {
         return Collections.unmodifiableList(filters);
     }
 
