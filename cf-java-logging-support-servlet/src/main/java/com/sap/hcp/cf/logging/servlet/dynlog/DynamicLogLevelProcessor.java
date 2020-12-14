@@ -32,11 +32,11 @@ public class DynamicLogLevelProcessor {
      *             {@link DynamicLogLevelProcessor#DynamicLogLevelProcessor(RSAPublicKey)}
      *             instead.
      * @param dynLogConfig
-     *            the {@link DynLogConfiguration} to read the public RSA key for
+     *            the {@link DynamicLogLevelConfiguration} to read the public RSA key for
      *            JWT validation from.
      */
     @Deprecated
-    public DynamicLogLevelProcessor(DynLogConfiguration dynLogConfig) {
+    public DynamicLogLevelProcessor(DynamicLogLevelConfiguration dynLogConfig) {
         this(dynLogConfig.getRsaPublicKey());
     }
 

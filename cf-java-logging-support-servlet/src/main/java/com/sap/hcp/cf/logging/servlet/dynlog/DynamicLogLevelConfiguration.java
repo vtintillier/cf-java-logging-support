@@ -4,11 +4,14 @@ import java.security.interfaces.RSAPublicKey;
 
 import javax.servlet.http.HttpServletRequest;
 
-public interface DynLogConfiguration {
-
-    String getDynLogHeaderKey();
+@FunctionalInterface
+public interface DynamicLogLevelConfiguration {
 
     RSAPublicKey getRsaPublicKey();
+
+    default String getDynLogHeaderKey() {
+        return "SAP-LOG-LEVEL";
+    };
 
     default String getDynLogHeaderValue(HttpServletRequest httpRequest) {
         return httpRequest.getHeader(getDynLogHeaderKey());

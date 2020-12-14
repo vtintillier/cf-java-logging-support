@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.sap.hcp.cf.logging.common.helper.Environment;
 
-public class DynLogEnvironment implements DynLogConfiguration {
+public class DynLogEnvironment implements DynamicLogLevelConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DynLogEnvironment.class);
     private final RSAPublicKey rsaPublicKey;

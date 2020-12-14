@@ -1,11 +1,11 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -33,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.request.HttpHeader;
 import com.sap.hcp.cf.logging.common.request.HttpHeaders;
 
@@ -55,13 +54,16 @@ public class RequestLogTest {
 	public void setUp() throws Exception {
 		this.server = initJetty();
 		this.client = HttpClientBuilder.create().build();
+        // We need the log message, that a correlation-id is created.
+        ((LoggerContext) LoggerFactory.getILoggerFactory()).getLogger(CorrelationIdFilter.class).setLevel(Level.DEBUG);
 
 	}
 
 	private Server initJetty() throws Exception {
 		Server server = new Server(0);
 		ServletContextHandler handler = new ServletContextHandler(server, null);
-		handler.addFilter(RequestLoggingFilter.class, "/*", EnumSet.of(DispatcherType.INCLUDE, DispatcherType.REQUEST,
+        handler.addFilter(RequestLoggingFilter.class, "/*", EnumSet.of(DispatcherType.INCLUDE,
+                                                                          DispatcherType.REQUEST,
 				DispatcherType.ERROR, DispatcherType.FORWARD, DispatcherType.ASYNC));
 		handler.addServlet(TestServlet.class, "/test");
 		server.start();
@@ -182,7 +184,7 @@ public class RequestLogTest {
 	}
 
 	private String getCorrelationIdGenerated() throws IOException {
-		Map<String, Object> generationLog = systemOut.fineLineAsMapWith("logger", LogContext.class.getName());
+        Map<String, Object> generationLog = systemOut.fineLineAsMapWith("logger", CorrelationIdFilter.class.getName());
 		if (generationLog == null) {
 			return null;
 		}
