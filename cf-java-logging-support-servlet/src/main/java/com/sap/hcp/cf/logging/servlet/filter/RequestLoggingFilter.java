@@ -28,6 +28,7 @@ import org.slf4j.MDC;
  * a default constructor to support web.xml configuration. You can customize the
  * filter by creating your own subclass of {@link CompositeFilter} and mix and
  * match any of the provided filters and add your own implementation:
+ * </p>
  * <ul>
  * <li>{@link AddVcapEnvironmentToLogContextFilter} provide application metadata
  * (app_id, app_name, ...) from environment</li>
@@ -40,7 +41,7 @@ import org.slf4j.MDC;
  * <li>{@link GenerateRequestLogFilter} instruments the request to generate the
  * final request log</li>
  * </ul>
- * </p>
+ *
  */
 public class RequestLoggingFilter extends CompositeFilter {
 

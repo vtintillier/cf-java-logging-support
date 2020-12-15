@@ -27,10 +27,9 @@ import com.sap.hcp.cf.logging.servlet.dynlog.DynamicLogLevelProcessor;
  * Setup and processing of these tokens can be changed with own implementations
  * of {@link DynamicLogLevelConfiguration} and {@link DynamicLogLevelProcessor}.
  * For integration provide a subclass of {@link DynamicLogLevelFilter} and
- * overwrite {@link DynamicLogLevelFilter#getDynLogConfiguration()} and
- * {@link DynamicLogLevelFilter#getDynLogLevelProcessor()}. Alternatively you
- * can use the different constructors to provide a custom configuration and
- * processor
+ * overwrite {@link DynamicLogLevelFilter#getConfiguration()} and
+ * {@link DynamicLogLevelFilter#getProcessor()}. Alternatively you can use the
+ * different constructors to provide a custom configuration and processor
  * </p>
  */
 public class DynamicLogLevelFilter extends AbstractLoggingFilter {
