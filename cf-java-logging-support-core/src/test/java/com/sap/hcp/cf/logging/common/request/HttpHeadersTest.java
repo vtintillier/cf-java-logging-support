@@ -24,7 +24,7 @@ public class HttpHeadersTest {
 
     @Test
     public void hasCorrectNumberOfTypes() throws Exception {
-        assertThat(HttpHeaders.values().length, is(equalTo(7)));
+        assertThat(HttpHeaders.values().length, is(equalTo(8)));
     }
 
     @Test
@@ -78,7 +78,8 @@ public class HttpHeadersTest {
 
     @Test
     public void propagatesCorrectHeaders() throws Exception {
-        assertThat(HttpHeaders.propagated(), containsInAnyOrder(HttpHeaders.CORRELATION_ID, HttpHeaders.TENANT_ID, HttpHeaders.X_VCAP_REQUEST_ID));
+        assertThat(HttpHeaders.propagated(), containsInAnyOrder(HttpHeaders.CORRELATION_ID, HttpHeaders.SAP_PASSPORT,
+                                                                HttpHeaders.TENANT_ID, HttpHeaders.X_VCAP_REQUEST_ID));
     }
 
 }
