@@ -135,6 +135,18 @@ public class RequestLogTest {
 		}
 	}
 
+    @Test
+    public void logsSapPassportFromRequestHeader() throws Exception {
+        String passport =
+                        "2a54482a0300e60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a54482a";
+        HttpGet get = createRequestWithHeader(HttpHeaders.SAP_PASSPORT.getName(), passport);
+        try (CloseableHttpResponse response = client.execute(get)) {
+            assertThat("Application log without passport.", getRequestMessage(), hasEntry(Fields.SAP_PASSPORT,
+                                                                                           passport));
+            assertThat("Request log without passport.", getRequestLog(), hasEntry(Fields.SAP_PASSPORT, passport));
+        }
+    }
+
 	@Test
 	public void writesCorrelationIdFromHeadersAsResponseHeader() throws Exception {
 		String correlationId = UUID.randomUUID().toString();

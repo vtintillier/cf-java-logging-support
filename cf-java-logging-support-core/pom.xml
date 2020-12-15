@@ -69,7 +69,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>python</executable>
+                                    <executable>python3</executable>
                                     <arguments>
                                         <argument>${basedir}/beats/scripts/generate_fields_docs.py</argument>
                                         <argument>${basedir}/beats/request-metrics</argument>
@@ -84,7 +84,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>python</executable>
+                                    <executable>python3</executable>
                                     <arguments>
                                         <argument>${basedir}/beats/scripts/generate_template.py</argument>
                                         <argument>${basedir}/beats/request-metrics</argument>
@@ -99,7 +99,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>python</executable>
+                                    <executable>python3</executable>
                                     <arguments>
                                         <argument>${basedir}/beats/scripts/generate_fields_docs.py</argument>
                                         <argument>${basedir}/beats/app-logs</argument>
@@ -114,7 +114,7 @@
                                     <goal>exec</goal>
                                 </goals>
                                 <configuration>
-                                    <executable>python</executable>
+                                    <executable>python3</executable>
                                     <arguments>
                                         <argument>${basedir}/beats/scripts/generate_template.py</argument>
                                         <argument>${basedir}/beats/app-logs</argument>

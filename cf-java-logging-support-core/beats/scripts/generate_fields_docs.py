@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 import yaml
 import sys
@@ -75,19 +75,19 @@ grouped in the following categories:
 
     # fields file is empty
     if docs is None:
-        print "fields.yml file is empty. fields.asciidoc cannot be generated."
+        print("fields.yml file is empty. fields.asciidoc cannot be generated.")
         return
 
     # If no sections are defined, docs can't be generated
     if "sections" not in docs.keys():
-        print "Sections is not defined in fields.yml. fields.asciidoc cannot be generated."
+        print("Sections is not defined in fields.yml. fields.asciidoc cannot be generated.")
         return
 
     sections = docs["sections"]
 
     # Check if sections is define
     if sections is None:
-        print "No sections are defined in fields.yml. fields.asciidoc cannot be generated."
+        print("No sections are defined in fields.yml. fields.asciidoc cannot be generated.")
         return
 
     for doc, _ in sections:
@@ -116,7 +116,7 @@ grouped in the following categories:
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
-        print "Usage: %s beatpath beatname" % sys.argv[0]
+        print("Usage: %s beatpath beatname" % sys.argv[0])
         sys.exit(1)
 
     beat_path = sys.argv[1]
