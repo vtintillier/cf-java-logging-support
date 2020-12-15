@@ -168,6 +168,71 @@
           "ignore_malformed": true,
           "type": "float"
         },
+        "sap_passport": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_Action": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_ActionType": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_ClientNumber": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_ComponentName": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_ComponentType": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_ConnectionCounter": {
+          "doc_values": true,
+          "ignore_malformed": true,
+          "type": "integer"
+        },
+        "sap_passport_ConnectionId": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_PreviousComponentName": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_RootContextId": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_TraceFlags": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_TransactionId": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "sap_passport_UserId": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
         "space_id": {
           "doc_values": true,
           "index": "not_analyzed",

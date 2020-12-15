@@ -100,6 +100,127 @@ required: False
 A unique identifier that can be used to correlate multiple messages to a request.
 
 
+==== sap_passport
+
+type: string
+
+example: 2a54482a0300e60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a54482a
+
+required: False
+
+SAP Passport is an end to end tracing technology used in many SAP products.
+It is a binary format encoded in hex notation.
+Applications can add the whole SAP Passport in this field or give its constituents in the respective fields. 
+
+
+==== sap_passport_Action
+
+type: string
+
+required: False
+
+This field can contain the action of an SAP Passport. 
+
+
+==== sap_passport_ActionType
+
+type: string
+
+required: False
+
+This field can contain the action type of an SAP Passport. 
+
+
+==== sap_passport_ClientNumber
+
+type: string
+
+required: False
+
+This field can contain the client number of an SAP Passport. 
+
+
+==== sap_passport_ConnectionCounter
+
+type: integer
+
+required: False
+
+This field can contain the connection counter of an SAP Passport. 
+
+
+==== sap_passport_ConnectionId
+
+type: string
+
+required: False
+
+This field can contain the connection id type of an SAP Passport. 
+
+
+==== sap_passport_ComponentName
+
+type: string
+
+required: False
+
+This field can contain the component name of an SAP Passport. 
+
+
+==== sap_passport_ComponentType
+
+type: string
+
+required: False
+
+This field can contain the component type of an SAP Passport. 
+
+
+==== sap_passport_PreviousComponentName
+
+type: string
+
+required: False
+
+This field can contain the previous component name of an SAP Passport. 
+
+
+==== sap_passport_TraceFlags
+
+type: string
+
+required: False
+
+This field can contain the trace flags of an SAP Passport. 
+
+
+==== sap_passport_TransactionId
+
+type: string
+
+required: False
+
+This field can contain the transaction id of an SAP Passport. 
+
+
+==== sap_passport_RootContextId
+
+type: string
+
+required: False
+
+This field can contain the root context id of an SAP Passport. 
+
+
+==== sap_passport_UserId
+
+type: string
+
+required: False
+
+This field can contain the user id of an SAP Passport. 
+
+
 ==== tenant_id
 
 example: e24a5963-95eb-4568-b1ae-81b67c41e99a
@@ -307,7 +428,7 @@ never the case.
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -325,7 +446,7 @@ shipped with the request (in the form of a header or meta data).
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -347,7 +468,7 @@ request has been received (preferred).
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 
@@ -366,7 +487,7 @@ has been sent.
 
 type: date
 
-example: 2015-01-24 14:06:05.071Z
+example: 2015-01-24 14:06:05.071000+00:00
 
 format: YYYY-MM-DDTHH:MM:SS.milliZ
 

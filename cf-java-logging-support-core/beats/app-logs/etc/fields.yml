@@ -76,6 +76,75 @@ ctx:
       description: |
         A unique identifier that can be used to correlate multiple messages to a request.
 
+    - name: "sap_passport"
+      type: string
+      required: false
+      example: "2a54482a0300e60000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002a54482a"
+      description: |
+        SAP Passport is an end to end tracing technology used in many SAP products.
+        It is a binary format encoded in hex notation.
+        Applications can add the whole SAP Passport in this field or give its constituents in the respective fields. 
+    - name: "sap_passport_Action"
+      type: string
+      required: false
+      description: |
+        This field can contain the action of an SAP Passport. 
+    - name: "sap_passport_ActionType"
+      type: string
+      required: false
+      description: |
+        This field can contain the action type of an SAP Passport. 
+    - name: "sap_passport_ClientNumber"
+      type: string
+      required: false
+      description: |
+        This field can contain the client number of an SAP Passport. 
+    - name: "sap_passport_ConnectionCounter"
+      type: integer
+      required: false
+      description: |
+        This field can contain the connection counter of an SAP Passport. 
+    - name: "sap_passport_ConnectionId"
+      type: string
+      required: false
+      description: |
+        This field can contain the connection id type of an SAP Passport. 
+    - name: "sap_passport_ComponentName"
+      type: string
+      required: false
+      description: |
+        This field can contain the component name of an SAP Passport. 
+    - name: "sap_passport_ComponentType"
+      type: string
+      required: false
+      description: |
+        This field can contain the component type of an SAP Passport. 
+    - name: "sap_passport_PreviousComponentName"
+      type: string
+      required: false
+      description: |
+        This field can contain the previous component name of an SAP Passport. 
+    - name: "sap_passport_TraceFlags"
+      type: string
+      required: false
+      description: |
+        This field can contain the trace flags of an SAP Passport. 
+    - name: "sap_passport_TransactionId"
+      type: string
+      required: false
+      description: |
+        This field can contain the transaction id of an SAP Passport. 
+    - name: "sap_passport_RootContextId"
+      type: string
+      required: false
+      description: |
+        This field can contain the root context id of an SAP Passport. 
+    - name: "sap_passport_UserId"
+      type: string
+      required: false
+      description: |
+        This field can contain the user id of an SAP Passport. 
+
     - name: "tenant_id"
       string: string
       required: false
