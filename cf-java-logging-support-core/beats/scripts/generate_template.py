@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 """
 This script generates the ES template file ({beat}.template.json) from
@@ -26,7 +26,7 @@ def fields_to_es_template(input, output, index):
 
     # No fields defined, can't generate template
     if docs is None:
-        print "fields.yml is empty. Cannot generate template."
+        print("fields.yml is empty. Cannot generate template.")
         return
 
     # Remove sections as only needed for docs
@@ -35,7 +35,7 @@ def fields_to_es_template(input, output, index):
 
     # Each template needs defaults
     if "defaults" not in docs.keys():
-        print "No defaults are defined. Each template needs at least defaults defined."
+        print("No defaults are defined. Each template needs at least defaults defined.")
         return
 
     defaults = docs["defaults"]
@@ -202,7 +202,7 @@ def fill_field_properties(field, defaults):
 if __name__ == "__main__":
 
     if len(sys.argv) != 3:
-        print "Usage: %s beatpath beatname" % sys.argv[0]
+        print("Usage: %s beatpath beatname" % sys.argv[0])
         sys.exit(1)
 
     beat_path = sys.argv[1]
