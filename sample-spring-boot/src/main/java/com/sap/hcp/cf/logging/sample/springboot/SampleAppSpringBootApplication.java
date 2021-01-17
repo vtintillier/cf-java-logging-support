@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.sap.hcp.cf.logging.sample.springboot.keystore.KeyStoreDynLogConfiguration;
@@ -30,15 +31,15 @@ public class SampleAppSpringBootApplication {
 	}
 
 	/**
-	 * Registers a customized {@link RequestLoggingFilter} with the servlet.
-	 * We inject our own dynamic logging configuration, that contains the public RSA key from our keystore.
+	 * Registers a customized {@link RequestLoggingFilter} with the servlet. We
+	 * inject our own dynamic logging configuration, that contains the public RSA
+	 * key from our keystore.
 	 * 
 	 * @param dynLogConfig autowired with {@link KeyStoreDynLogConfiguration}
 	 * @return a registration of the {@link RequestLoggingFilter}
 	 */
 	@Bean
-	public FilterRegistrationBean<MyLoggingFilter> loggingFilter(
-			@Autowired DynamicLogLevelConfiguration dynLogConfig) {
+	public FilterRegistrationBean<MyLoggingFilter> loggingFilter(@Autowired DynamicLogLevelConfiguration dynLogConfig) {
 		FilterRegistrationBean<MyLoggingFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new MyLoggingFilter(dynLogConfig));
 		registrationBean.setName("request-logging");
@@ -49,6 +50,7 @@ public class SampleAppSpringBootApplication {
 
 	/**
 	 * Provides a global {@link Clock} instance. Useful for testing.
+	 * 
 	 * @return the global clock
 	 */
 	@Bean
@@ -57,11 +59,21 @@ public class SampleAppSpringBootApplication {
 	}
 
 	private class MyLoggingFilter extends CompositeFilter {
-		
+
 		private MyLoggingFilter(DynamicLogLevelConfiguration dynLogConfig) {
 			super(new AddVcapEnvironmentToLogContextFilter(), new AddHttpHeadersToLogContextFilter(),
 					new CorrelationIdFilter(), new DynamicLogLevelFilter(() -> dynLogConfig),
 					new GenerateRequestLogFilter());
 		}
+	}
+
+	/**
+	 * Provides a {@link BCryptPasswordEncoder} for Basic-Auth.
+	 * 
+	 * @return the encoder
+	 */
+	@Bean
+	public BCryptPasswordEncoder encoder() {
+		return new BCryptPasswordEncoder();
 	}
 }
