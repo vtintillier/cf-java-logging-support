@@ -3,9 +3,9 @@ keystore:
   token:
     type: jks
     location: "classpath:token_keystore.jks"
-    password: "0bzhBRNUXBR5"
-    keyAlias: jwt-token
-    keyPassword: "0bzhBRNUXBR5"
+    password: ${keystore.token.store_password}
+    keyAlias: ${keystore.token.key_alias}
+    keyPassword: ${keystore.token.key_password}
 defaults:
   token:
     expiration: P2D
