@@ -16,7 +16,7 @@ import com.sap.hcp.cf.logging.sample.springboot.config.TokenDefaultsConfiguratio
 import com.sap.hcp.cf.logging.sample.springboot.service.TokenGenerator;
 
 /**
- * This controller provides and endpoint to create new JWT tokens. These token
+ * This controller provides an endpoint to create new JWT tokens. These token
  * can be used as headers of HTTP request to dynamically switch the log level.
  */
 @RestController
