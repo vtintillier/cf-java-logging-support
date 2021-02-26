@@ -105,7 +105,7 @@
 				<filtering>true</filtering>
 			</resource>
 			<resource>
-				<directory>${project.build.directory}/generated-resources/keystore</directory>
+				<directory>${basedir}/target/generated-resources/keystore</directory>
 			</resource>
 		</resources>
 
@@ -130,8 +130,7 @@
 			<id>initialze-keystore</id>
 			<activation>
 				<file>
-					<missing>${project.build.directory}/generated-resources/keystore/token_keystore.jks
-					</missing>
+					<missing>${basedir}/target/generated-resources/keystore/token_keystore.jks</missing>
 				</file>
 			</activation>
 			<build>
@@ -150,8 +149,7 @@
 							</execution>
 						</executions>
 						<configuration>
-							<keystore>${project.build.directory}/generated-resources/keystore/token_keystore.jks
-							</keystore>
+							<keystore>${basedir}/target/generated-resources/keystore/token_keystore.jks</keystore>
 							<storepass>${keystore.token.store_password}</storepass>
 							<keypass>${keystore.token.key_password}</keypass>
 							<alias>${keystore.token.key_alias}</alias>
@@ -169,7 +167,9 @@
 		<profile>
 			<id>logback</id>
 			<activation>
-				<activeByDefault>true</activeByDefault>
+				<property>
+					<name>!log4j2</name>
+				</property>
 			</activation>
 			<dependencies>
 				<dependency>
@@ -186,7 +186,9 @@
 		<profile>
 			<id>log4j2</id>
 			<activation>
-				<activeByDefault>false</activeByDefault>
+				<property>
+					<name>log4j2</name>
+				</property>
 			</activation>
 			<dependencies>
 				<dependency>
