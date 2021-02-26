@@ -1,8 +1,8 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
 import java.io.IOException;
-import java.io.OutputStream;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
 /**
@@ -106,4 +106,19 @@ public class WrappedInputStream extends ServletInputStream {
 	public boolean markSupported() {
 		return wrappedStream.markSupported();
 	}
+
+    @Override
+    public boolean isFinished() {
+        return wrappedStream.isFinished();
+    }
+
+    @Override
+    public boolean isReady() {
+        return wrappedStream.isReady();
+    }
+
+    @Override
+    public void setReadListener(ReadListener readListener) {
+        wrappedStream.setReadListener(readListener);
+    }
 }

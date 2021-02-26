@@ -8,6 +8,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 
 import org.junit.Test;
@@ -24,6 +25,21 @@ public class WrappedInputStreamTest {
 			public int read() throws IOException {
 				return in.read();
 			}
+
+            @Override
+            public boolean isFinished() {
+                return false;
+            }
+
+            @Override
+            public boolean isReady() {
+                return true;
+            }
+
+            @Override
+            public void setReadListener(ReadListener readListener) {
+                // nothing to do
+            }
 		});
 	}
 
