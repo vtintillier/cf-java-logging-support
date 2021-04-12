@@ -1,5 +1,10 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
+import java.util.function.UnaryOperator;
+import java.util.stream.Stream;
+
+import javax.servlet.Filter;
+
 import org.slf4j.MDC;
 
 /**
@@ -63,14 +68,21 @@ public class RequestLoggingFilter extends CompositeFilter {
     @Deprecated
     public static final String WRAP_REQUEST_INIT_PARAM = "wrapRequest";
 
+    public static Filter[] getDefaultFilters() {
+        return new Filter[] { new AddVcapEnvironmentToLogContextFilter(), new AddHttpHeadersToLogContextFilter(),
+                              new CorrelationIdFilter(), new DynamicLogLevelFilter(), new GenerateRequestLogFilter() };
+    }
+
     public RequestLoggingFilter() {
-        super(new AddVcapEnvironmentToLogContextFilter(), new AddHttpHeadersToLogContextFilter(),
-              new CorrelationIdFilter(), new DynamicLogLevelFilter(), new GenerateRequestLogFilter());
+        super(getDefaultFilters());
     }
 
     public RequestLoggingFilter(RequestRecordFactory requestRecordFactory) {
-        super(new AddVcapEnvironmentToLogContextFilter(), new AddHttpHeadersToLogContextFilter(),
-              new CorrelationIdFilter(), new DynamicLogLevelFilter(), new GenerateRequestLogFilter(
-                                                                                                   requestRecordFactory));
+        super(Stream.of(getDefaultFilters()).map(injectFactory(requestRecordFactory)).toArray(Filter[]::new));
+    }
+
+    private static UnaryOperator<Filter> injectFactory(RequestRecordFactory requestRecordFactory) {
+        return filter -> filter instanceof GenerateRequestLogFilter ? new GenerateRequestLogFilter(requestRecordFactory)
+                                                                    : filter;
     }
 }
