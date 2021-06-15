@@ -1,16 +1,17 @@
 # Java Logging Support for Cloud Foundry
 
-[![Build Status](https://travis-ci.org/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.org/SAP/cf-java-logging-support)[![REUSE status](https://api.reuse.software/badge/github.com/SAP/cf-java-logging-support)](https://api.reuse.software/info/github.com/SAP/cf-java-logging-support)
+[![Build Status](https://travis-ci.org/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.org/SAP/cf-java-logging-support)
+[![REUSE status](https://api.reuse.software/badge/github.com/SAP/cf-java-logging-support)](https://api.reuse.software/info/github.com/SAP/cf-java-logging-support)
 
 ## Summary
 
-This is a collection of support libraries for Java applications running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) java clients for producing *custom metrics*.
+This is a collection of support libraries for Java applications (Java 8 and above) running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) java clients for producing *custom metrics*.
 
 When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks such as [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
 If you're interested in the specifications of these standardized formats, you may want to have a closer look at the `fields.yml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
-While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to keep implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/),  but provided implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
+While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to keep implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/), but provided implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
 
 The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html) and [client and server filters for Jersey](https://jersey.java.net/documentation/latest/filters-and-interceptors.html), but again, we're open to contributions for other APIs and frameworks.
 
@@ -72,7 +73,6 @@ If you want to use the `custom metrics`, just define the following dependency:
   <version>${cf-logging-version}</version>
 </dependency>
 ```
-
 
 ## Implementation variants and logging configurations
 
@@ -209,7 +209,7 @@ public class DemoController {
 	private LongTaskTimer longTimer;
 
 	DemoController() {
-		this.counter = Metrics.counter("demo.contoller.number.of.requests", "unit", "requests");
+		this.counter = Metrics.counter("demo.controller.number.of.requests", "unit", "requests");
 		List<Tag> tags = new ArrayList<Tag>(Arrays.asList(new Tag[] { Tag.of("parallel", "clients") }));
 		this.concurrentHttpRequests = Metrics.gauge("demo.controller.number.of.clients.being.served", tags,
 				new AtomicInteger(0));
@@ -311,8 +311,12 @@ Stacktraces can be logged within one log message. Further details can be found
 
 In order to illustrate how the different features are used, this repository includes two sample applications:
   * a Jersey implementation in the  [./sample folder](./sample)
-  * a Spring Boot implementaiton in the [./sample-spring-boot folder](./sample-spring-boot)
+  * a Spring Boot implementation in the [./sample-spring-boot folder](./sample-spring-boot)
 
 ## Documentation
 
 More info on the actual implementation can be found in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki).
+
+## Licensing
+
+Please see our [LICENSE](LICENSE) for copyright and license information. Detailed information including third-party components and their licensing/copyright information is available via the [REUSE](https://api.reuse.software/info/github.com/SAP/cf-java-logging-support) tool.
