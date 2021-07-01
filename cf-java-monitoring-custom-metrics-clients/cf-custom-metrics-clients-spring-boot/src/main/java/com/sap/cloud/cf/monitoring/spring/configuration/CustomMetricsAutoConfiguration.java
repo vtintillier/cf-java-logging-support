@@ -29,7 +29,7 @@ public class CustomMetricsAutoConfiguration {
 
     @Bean
     MonitoringClient metricPublisher() {
-		return new MonitoringClientBuilder().create();
+        return new MonitoringClientBuilder().create();
     }
 
 }

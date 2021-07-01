@@ -16,42 +16,40 @@ import org.springframework.core.env.Environment;
 public class CustomMetricsConditionTest {
     private CustomMetricsCondition condition;
 
-	@Mock
-	private Environment environment;
+    @Mock
+    private Environment environment;
 
-	@Mock
-	private ConditionContext context;
+    @Mock
+    private ConditionContext context;
 
     @Before
     public void setup() {
         condition = new CustomMetricsCondition();
-		when(context.getEnvironment()).thenReturn(environment);
-	}
+        when(context.getEnvironment()).thenReturn(environment);
+    }
 
     @Test
     public void testMatches_WithAllEnvs() throws Exception {
-		when(environment.getProperty("VCAP_SERVICES")).thenReturn("{\"application-logs\": [{}]}");
+        when(environment.getProperty("VCAP_SERVICES")).thenReturn("{\"application-logs\": [{}]}");
 
-		boolean matches = condition.matches(context, null);
+        boolean matches = condition.matches(context, null);
 
-		assertTrue("Should send metrics on binding to application-logs", matches);
+        assertTrue("Should send metrics on binding to application-logs", matches);
     }
 
-
     @Test
-	public void testMatches_Without_VCAP_SERVICES() throws Exception {
-		boolean matches = condition.matches(context, null);
+    public void testMatches_Without_VCAP_SERVICES() throws Exception {
+        boolean matches = condition.matches(context, null);
 
-		assertFalse("Should not send metrics when not running in CF.", matches);
+        assertFalse("Should not send metrics when not running in CF.", matches);
     }
 
-
     @Test
-	public void testMatches_Without_Binding() throws Exception {
-		when(environment.getProperty("VCAP_SERVICES")).thenReturn("");
+    public void testMatches_Without_Binding() throws Exception {
+        when(environment.getProperty("VCAP_SERVICES")).thenReturn("");
 
-		boolean matches = condition.matches(context, null);
+        boolean matches = condition.matches(context, null);
 
-		assertFalse("Should not send metrics if not bound to application-logs", matches);
+        assertFalse("Should not send metrics if not bound to application-logs", matches);
     }
 }

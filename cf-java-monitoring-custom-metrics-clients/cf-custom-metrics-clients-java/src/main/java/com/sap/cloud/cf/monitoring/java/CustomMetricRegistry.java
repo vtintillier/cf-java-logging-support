@@ -15,7 +15,7 @@ public class CustomMetricRegistry extends MetricRegistry {
     private static final Logger LOGGER = LoggerFactory.getLogger(CustomMetricRegistry.class);
     private static volatile CustomMetricRegistry instance = null;
 
-    private CustomMetricsConfiguration customMetricsConfig;
+    private final CustomMetricsConfiguration customMetricsConfig;
     private CustomMetricsReporter reporter;
 
     public static MetricRegistry get() {
@@ -39,11 +39,11 @@ public class CustomMetricRegistry extends MetricRegistry {
     }
 
     private void initializeAndStartReporter() {
-		if (customMetricsConfig == null || !customMetricsConfig.isEnabled()) {
+        if (customMetricsConfig == null || !customMetricsConfig.isEnabled()) {
             LOGGER.error("Custom Metrics reporter will not start since required ENVs are missing or environment variable 'enable' is false.");
             return;
         }
-		MonitoringClient client = new MonitoringClientBuilder().create();
+        MonitoringClient client = new MonitoringClientBuilder().create();
         reporter = new CustomMetricsReporter(this, client, customMetricsConfig);
         reporter.start(customMetricsConfig.getInterval(), TimeUnit.MILLISECONDS);
     }

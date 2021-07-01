@@ -14,38 +14,39 @@ import com.google.gson.annotations.SerializedName;
 
 public class CustomMetricsCondition implements Condition {
 
-	private static final String VCAP_SERVICES_KEY = "VCAP_SERVICES";
-	private static final Logger LOG = LoggerFactory.getLogger(CustomMetricsCondition.class);
+    private static final String VCAP_SERVICES_KEY = "VCAP_SERVICES";
+    private static final Logger LOG = LoggerFactory.getLogger(CustomMetricsCondition.class);
 
-	@Override
-	public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-		Optional<VcapServices> vcapServices = Optional.of(context).map(ConditionContext::getEnvironment)
-				.map(env -> env.getProperty(VCAP_SERVICES_KEY)).map(s -> new Gson().fromJson(s, VcapServices.class));
-		if (!vcapServices.isPresent()) {
-			LOG.error("Custom Metrics reporter will not start since required environment variable ''{}'' is missing.",
-					VCAP_SERVICES_KEY);
-			return false;
-		}
-		boolean isBoundToApplicationLogging = vcapServices.map(VcapServices::getApplicationLogs).map(l -> !l.isEmpty())
-				.orElse(false);
-		if (!isBoundToApplicationLogging) {
-			LOG.error("Custom Metrics reporter will not start since app is not bound to application-logging.",
-					VCAP_SERVICES_KEY);
+    @Override
+    public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+        Optional<VcapServices> vcapServices = Optional.of(context).map(ConditionContext::getEnvironment).map(env -> env
+                                                                                                                       .getProperty(VCAP_SERVICES_KEY))
+                                                      .map(s -> new Gson().fromJson(s, VcapServices.class));
+        if (!vcapServices.isPresent()) {
+            LOG.error("Custom Metrics reporter will not start since required environment variable ''{}'' is missing.",
+                      VCAP_SERVICES_KEY);
+            return false;
+        }
+        boolean isBoundToApplicationLogging = vcapServices.map(VcapServices::getApplicationLogs).map(l -> !l.isEmpty())
+                                                          .orElse(false);
+        if (!isBoundToApplicationLogging) {
+            LOG.error("Custom Metrics reporter will not start since app is not bound to application-logging.",
+                      VCAP_SERVICES_KEY);
 
-		}
-		return isBoundToApplicationLogging;
-	}
+        }
+        return isBoundToApplicationLogging;
+    }
 
-	private static class VcapServices {
-		@SerializedName("application-logs")
-		private List<ApplicationLogs> applicationLogs;
+    private static class VcapServices {
+        @SerializedName("application-logs")
+        private List<ApplicationLogs> applicationLogs;
 
-		public List<ApplicationLogs> getApplicationLogs() {
-			return applicationLogs;
-		}
-	}
+        public List<ApplicationLogs> getApplicationLogs() {
+            return applicationLogs;
+        }
+    }
 
-	private static class ApplicationLogs {
-	}
+    private static class ApplicationLogs {
+    }
 
 }

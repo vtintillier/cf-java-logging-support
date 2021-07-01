@@ -18,7 +18,6 @@ import com.sap.cloud.cf.monitoring.client.configuration.EnvUtils;
 @RunWith(MockitoJUnitRunner.class)
 public class CustomMetricRegistryTest {
 
-
     @Before
     public void setUp() throws Exception {
         Field inst = CustomMetricRegistry.class.getDeclaredField("instance");
@@ -37,16 +36,16 @@ public class CustomMetricRegistryTest {
     }
 
     @Test
-	public void testCustomMetricRegistryInitializeWithDisabledFlag() throws Exception {
-		EnvUtils.setEnvs(new String[][] { getCustomMetricsEnv(false) });
+    public void testCustomMetricRegistryInitializeWithDisabledFlag() throws Exception {
+        EnvUtils.setEnvs(new String[][] { getCustomMetricsEnv(false) });
         MetricRegistry metricRegistry = CustomMetricRegistry.get();
 
         assertNull(((CustomMetricRegistry) metricRegistry).getReporter());
     }
 
     @Test
-	public void testCustomMetricRegistryInitializeWithEnabledFlag() throws Exception {
-		EnvUtils.setEnvs(new String[][] { getCustomMetricsEnv(true) });
+    public void testCustomMetricRegistryInitializeWithEnabledFlag() throws Exception {
+        EnvUtils.setEnvs(new String[][] { getCustomMetricsEnv(true) });
         MetricRegistry metricRegistry = CustomMetricRegistry.get();
 
         assertNotNull(((CustomMetricRegistry) metricRegistry).getReporter());
@@ -54,9 +53,9 @@ public class CustomMetricRegistryTest {
 
     private static String[] getCustomMetricsEnv(boolean isEnable) {
         return new String[] { "CUSTOM_METRICS", "{\n" + //
-                "    \"interval\": \"20000\",\n" + //
-                "    \"enabled\": \"" + isEnable + "\",\n" + //
-                "    \"metrics\": [\"timer\", \"summary\"]\n" + //
-                "}" };
+                                                "    \"interval\": \"20000\",\n" + //
+                                                "    \"enabled\": \"" + isEnable + "\",\n" + //
+                                                "    \"metrics\": [\"timer\", \"summary\"]\n" + //
+                                                "}" };
     }
 }

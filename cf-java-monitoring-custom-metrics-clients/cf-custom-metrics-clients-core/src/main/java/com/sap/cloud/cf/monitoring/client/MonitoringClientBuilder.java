@@ -13,7 +13,7 @@ import com.sap.cloud.cf.monitoring.client.model.MetricEnvelope;
 public class MonitoringClientBuilder {
 
     public MonitoringClient create() {
-		return new MonitoringClientImpl();
+        return new MonitoringClientImpl();
     }
 
     static class MonitoringClientImpl implements MonitoringClient {
@@ -34,9 +34,9 @@ public class MonitoringClientBuilder {
             if (metrics.isEmpty()) {
                 throw new IllegalArgumentException("The list of metrics cannot be empty");
             }
-			MetricEnvelope envelope = new MetricEnvelope(metrics);
-			String message = gson.toJson(envelope);
-			System.out.println(message);
+            MetricEnvelope envelope = new MetricEnvelope(metrics);
+            String message = gson.toJson(envelope);
+            System.out.println(message);
         }
-	}
- }
+    }
+}

@@ -10,9 +10,9 @@ public class Metric implements Serializable {
 
     private static final long serialVersionUID = 1821203758427351658L;
 
-    private String name;
-    private double value;
-    private long timestamp;
+    private final String name;
+    private final double value;
+    private final long timestamp;
     private Map<String, String> tags;
 
     public Metric(String name, double value, long timestamp) {
@@ -62,55 +62,57 @@ public class Metric implements Serializable {
 
     @Override
     public String toString() {
-        return new StringBuilder("Metric[").append("name=")
-            .append(name)
-            .append(", value=")
-            .append(value)
-            .append(", timestamp=")
-            .append(timestamp)
-            .append(", tags=")
-            .append(tags)
-            .append("]")
-            .toString();
+        return new StringBuilder("Metric[").append("name=").append(name).append(", value=").append(value).append(
+                                                                                                                 ", timestamp=")
+                                           .append(timestamp).append(", tags=").append(tags).append("]").toString();
     }
 
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((tags == null) ? 0 : tags.hashCode());
-		result = prime * result + (int) (timestamp ^ (timestamp >>> 32));
-		long temp;
-		temp = Double.doubleToLongBits(value);
-		result = prime * result + (int) (temp ^ (temp >>> 32));
-		return result;
-	}
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + (name == null ? 0 : name.hashCode());
+        result = prime * result + (tags == null ? 0 : tags.hashCode());
+        result = prime * result + (int) (timestamp ^ timestamp >>> 32);
+        long temp;
+        temp = Double.doubleToLongBits(value);
+        result = prime * result + (int) (temp ^ temp >>> 32);
+        return result;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Metric other = (Metric) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (tags == null) {
-			if (other.tags != null)
-				return false;
-		} else if (!tags.equals(other.tags))
-			return false;
-		if (timestamp != other.timestamp)
-			return false;
-		if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Metric other = (Metric) obj;
+        if (name == null) {
+            if (other.name != null) {
+                return false;
+            }
+        } else if (!name.equals(other.name)) {
+            return false;
+        }
+        if (tags == null) {
+            if (other.tags != null) {
+                return false;
+            }
+        } else if (!tags.equals(other.tags)) {
+            return false;
+        }
+        if (timestamp != other.timestamp) {
+            return false;
+        }
+        if (Double.doubleToLongBits(value) != Double.doubleToLongBits(other.value)) {
+            return false;
+        }
+        return true;
+    }
 
 }
