@@ -5,7 +5,7 @@
 
 ## Summary
 
-This is a collection of support libraries for Java applications (Java 8 and above) running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) java clients for producing *custom metrics*.
+This is a collection of support libraries for Java applications (Java 8 and above) running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) allow production of *custom metrics*.
 
 When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks such as [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
@@ -15,7 +15,7 @@ While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-en
 
 The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html) and [client and server filters for Jersey](https://jersey.java.net/documentation/latest/filters-and-interceptors.html), but again, we're open to contributions for other APIs and frameworks.
 
-The custom metrics clients part allows users to easily define and push custom metrics. The clients configure all necessary components and make it possible to define custom metrics with minimal code change.
+The custom metrics instrumentation allows users to easily define and emit custom metrics. The different modules configure all necessary components and make it possible to define custom metrics with minimal code change.
 
 Lastly, there are also two sibling projects on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support) and [python logging support](https://github.com/SAP/cf-python-logging-support).
 
@@ -52,7 +52,7 @@ This feature only depends on the servlet API which you have included in your POM
 
 If you want to use the `custom metrics`, just define the following dependency:
 
-* `spring-boot client`:
+* Spring Boot Support:
 
 ``` xml
 
@@ -63,7 +63,7 @@ If you want to use the `custom metrics`, just define the following dependency:
 </dependency>
 ```
 
-* `java client`:
+* Plain Java Support:
 
 ``` xml
 
@@ -170,12 +170,12 @@ Here are the minimal configurations you'd need:
 </Configuration>
 ```
 
-## Custom metrics client usage
+## Custom Metrics
 
-With the custom metrics clients you can send metrics defined inside your code. If you choose not to use one of these clients, you can still directly push the metrics using the REST API. Once send the metrics can be consumed in Kibana.
-To use the clients you'd need:
+With the custom metrics feature you can send metrics defined inside your code. Metrics are emitted as log messages when your application is bound to a service called *application-logs*. This is done because of the
+special format supported by the SAP BTP Application Logging Service and for compatibility with the prior apporach. To use the feature you'd need:
 
-1. *Using spring-boot client in Spring Boot 2 application:*
+1. *Instrumenting Spring Boot 2 applications:*
 
 ``` xml
 <dependency>
@@ -185,7 +185,7 @@ To use the clients you'd need:
 </dependency>
 ```
 
-The spring-boot client uses `Spring Boot Actuator` which allows to read predefined metrics and write custom metrics. The Actuator supports [Micrometer](https://github.com/micrometer-metrics/micrometer) and is part of Actuator's dependencies.
+The Srpring Boot instrumentation uses `Spring Boot Actuator` which allows to read predefined metrics and write custom metrics. The Actuator supports [Micrometer](https://github.com/micrometer-metrics/micrometer) and is part of Actuator's dependencies.
 In your code you work directly with `Micrometer`. Define your custom metrics and iterate with them:
 
 ``` java
@@ -234,9 +234,10 @@ public class DemoController {
 	}
 }
 ```
+
 In the example above, three custom metrics are defined and used. The metrics are `Counter`, `LongTaskTimer` and `Gauge`.
 
-2. *Using java client in Java application:*
+2. *Instrumenting plain Java applications:*
 
 ``` xml
 <dependency>
@@ -246,7 +247,7 @@ In the example above, three custom metrics are defined and used. The metrics are
 </dependency>
 ```
 
-The java client uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizard. The following metrics are available: com.codahale.metrics.Gauge, com.codahale.metrics.Counter, com.codahale.metrics.Histogram, com.codahale.metrics.Meter and com.codahale.metrics.Timer. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
+The Java instrumentation uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizard. The following metrics are available: com.codahale.metrics.Gauge, com.codahale.metrics.Counter, com.codahale.metrics.Histogram, com.codahale.metrics.Meter and com.codahale.metrics.Timer. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
 
 ``` java
 import java.io.IOException;
@@ -273,13 +274,13 @@ public class CustomMetricsServlet extends HttpServlet {
 }
 ```
 
-## Custom metrics client configurations
+## Custom metrics Configurations
 
-This client library supports the following configurations regarding sending custom metrics:
+This library supports the following configurations regarding sending custom metrics:
   * `interval`: the interval for sending metrics, in millis. **Default value: `60000`**
   * `enabled`: enables or disables the sending of metrics. **Default value: `true`**
   * `metrics`: array of whitelisted metric names. Only mentioned metrics would be processed and sent. If it is an empty array all metrics are being sent. **Default value: `[]`**
-  * `metricQuantiles`: enables or disables the sending of metric's [quantiles](https://en.wikipedia.org/wiki/Quantile) like median, 95th percentile, 99th percentile. Spring-boot client does not support this configuration. **Default value: `false`**
+  * `metricQuantiles`: enables or disables the sending of metric's [quantiles](https://en.wikipedia.org/wiki/Quantile) like median, 95th percentile, 99th percentile. SpringBoot does not support this configuration. **Default value: `false`**
 
   Configurations are read from environment variable named `CUSTOM_METRICS`. To change the default values, you should override the environment variable with your custom values. Example:
 
