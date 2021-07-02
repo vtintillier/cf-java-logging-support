@@ -5,7 +5,7 @@ applications:
 #
 - name: logging-sample-app
   instances: 1
-  path: target/logging-sample-app-3.4.0.war
+  path: target/logging-sample-app-3.5.0.war
   env:
     RANDOM_SLEEP: true
 # Set LOG_*: true to activate logging of respective field
