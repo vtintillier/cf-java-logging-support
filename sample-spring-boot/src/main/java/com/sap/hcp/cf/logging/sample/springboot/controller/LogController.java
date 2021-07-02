@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.Metrics;
+
 /**
  * This controller provides an endpoint to generate logs. This can be used to
  * test logging.
@@ -16,6 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class LogController {
 
 	private static final String DEFAULT_LOG_MESSAGE = "This is the default log message!";
+
+	private Counter requestCounter = Metrics
+			.counter("com.sap.hcp.cf.logging.sample.springboot.controller.LogController", "unit", "requests");
 
 	/**
 	 * Generate a log event with the given parameters.
@@ -32,6 +38,7 @@ public class LogController {
 			@PathVariable("logLevel") String logLevel,
 			@RequestParam(name = "m", required = false, defaultValue = DEFAULT_LOG_MESSAGE) String message) {
 		Logger logger = LoggerFactory.getLogger(loggerName);
+		requestCounter.increment();
 		switch (logLevel.toLowerCase()) {
 		case "error":
 			logger.error(message);
