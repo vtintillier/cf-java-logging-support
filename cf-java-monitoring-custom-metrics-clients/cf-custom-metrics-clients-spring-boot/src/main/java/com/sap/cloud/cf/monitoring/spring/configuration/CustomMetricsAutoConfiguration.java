@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Configuration;
 
 import com.sap.cloud.cf.monitoring.client.MonitoringClient;
 import com.sap.cloud.cf.monitoring.client.MonitoringClientBuilder;
-import com.sap.cloud.cf.monitoring.client.configuration.CFConfigurationProvider;
-import com.sap.cloud.cf.monitoring.client.configuration.ConfigurationProvider;
 import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfiguration;
 import com.sap.cloud.cf.monitoring.client.configuration.CustomMetricsConfigurationFactory;
 import com.sap.cloud.cf.monitoring.spring.CustomMetricWriter;
@@ -31,8 +29,7 @@ public class CustomMetricsAutoConfiguration {
 
     @Bean
     MonitoringClient metricPublisher() {
-        ConfigurationProvider configProvider = new CFConfigurationProvider();
-        return new MonitoringClientBuilder().setConfigurationProvider(configProvider).create();
+        return new MonitoringClientBuilder().create();
     }
 
 }

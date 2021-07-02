@@ -9,7 +9,7 @@ public interface MonitoringClient {
 
     /**
      * Send single metric to the Monitoring service
-     * 
+     *
      * @param metric
      * @throws MonitoringClientException
      */
@@ -17,7 +17,7 @@ public interface MonitoringClient {
 
     /**
      * Send list of metrics to the Monitoring service
-     * 
+     *
      * @param metrics
      * @throws MonitoringClientException
      */
