@@ -1,6 +1,6 @@
 # Java Logging Support for Cloud Foundry
 
-[![Build Status](https://travis-ci.org/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.org/SAP/cf-java-logging-support)
+[![Build Status](https://travis-ci.com/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.com/SAP/cf-java-logging-support)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/cf-java-logging-support)](https://api.reuse.software/info/github.com/SAP/cf-java-logging-support)
 
 ## Summary
