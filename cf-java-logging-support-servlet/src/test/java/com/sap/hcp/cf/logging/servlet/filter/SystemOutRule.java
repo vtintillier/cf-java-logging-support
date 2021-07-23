@@ -33,7 +33,7 @@ public class SystemOutRule extends ExternalResource {
 		return output.toString();
 	}
 
-	public Map<String, Object> fineLineAsMapWith(String key, String expected) throws IOException {
+	public Map<String, Object> findLineAsMapWith(String key, String expected) throws IOException {
 		for (String line : output.toString().split("\n")) {
 			Map<String, Object> map = JSON.std.mapFrom(line);
 			if (expected.equals(getAsString(map, key))) {
