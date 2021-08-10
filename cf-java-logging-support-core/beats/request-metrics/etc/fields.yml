@@ -501,3 +501,88 @@ request-metrics:
         Comma-separated list of IP addresses, the left-most being the original
         client, followed by proxy server addresses that forwarded the client
         request.
+
+    - name: "x_forwarded_host"
+      type: string
+      required: false
+      example: "requested-host.example.com"
+      description: |
+        The originally requested host by the client in the host HTTP request header.
+        A proxy may forward the host header using the x-forwarded-host header.
+
+    - name: "x_forwarded_proto"
+      type: string
+      required: false
+      example: "https"
+      description: |
+        The original protocol used by the client to connect to the proxy or load balancer
+        before the application.
+
+    - name: "x_custom_host"
+      type: string
+      required: false
+      example: "central-host.example.com"
+      description: |
+        A header set by a proxy or load balancer for special use-cases.
+
+    - name: "x_ssl_client"
+      type: string
+      required: false
+      example: "0"
+      description: |
+        A header set by HA-Proxy to indicate usage of a secured connection by the 
+        client (1) or not (0).
+
+    - name: "x_ssl_client_verify"
+      type: string
+      required: false
+      example: "0"
+      description: |
+        A header set by HA-Proxy to indicate the status code of the TLS/SSL connection.
+
+    - name: "x_ssl_client_subject_dn"
+      type: string
+      required: false
+      example: "/C=FR/ST=Ile de France/L=Jouy en Josas/O=haproxy.com/CN=client1/emailAddress=ba@haproxy.com"
+      description: |
+        A header set by HA-Proxy to provide the full distinguished name of the
+        client certificate.
+
+    - name: "x_ssl_client_subject_cn"
+      type: string
+      required: false
+      example: "client1"
+      description: |
+        A header set by HA-Proxy to provide the full common name of the
+        client certificate.
+
+    - name: "x_ssl_client_issuer_dn"
+      type: string
+      required: false
+      example: "/C=FR/ST=Ile de France/L=Jouy en Josas/O=haproxy.com/CN=haproxy.com/emailAddress=ba@haproxy.com"
+      description: |
+        A header set by HA-Proxy to provide the full distinguished name of the
+        issuer of the client certificate.
+
+    - name: "x_ssl_client_notbefore"
+      type: string
+      required: false
+      example: "130613144555Z"
+      description: |
+        A header set by HA-Proxy to provide the start date of the client
+        certificate as a formatted string YYMMDDhhmmss.
+
+    - name: "x_ssl_client_notafter"
+      type: string
+      required: false
+      example: "140613144555Z"
+      description: |
+        A header set by HA-Proxy to provide the end date of the client
+        certificate as a formatted string YYMMDDhhmmss.
+
+    - name: "x_ssl_client_session_id"
+      type: string
+      required: false
+      example: "session-id"
+      description: |
+        A header to indicate the SSL client session id.

@@ -695,3 +695,132 @@ client, followed by proxy server addresses that forwarded the client
 request.
 
 
+==== x_forwarded_host
+
+type: string
+
+example: requested-host.example.com
+
+required: False
+
+The originally requested host by the client in the host HTTP request header.
+A proxy may forward the host header using the x-forwarded-host header.
+
+
+==== x_forwarded_proto
+
+type: string
+
+example: https
+
+required: False
+
+The original protocol used by the client to connect to the proxy or load balancer
+before the application.
+
+
+==== x_custom_host
+
+type: string
+
+example: central-host.example.com
+
+required: False
+
+A header set by a proxy or load balancer for special use-cases.
+
+
+==== x_ssl_client
+
+type: string
+
+example: 0
+
+required: False
+
+A header set by HA-Proxy to indicate usage of a secured connection by the 
+client (1) or not (0).
+
+
+==== x_ssl_client_verify
+
+type: string
+
+example: 0
+
+required: False
+
+A header set by HA-Proxy to indicate the status code of the TLS/SSL connection.
+
+
+==== x_ssl_client_subject_dn
+
+type: string
+
+example: /C=FR/ST=Ile de France/L=Jouy en Josas/O=haproxy.com/CN=client1/emailAddress=ba@haproxy.com
+
+required: False
+
+A header set by HA-Proxy to provide the full distinguished name of the
+client certificate.
+
+
+==== x_ssl_client_subject_cn
+
+type: string
+
+example: client1
+
+required: False
+
+A header set by HA-Proxy to provide the full common name of the
+client certificate.
+
+
+==== x_ssl_client_issuer_dn
+
+type: string
+
+example: /C=FR/ST=Ile de France/L=Jouy en Josas/O=haproxy.com/CN=haproxy.com/emailAddress=ba@haproxy.com
+
+required: False
+
+A header set by HA-Proxy to provide the full distinguished name of the
+issuer of the client certificate.
+
+
+==== x_ssl_client_notbefore
+
+type: string
+
+example: 130613144555Z
+
+required: False
+
+A header set by HA-Proxy to provide the start date of the client
+certificate as a formatted string YYMMDDhhmmss.
+
+
+==== x_ssl_client_notafter
+
+type: string
+
+example: 140613144555Z
+
+required: False
+
+A header set by HA-Proxy to provide the end date of the client
+certificate as a formatted string YYMMDDhhmmss.
+
+
+==== x_ssl_client_session_id
+
+type: string
+
+example: session-id
+
+required: False
+
+A header to indicate the SSL client session id.
+
+
