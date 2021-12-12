@@ -110,12 +110,12 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
 	<groupId>org.apache.logging.log4j</groupId>
 	<artifactId>log4j-slf4j-impl</artifactId>
-	<version>2.8.2</version>
+	<version>2.15.0</version>
 </dependency>
 	<dependency>
 	<groupId>org.apache.logging.log4j</groupId>
 	<artifactId>log4j-core</artifactId>
-	<version>2.8.2</version>
+	<version>2.15.0</version>
 </dependency>
 ```
 
