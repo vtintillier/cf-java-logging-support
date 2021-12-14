@@ -56,6 +56,7 @@ public final class LayoutPatternBuilder {
 		sb.append("%").append(ContextPropsConverter.WORD);
         appendParameters(asList(Boolean.toString(sendDefaultValues)));
 		appendParameters(exclusions);
+        sb.append(",");
 		return this;
 	}
 
