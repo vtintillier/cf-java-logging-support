@@ -166,10 +166,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson-jr.version>2.10.1</jackson-jr.version>
-        <slf4j.version>1.7.30</slf4j.version>
-        <logback.version>1.2.3</logback.version>
-        <log4j2.version>2.15.0</log4j2.version>
+        <jackson-jr.version>2.13.0</jackson-jr.version>
+        <slf4j.version>1.7.32</slf4j.version>
+        <logback.version>1.2.7</logback.version>
+        <log4j2.version>2.16.0</log4j2.version>
         <buildnumber.plugin.version>1.4</buildnumber.plugin.version>
         <source.plugin.version>3.2.1</source.plugin.version>
         <jar.plugin.version>3.1.0</jar.plugin.version>
