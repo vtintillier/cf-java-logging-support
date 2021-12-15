@@ -107,7 +107,7 @@ public class LayoutPatternBuilderTest {
 				.suppressExceptions().build();
 
 		assertThat(pattern, specificPart(is(
-                                            ",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{false}{excluded-field}\"#cf\":{%cf{custom-field}}%ex{0} ")));
+                                            ",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{false}{excluded-field},\"#cf\":{%cf{custom-field}}%ex{0} ")));
 	}
 
 	@Test
@@ -117,7 +117,7 @@ public class LayoutPatternBuilderTest {
 				.build();
 
 		assertThat(pattern, specificPart(is(
-                                            ",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{false}{excluded-field}\"#cf\":{%cf{custom-field}},\"stacktrace\":%stacktrace")));
+                                            ",\"type\":\"log\",\"logger\":\"%replace{%logger}{\"}{\\\\\"}\",\"thread\":\"%replace{%thread}{\"}{\\\\\"}\",\"level\":\"%p\",\"categories\":%categories,\"msg\":%jsonmsg{escape},%ctxp{false}{excluded-field},\"#cf\":{%cf{custom-field}},\"stacktrace\":%stacktrace")));
 	}
 
 	private static Matcher<String> specificPart(Matcher<String> expected) {

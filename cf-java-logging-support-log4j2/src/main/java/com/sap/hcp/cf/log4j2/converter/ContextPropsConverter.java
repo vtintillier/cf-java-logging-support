@@ -51,10 +51,11 @@ public class ContextPropsConverter extends LogEventPatternConverter {
 		addCustomFieldsFromArguments(contextData, event);
         int lengthBefore = toAppendTo.length();
 		converter.convert(toAppendTo, contextData);
-        // append comma only, if at least one field was added
-        // otherwise, there will be to commas ",," rendering the JSON invalid
-        if (toAppendTo.length() > lengthBefore) {
-            toAppendTo.append(",");
+        // remove comma from pattern, when no properties are added
+        // this is to avoid a double comma in the JSON
+        // Do not do this on empty messages
+        if (toAppendTo.length() == lengthBefore && lengthBefore > 0 && toAppendTo.charAt(lengthBefore - 1) == ',') {
+            toAppendTo.setLength(lengthBefore - 1);
         }
 	}
 

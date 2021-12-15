@@ -9,8 +9,6 @@ import static org.hamcrest.core.Is.is;
 import java.io.IOException;
 import java.util.Map;
 
-import org.apache.logging.log4j.core.LogEvent;
-import org.apache.logging.log4j.core.pattern.LogEventPatternConverter;
 import org.junit.Test;
 import org.slf4j.MDC;
 
@@ -106,11 +104,5 @@ public class ContextPropsConverterTest extends AbstractConverterTest {
 		assertThat(mapFrom(format(cpc, makeEvent(TEST_MSG_NO_ARGS, customField(SOME_KEY, SOME_VALUE)))),
 				not(hasEntry(SOME_KEY, SOME_VALUE)));
 	}
-
-    @Override
-    protected String format(LogEventPatternConverter cpc, LogEvent event) {
-        String converted = super.format(cpc, event);
-        return converted.length() > 0 ? converted.substring(0, converted.length() - 1) : converted;
-    }
 
 }
