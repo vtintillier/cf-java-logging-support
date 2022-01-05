@@ -95,7 +95,7 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
   	<groupId>ch.qos.logback</groupId>
    	<artifactId>logback-classic</artifactId>
-   	<version>1.2.7</version>
+   	<version>1.2.10</version>
  </dependency>
 ```
 
@@ -110,12 +110,12 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
 	<groupId>org.apache.logging.log4j</groupId>
 	<artifactId>log4j-slf4j-impl</artifactId>
-	<version>2.17.0</version>
+	<version>2.17.1</version>
 </dependency>
 	<dependency>
 	<groupId>org.apache.logging.log4j</groupId>
 	<artifactId>log4j-core</artifactId>
-	<version>2.17.0</version>
+	<version>2.17.1</version>
 </dependency>
 ```
 

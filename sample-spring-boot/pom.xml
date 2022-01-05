@@ -18,7 +18,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>11</maven.compiler.source>
 		<maven.compiler.target>11</maven.compiler.target>
-		<spring.boot.version>2.6.1</spring.boot.version>
+		<spring.boot.version>2.6.2</spring.boot.version>
 		<keytool.plugin.version>1.5</keytool.plugin.version>
 		<keystore.token.store_password>0bzhBRNUXBR5
 		</keystore.token.store_password>
@@ -204,12 +204,12 @@
 				<dependency>
 					<groupId>org.apache.logging.log4j</groupId>
 					<artifactId>log4j-slf4j-impl</artifactId>
-					<version>2.17.0</version>
+					<version>2.17.1</version>
 				</dependency>
 				<dependency>
 					<groupId>org.apache.logging.log4j</groupId>
 					<artifactId>log4j-jul</artifactId>
-					<version>2.17.0</version>
+					<version>2.17.1</version>
 				</dependency>
 				<dependency>
 					<groupId>org.springframework.boot</groupId>
