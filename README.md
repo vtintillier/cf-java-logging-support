@@ -185,7 +185,7 @@ special format supported by the SAP BTP Application Logging Service and for comp
 </dependency>
 ```
 
-The Srpring Boot instrumentation uses `Spring Boot Actuator` which allows to read predefined metrics and write custom metrics. The Actuator supports [Micrometer](https://github.com/micrometer-metrics/micrometer) and is part of Actuator's dependencies.
+The Spring Boot instrumentation uses `Spring Boot Actuator` which allows to read predefined metrics and write custom metrics. The Actuator supports [Micrometer](https://github.com/micrometer-metrics/micrometer) and is part of Actuator's dependencies.
 In your code you work directly with `Micrometer`. Define your custom metrics and iterate with them:
 
 ``` java
@@ -247,7 +247,7 @@ In the example above, three custom metrics are defined and used. The metrics are
 </dependency>
 ```
 
-The Java instrumentation uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizard. The following metrics are available: com.codahale.metrics.Gauge, com.codahale.metrics.Counter, com.codahale.metrics.Histogram, com.codahale.metrics.Meter and com.codahale.metrics.Timer. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
+The Java instrumentation uses [Dropwizard](https://metrics.dropwizard.io) which allows to define all kind of metrics supports by Dropwizard. The following metrics are available: `com.codahale.metrics.Gauge`, `com.codahale.metrics.Counter`, `com.codahale.metrics.Histogram`, `com.codahale.metrics.Meter` and `com.codahale.metrics.Timer`. More information about the [metric types and their usage](https://metrics.dropwizard.io/4.0.0/getting-started.html). Define your custom metrics and iterate with them:
 
 ``` java
 import java.io.IOException;
