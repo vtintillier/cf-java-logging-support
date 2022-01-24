@@ -1,6 +1,7 @@
 package com.sap.hcp.cf.log4j2.converter;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.logging.log4j.core.LogEvent;
@@ -47,30 +48,38 @@ public class ContextPropsConverter extends LogEventPatternConverter {
 
     @Override
     public void format(LogEvent event, StringBuilder toAppendTo) {
-		Map<String, String> contextData = event.getContextData().toMap();
-		addCustomFieldsFromArguments(contextData, event);
+        Map<String, String> contextData = event.getContextData().toMap();
+        contextData = addCustomFieldsFromArguments(contextData, event);
         int lengthBefore = toAppendTo.length();
-		converter.convert(toAppendTo, contextData);
+        converter.convert(toAppendTo, contextData);
         // remove comma from pattern, when no properties are added
         // this is to avoid a double comma in the JSON
         // Do not do this on empty messages
         if (toAppendTo.length() == lengthBefore && lengthBefore > 0 && toAppendTo.charAt(lengthBefore - 1) == ',') {
             toAppendTo.setLength(lengthBefore - 1);
         }
-	}
+    }
 
-	private void addCustomFieldsFromArguments(Map<String, String> contextData, LogEvent event) {
-		Message message = event.getMessage();
-		Object[] parameters = message.getParameters();
-		if (parameters == null) {
-			return;
-		}
-		for (Object current : parameters) {
-			if (current instanceof CustomField) {
-				CustomField field = (CustomField) current;
-				contextData.put(field.getKey(), field.getValue());
-			}
-		}
-	}
+    private Map<String, String> addCustomFieldsFromArguments(Map<String, String> contextData, LogEvent event) {
+        Message message = event.getMessage();
+        Object[] parameters = message.getParameters();
+        if (parameters == null) {
+            return contextData;
+        }
+        boolean unchangedContextData = true;
+        Map<String, String> result = contextData;
+        for (Object current: parameters) {
+            if (current instanceof CustomField) {
+                CustomField field = (CustomField) current;
+                if (unchangedContextData) {
+                    // contextData might be an unmodifiable map
+                    result = new HashMap<>(contextData);
+                    unchangedContextData = false;
+                }
+                result.put(field.getKey(), field.getValue());
+            }
+        }
+        return result;
+    }
 
 }
