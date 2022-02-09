@@ -139,6 +139,19 @@ public class RequestLogTest {
         }
     }
 
+    @Test
+    public void logsW3cTraceparentFromRequestHeader() throws Exception {
+        String traceparent = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
+        HttpGet get = createRequestWithHeader(HttpHeaders.W3C_TRACEPARENT.getName(), traceparent);
+        try (CloseableHttpResponse response = client.execute(get)) {
+            assertThat("Application log without traceparent.", getRequestMessage(), hasEntry(Fields.W3C_TRACEPARENT,
+                                                                                             traceparent));
+            assertThat("Request log without traceparent.", getRequestLog(), hasEntry(Fields.W3C_TRACEPARENT,
+                                                                                     traceparent));
+        }
+
+    }
+
 	@Test
 	public void writesCorrelationIdFromHeadersAsResponseHeader() throws Exception {
 		String correlationId = UUID.randomUUID().toString();

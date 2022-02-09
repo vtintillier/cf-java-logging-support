@@ -13,6 +13,7 @@ public interface Fields {
   public String WRITTEN_TS = "written_ts";
   public String CORRELATION_ID = "correlation_id";
   public String REQUEST_ID = "request_id";
+  public String W3C_TRACEPARENT = "w3c_traceparent";
   public String SAP_PASSPORT = "sap_passport";
   public String SAP_PASSPORT_ACTION = "sap_passport_Action";
   public String SAP_PASSPORT_ACTIONTYPE = "sap_passport_ActionType";

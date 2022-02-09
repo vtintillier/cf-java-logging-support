@@ -47,6 +47,7 @@ public class RequestLoggingFilterTest {
     private static final String REQUEST_ID = "1234-56-7890-xxx";
     private static final String CORRELATION_ID = "xxx-56-7890-xxx";
     private static final String TENANT_ID = "tenant1";
+    private static final String W3C_TRACEPARENT = "00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01";
     private static final String REQUEST = "/foobar";
     private static final String QUERY_STRING = "baz=bla";
     private static final String FULL_REQUEST = REQUEST + "?" + QUERY_STRING;
@@ -209,6 +210,14 @@ public class RequestLoggingFilterTest {
         assertThat(getField(Fields.CORRELATION_ID), not(REQUEST_ID));
         assertThat(getField(Fields.REQUEST_ID), is(REQUEST_ID));
         assertThat(getField(Fields.TENANT_ID), is(nullValue()));
+    }
+
+    @Test
+    public void testExplicitW3cTraceparent() throws IOException, ServletException {
+        mockGetHeader(HttpHeaders.W3C_TRACEPARENT, W3C_TRACEPARENT);
+        FilterChain mockFilterChain = mock(FilterChain.class);
+        new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
+        assertThat(getField(Fields.W3C_TRACEPARENT), is(W3C_TRACEPARENT));
     }
 
     @Test

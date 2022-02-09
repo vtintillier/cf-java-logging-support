@@ -24,7 +24,7 @@ public class HttpHeadersTest {
 
     @Test
     public void hasCorrectNumberOfTypes() throws Exception {
-        assertThat(HttpHeaders.values().length, is(equalTo(19)));
+        assertThat(HttpHeaders.values().length, is(equalTo(20)));
     }
 
     @Test
@@ -34,6 +34,7 @@ public class HttpHeadersTest {
         assertThat(HttpHeaders.CORRELATION_ID.getName(), is("X-CorrelationID"));
         assertThat(HttpHeaders.REFERER.getName(), is("referer"));
         assertThat(HttpHeaders.TENANT_ID.getName(), is("tenantid"));
+        assertThat(HttpHeaders.W3C_TRACEPARENT.getName(), is("traceparent"));
         assertThat(HttpHeaders.X_CUSTOM_HOST.getName(), is("x-custom-host"));
         assertThat(HttpHeaders.X_FORWARDED_FOR.getName(), is("x-forwarded-for"));
         assertThat(HttpHeaders.X_FORWARDED_HOST.getName(), is("x-forwarded-host"));
@@ -56,6 +57,7 @@ public class HttpHeadersTest {
         assertThat(HttpHeaders.CORRELATION_ID.getField(), is(Fields.CORRELATION_ID));
         assertThat(HttpHeaders.REFERER.getField(), is(nullValue()));
         assertThat(HttpHeaders.TENANT_ID.getField(), is(Fields.TENANT_ID));
+        assertThat(HttpHeaders.W3C_TRACEPARENT.getField(), is(Fields.W3C_TRACEPARENT));
         assertThat(HttpHeaders.X_CUSTOM_HOST.getField(), is(Fields.X_CUSTOM_HOST));
         assertThat(HttpHeaders.X_FORWARDED_FOR.getField(), is(Fields.X_FORWARDED_FOR));
         assertThat(HttpHeaders.X_FORWARDED_HOST.getField(), is(Fields.X_FORWARDED_HOST));
@@ -93,6 +95,7 @@ public class HttpHeadersTest {
         assertThat(HttpHeaders.CORRELATION_ID.getAliases(), containsInAnyOrder(HttpHeaders.X_VCAP_REQUEST_ID));
         assertThat(HttpHeaders.REFERER.getAliases(), is(empty()));
         assertThat(HttpHeaders.TENANT_ID.getAliases(), is(empty()));
+        assertThat(HttpHeaders.W3C_TRACEPARENT.getAliases(), is(empty()));
         assertThat(HttpHeaders.X_CUSTOM_HOST.getAliases(), is(empty()));
         assertThat(HttpHeaders.X_FORWARDED_FOR.getAliases(), is(empty()));
         assertThat(HttpHeaders.X_FORWARDED_HOST.getAliases(), is(empty()));
@@ -111,7 +114,8 @@ public class HttpHeadersTest {
     @Test
     public void propagatesCorrectHeaders() throws Exception {
         assertThat(HttpHeaders.propagated(), containsInAnyOrder(HttpHeaders.CORRELATION_ID, HttpHeaders.SAP_PASSPORT,
-                                                                HttpHeaders.TENANT_ID, HttpHeaders.X_VCAP_REQUEST_ID));
+                                                                HttpHeaders.TENANT_ID, HttpHeaders.W3C_TRACEPARENT,
+                                                                HttpHeaders.X_VCAP_REQUEST_ID));
     }
 
 }
