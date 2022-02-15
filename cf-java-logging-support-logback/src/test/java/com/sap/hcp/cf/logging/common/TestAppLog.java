@@ -10,6 +10,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 
 import java.time.Instant;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ public class TestAppLog extends AbstractTest {
     }
 
     @Test
-    public void testCategorties() {
+    public void testCategories() {
         logMsg = "Running testCategories()";
         Marker cat0 = MarkerFactory.getMarker("cat0");
 
@@ -58,7 +59,7 @@ public class TestAppLog extends AbstractTest {
         assertThat(getField(Fields.COMPONENT_NAME), is("-"));
         assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
         assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
-        assertThat(getList(Fields.CATEGORIES), contains(cat1.getName(), cat0.getName()));
+        assertThat(getList(Fields.CATEGORIES), Matchers.containsInAnyOrder(cat1.getName(), cat0.getName()));
     }
 
     @Test

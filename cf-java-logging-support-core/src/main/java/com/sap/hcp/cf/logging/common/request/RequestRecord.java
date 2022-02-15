@@ -3,6 +3,7 @@ package com.sap.hcp.cf.logging.common.request;
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -214,6 +215,11 @@ public class RequestRecord {
         } catch (Exception ex) {
             return "{}";
         }
+    }
+
+    public Map<String, Value> getFields() {
+        finish();
+        return Collections.unmodifiableMap(fields);
     }
 
     private void setDefaults() {

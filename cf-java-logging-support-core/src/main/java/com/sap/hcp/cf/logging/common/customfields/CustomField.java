@@ -30,13 +30,13 @@ public class CustomField {
         return key;
     }
 
-    public String getValue() {
-        return String.valueOf(value);
+    public Object getValue() {
+        return value;
     }
 
     @Override
     public String toString() {
-        return key + "=" + getValue();
+        return key + "=" + String.valueOf(value);
     }
 
     private void validateNotNull(Object obj, String msg) throws IllegalArgumentException {
