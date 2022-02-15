@@ -29,7 +29,9 @@ import com.sap.hcp.cf.logging.common.request.HttpHeaders;
 @RunWith(MockitoJUnitRunner.class)
 public class CorrelationIdFilterTest {
 
-    private static String KNOWN_CORRELATION_ID = UUID.randomUUID().toString();
+    private static final String KNOWN_CORRELATION_ID = UUID.randomUUID().toString();
+    private static final String KNOWN_TRACE_ID = "4bf92f3577b34da6a3ce929d0e0e4736";
+    private static final String KNOWN_TRACEPARENT = "00-" + KNOWN_TRACE_ID + "-00f067aa0ba902b7-01";
 
     @Mock
     private HttpServletRequest request;
@@ -108,13 +110,40 @@ public class CorrelationIdFilterTest {
     }
 
     @Test
-    public void usesCustomHeader() throws Exception {
-        HttpHeader myHeader = new HttpTestHeader("my-header", "my-field", null, false);
-        when(request.getHeader("my-header")).thenReturn(KNOWN_CORRELATION_ID);
+    public void usesCustomCorrelationIdHeader() throws Exception {
+        HttpHeader myCorrelationIdHeader = new HttpTestHeader("my-correlationId-header", "my-correlationId-field", null,
+                                                              false);
+        HttpHeader myTraceparentHeader = new HttpTestHeader("my-traceparent-header", "my-traceparent-field", null,
+                                                            false);
+        when(request.getHeader("my-correlationId-header")).thenReturn(KNOWN_CORRELATION_ID);
+        when(request.getHeader("my-traceparent-header")).thenReturn(KNOWN_TRACEPARENT);
 
-        new CorrelationIdFilter(myHeader).doFilter(request, response, chain);
+        new CorrelationIdFilter(myCorrelationIdHeader, myTraceparentHeader).doFilter(request, response, chain);
 
-        assertThat(mdcExtractor.getField("my-field"), is(equalTo(KNOWN_CORRELATION_ID)));
-        verify(response).setHeader("my-header", KNOWN_CORRELATION_ID);
+        assertThat(mdcExtractor.getField("my-correlationId-field"), is(equalTo(KNOWN_CORRELATION_ID)));
+        verify(response).setHeader("my-correlationId-header", KNOWN_CORRELATION_ID);
+    }
+
+    @Test
+    public void usesCustomTraceparentHeader() throws Exception {
+        HttpHeader myCorrelationIdHeader = new HttpTestHeader("my-correlationId-header", "my-correlationId-field", null,
+                                                              false);
+        HttpHeader myTraceparentHeader = new HttpTestHeader("my-traceparent-header", "my-traceparent-field", null,
+                                                            false);
+        when(request.getHeader("my-traceparent-header")).thenReturn(KNOWN_TRACEPARENT);
+
+        new CorrelationIdFilter(myCorrelationIdHeader, myTraceparentHeader).doFilter(request, response, chain);
+
+        assertThat(mdcExtractor.getField("my-correlationId-field"), is(equalTo(KNOWN_TRACE_ID)));
+        verify(response).setHeader("my-correlationId-header", KNOWN_TRACE_ID);
+    }
+
+    @Test
+    public void usesTraceparentIfCorrelationIdHeaderNotPresent() throws Exception {
+        when(request.getHeader(HttpHeaders.W3C_TRACEPARENT.getName())).thenReturn(KNOWN_TRACEPARENT);
+
+        new CorrelationIdFilter().doFilter(request, response, chain);
+
+        assertThat(getExtractedCorrelationId(), is(equalTo(KNOWN_TRACE_ID)));
     }
 }

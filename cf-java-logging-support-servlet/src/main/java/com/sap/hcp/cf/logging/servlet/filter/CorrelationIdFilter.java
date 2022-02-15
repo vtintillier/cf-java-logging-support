@@ -1,8 +1,11 @@
 package com.sap.hcp.cf.logging.servlet.filter;
 
 import static com.sap.hcp.cf.logging.common.customfields.CustomField.customField;
+import static com.sap.hcp.cf.logging.common.request.HttpHeaders.W3C_TRACEPARENT;
+import static java.util.Optional.ofNullable;
 
 import java.util.UUID;
+import java.util.function.Predicate;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,13 +28,19 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
 
     private static final Logger LOG = LoggerFactory.getLogger(CorrelationIdFilter.class);
     private HttpHeader correlationHeader;
+    private HttpHeader traceparentHeader;
 
     public CorrelationIdFilter() {
         this(HttpHeaders.CORRELATION_ID);
     }
 
     public CorrelationIdFilter(HttpHeader correlationHeader) {
+        this(correlationHeader, W3C_TRACEPARENT);
+    }
+
+    public CorrelationIdFilter(HttpHeader correlationHeader, HttpHeader traceparentHeader) {
         this.correlationHeader = correlationHeader;
+        this.traceparentHeader = traceparentHeader;
     }
 
     @Override
@@ -43,7 +52,10 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
 
     private String determineCorrelationId(HttpServletRequest request) {
         String correlationId = HttpHeaderUtilities.getHeaderValue(request, correlationHeader);
-        if (correlationId == null || correlationId.isEmpty() || correlationId.equals(Defaults.UNKNOWN)) {
+        if (isBlankOrDefault(correlationId)) {
+            correlationId = getCorrelationIdFromTraceparent(request);
+        }
+        if (isBlankOrDefault(correlationId)) {
             correlationId = String.valueOf(UUID.randomUUID());
             // add correlation-id as custom field, since it is added to MDC only
             // in the next step
@@ -51,6 +63,25 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
                                                                                       correlationId));
         }
         return correlationId;
+    }
+
+    private boolean isBlankOrDefault(String value) {
+        return value == null || value.isEmpty() || value.equals(Defaults.UNKNOWN);
+    }
+
+    private String getCorrelationIdFromTraceparent(HttpServletRequest request) {
+        String traceparent = HttpHeaderUtilities.getHeaderValue(request, traceparentHeader);
+        return ofNullable(traceparent).filter(not(this::isBlankOrDefault)).map(this::parseTraceparent).orElse(
+                                                                                                                        null);
+    }
+
+    private <T> Predicate<T> not(Predicate<T> p) {
+        return p.negate();
+    }
+
+    private String parseTraceparent(String value) {
+        String[] tokens = value.split("-");
+        return tokens.length >= 2 ? tokens[1] : null;
     }
 
     private void addCorrelationIdHeader(HttpServletResponse response, String correlationId) {
@@ -63,5 +94,4 @@ public class CorrelationIdFilter extends AbstractLoggingFilter {
     protected void cleanup(HttpServletRequest request, HttpServletResponse response) {
         LogContext.remove(correlationHeader.getField());
     }
-
 }

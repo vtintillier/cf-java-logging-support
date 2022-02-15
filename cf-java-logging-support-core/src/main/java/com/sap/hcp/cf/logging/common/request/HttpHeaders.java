@@ -36,6 +36,7 @@ public enum HttpHeaders implements HttpHeader {
                                                X_VCAP_REQUEST_ID("x-vcap-request-id", Fields.REQUEST_ID, true), //
                                                CORRELATION_ID("X-CorrelationID", Fields.CORRELATION_ID, true,
                                                               X_VCAP_REQUEST_ID), //
+                                               W3C_TRACEPARENT("traceparent", Fields.W3C_TRACEPARENT, true),
                                                SAP_PASSPORT("sap-passport", Fields.SAP_PASSPORT, true), //
                                                TENANT_ID("tenantid", Fields.TENANT_ID, true); //
 
