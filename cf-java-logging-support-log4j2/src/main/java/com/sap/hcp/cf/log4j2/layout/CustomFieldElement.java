@@ -6,12 +6,12 @@ import org.apache.logging.log4j.core.config.plugins.PluginBuilderAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginBuilderFactory;
 
 @Plugin(name = "customField", category = Node.CATEGORY, printObject = true)
-public class CustomField {
+public class CustomFieldElement {
 
 	private final String key;
 	private final boolean retainOriginal;
 
-	private CustomField(Builder builder) {
+	private CustomFieldElement(Builder builder) {
 		this.key = builder.key;
 		this.retainOriginal = builder.retainOriginal;
 	}
@@ -34,7 +34,7 @@ public class CustomField {
 		return new Builder();
 	}
 	
-	public static class Builder implements org.apache.logging.log4j.core.util.Builder<CustomField> {
+	public static class Builder implements org.apache.logging.log4j.core.util.Builder<CustomFieldElement> {
 
 		@PluginBuilderAttribute("mdcKeyName")
 		private String key;
@@ -53,8 +53,8 @@ public class CustomField {
 		}
 
 		@Override
-		public CustomField build() {
-			return new CustomField(this);
+		public CustomFieldElement build() {
+			return new CustomFieldElement(this);
 		}
 		
 	}

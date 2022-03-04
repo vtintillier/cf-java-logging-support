@@ -76,7 +76,7 @@ public class RequestLogger {
 		Map<String, String> currentContextMap = MDC.getCopyOfContextMap();
 		try {
 			MDC.setContextMap(contextMap);
-			LOG.info(Markers.REQUEST_MARKER, "{}", requestRecord);
+            LOG.info(Markers.REQUEST_MARKER, "", requestRecord);
 		} finally {
 			if (currentContextMap != null) {
 				MDC.setContextMap(currentContextMap);

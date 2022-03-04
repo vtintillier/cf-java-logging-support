@@ -1,29 +1,23 @@
 package com.sap.hcp.cf.logback.encoder;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import com.sap.hcp.cf.logback.converter.api.LogbackContextFieldSupplier;
-import com.sap.hcp.cf.logging.common.customfields.CustomField;
+import com.sap.hcp.cf.logging.common.serialization.AbstractContextFieldSupplier;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 
-public class EventContextFieldSupplier implements LogbackContextFieldSupplier {
+public class EventContextFieldSupplier extends AbstractContextFieldSupplier<ILoggingEvent> implements
+                                       LogbackContextFieldSupplier {
 
     @Override
-    public Map<String, Object> map(ILoggingEvent event) {
-        Map<String, Object> result = new HashMap<>();
-        result.putAll(event.getMDCPropertyMap());
-        Object[] arguments = event.getArgumentArray();
-        if (arguments != null) {
-            for (Object argument: arguments) {
-                if (argument instanceof CustomField) {
-                    CustomField customField = (CustomField) argument;
-                    result.put(customField.getKey(), customField.getValue());
-                }
-            }
-        }
-        return result;
+    protected Object[] getParameterArray(ILoggingEvent event) {
+        return event.getArgumentArray();
+    }
+
+    @Override
+    protected Map<? extends String, ? extends Object> getContextMap(ILoggingEvent event) {
+        return event.getMDCPropertyMap();
     }
 
 }
