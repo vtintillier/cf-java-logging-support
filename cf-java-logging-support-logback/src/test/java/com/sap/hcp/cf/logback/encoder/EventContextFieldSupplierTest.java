@@ -52,12 +52,12 @@ public class EventContextFieldSupplierTest {
         Object[] arguments = new Object[] { //
                                             new Object(), //
                                             CustomField.customField("key", "value"), //
-                                            CustomField.customField("this", "that") };
+                                            CustomField.customField("number", Double.valueOf(123.456d)) };
         when(event.getArgumentArray()).thenReturn(arguments);
 
         Map<String, Object> fields = fieldSupplier.map(event);
         assertThat(fields, hasEntry("key", "value"));
-        assertThat(fields, hasEntry("this", "that"));
+        assertThat(fields, hasEntry("number", Double.valueOf(123.456d)));
     }
 
     @Test

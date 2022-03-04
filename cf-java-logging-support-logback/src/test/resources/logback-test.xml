@@ -5,7 +5,7 @@
 		class="ch.qos.logback.core.ConsoleAppender">
 		<encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder">
 			<sendDefaultValues>true</sendDefaultValues>
-			<contextFieldSupplier>com.sap.hcp.cf.logging.common.serialization.FullVcapEnvFieldFupplier</contextFieldSupplier>
+			<contextFieldSupplier>com.sap.hcp.cf.logging.common.serialization.FullVcapEnvFieldSupplier</contextFieldSupplier>
 			<customFieldMdcKeyName>custom-field</customFieldMdcKeyName>
 			<customFieldMdcKeyName>test-field</customFieldMdcKeyName>
 			<customFieldMdcKeyName>retained-field</customFieldMdcKeyName>
