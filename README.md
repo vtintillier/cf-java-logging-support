@@ -5,19 +5,31 @@
 
 ## Summary
 
-This is a collection of support libraries for Java applications (Java 8 and above) running on Cloud Foundry that serves three main purposes: It provides (a) means to emit *structured application log messages*, (b) instrument parts of your application stack to *collect request metrics* and (c) allow production of *custom metrics*.
+This is a collection of support libraries for Java applications (Java 8 and above) that serves three main purposes: 
 
-When we say structured, we actually mean in JSON format. In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) (and a first internal version was actually based on it), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks such as [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
+1. Provide means to emit *structured application log messages* 
+2. Instrument parts of your application stack to *collect request metrics* 
+3. Allow production of *custom metrics*.
+
+The libraries started out to support applications running on Cloud Foundry.
+This integration has become optional.
+The library can be used in any runtime environment such as Kubernetes or Kyma.
+
+When we say structured, we actually mean in JSON format. 
+In that sense, it shares ideas with [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder), but takes a simpler approach as we want to ensure that these structured messages adhere to standardized formats. 
+With such standardized formats in place, it becomes much easier to ingest, process and search such messages in log analysis stacks such as [ELK](https://www.elastic.co/webinars/introduction-elk-stack).
 
 If you're interested in the specifications of these standardized formats, you may want to have a closer look at the `fields.yml` files in the [beats folder](./cf-java-logging-support-core/beats).
 
 While [logstash-logback-encoder](https://github.com/logstash/logstash-logback-encoder) is tied to [logback](http://logback.qos.ch/), we've tried to keep implementation neutral and have implemented the core functionality on top of [slf4j](http://www.slf4j.org/), but provided implementations for both [logback](http://logback.qos.ch/) and [log4j2](http://logging.apache.org/log4j/2.x/) (and we're open to contributions that would support other implementations).
 
-The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html) and [client and server filters for Jersey](https://jersey.java.net/documentation/latest/filters-and-interceptors.html), but again, we're open to contributions for other APIs and frameworks.
+The instrumentation part is currently focusing on providing [request filters for Java Servlets](http://www.oracle.com/technetwork/java/filters-137243.html), but again, we're open to contributions for other APIs and frameworks.
 
-The custom metrics instrumentation allows users to easily define and emit custom metrics. The different modules configure all necessary components and make it possible to define custom metrics with minimal code change.
+The custom metrics instrumentation allows users to easily define and emit custom metrics. 
+The different modules configure all necessary components and make it possible to define custom metrics with minimal code change.
+Once collected, custom metrics are sent as special log message.
 
-Lastly, there are also two sibling projects on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support) and [python logging support](https://github.com/SAP/cf-python-logging-support).
+Lastly, there is also a project on [node.js logging support](https://github.com/SAP/cf-nodejs-logging-support).
 
 ## Features and dependencies
 
@@ -95,7 +107,7 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
   	<groupId>ch.qos.logback</groupId>
    	<artifactId>logback-classic</artifactId>
-   	<version>1.2.10</version>
+   	<version>1.2.11</version>
  </dependency>
 ```
 
@@ -110,12 +122,12 @@ Again, we don't include dependencies to those implementation backends ourselves,
 <dependency>
 	<groupId>org.apache.logging.log4j</groupId>
 	<artifactId>log4j-slf4j-impl</artifactId>
-	<version>2.17.1</version>
+	<version>2.17.2</version>
 </dependency>
 	<dependency>
 	<groupId>org.apache.logging.log4j</groupId>
 	<artifactId>log4j-core</artifactId>
-	<version>2.17.1</version>
+	<version>2.17.2</version>
 </dependency>
 ```
 
