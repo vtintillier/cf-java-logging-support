@@ -107,7 +107,7 @@ public class DefaultCustomFieldsConverter {
 			// Let argument CustomField take precedence over MDC
 			CustomField field = customFields.get(key);
 			if (field != null) {
-				value = field.getValue();
+                value = String.valueOf(field.getValue());
 			}
 			if (value != null) {
 				oc.startObject().put("k", key).put("v", value).put("i", i).end();

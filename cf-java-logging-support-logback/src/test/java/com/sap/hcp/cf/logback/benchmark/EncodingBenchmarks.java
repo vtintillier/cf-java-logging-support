@@ -72,7 +72,7 @@ public class EncodingBenchmarks {
                                                                                       state.componentId).build();
         requestRecord.start();
         requestRecord.stop();
-        LOG.info(Markers.REQUEST_MARKER, "{}", requestRecord);
+        LOG.info(Markers.REQUEST_MARKER, "", requestRecord);
     }
 
 }

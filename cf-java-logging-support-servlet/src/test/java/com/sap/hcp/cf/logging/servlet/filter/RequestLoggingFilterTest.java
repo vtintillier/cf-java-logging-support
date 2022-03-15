@@ -89,10 +89,10 @@ public class RequestLoggingFilterTest {
         FilterChain mockFilterChain = mock(FilterChain.class);
 
         new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
-        assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REQUEST), is(nullValue()));
         assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
         assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
-        assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REMOTE_HOST), is(nullValue()));
         assertThat(getField(Fields.COMPONENT_ID), is(nullValue()));
         assertThat(getField(Fields.CONTAINER_ID), is(nullValue()));
         assertThat(getField(Fields.REQUEST_SIZE_B), is("-1"));
@@ -112,10 +112,10 @@ public class RequestLoggingFilterTest {
             }
         };
         new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
-        assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REQUEST), is(nullValue()));
         assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
         assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
-        assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REMOTE_HOST), is(nullValue()));
         assertThat(getField(Fields.COMPONENT_ID), is(nullValue()));
         assertThat(getField(Fields.CONTAINER_ID), is(nullValue()));
         assertThat(getField(Fields.REQUEST_SIZE_B), is("1"));
@@ -134,10 +134,10 @@ public class RequestLoggingFilterTest {
             }
         };
         new RequestLoggingFilter().doFilter(mockReq, mockResp, mockFilterChain);
-        assertThat(getField(Fields.REQUEST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REQUEST), is(nullValue()));
         assertThat(getField(Fields.CORRELATION_ID), not(isEmptyOrNullString()));
         assertThat(getField(Fields.REQUEST_ID), is(nullValue()));
-        assertThat(getField(Fields.REMOTE_HOST), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REMOTE_HOST), is(nullValue()));
         assertThat(getField(Fields.COMPONENT_ID), is(nullValue()));
         assertThat(getField(Fields.CONTAINER_ID), is(nullValue()));
         assertThat(getField(Fields.REQUEST_SIZE_B), is("4"));
@@ -193,7 +193,7 @@ public class RequestLoggingFilterTest {
         assertThat(getField(Fields.REQUEST), is(FULL_REQUEST));
         assertThat(getField(Fields.CORRELATION_ID), is(REQUEST_ID));
         assertThat(getField(Fields.REQUEST_ID), is(REQUEST_ID));
-        assertThat(getField(Fields.REMOTE_IP), is(Defaults.UNKNOWN));
+        assertThat(getField(Fields.REMOTE_IP), is(nullValue()));
         assertThat(getField(Fields.REMOTE_HOST), is(Defaults.REDACTED));
         assertThat(getField(Fields.COMPONENT_ID), is(nullValue()));
         assertThat(getField(Fields.CONTAINER_ID), is(nullValue()));
@@ -326,8 +326,8 @@ public class RequestLoggingFilterTest {
         filter.doFilter(mockReq, mockResp, mockFilterChain);
         assertThat(getField(Fields.X_SSL_CLIENT), is("0"));
         assertThat(getField(Fields.X_SSL_CLIENT_VERIFY), is("0"));
-        assertThat(getField(Fields.X_SSL_CLIENT_SUBJECT_DN), is("-"));
-        assertThat(getField(Fields.X_SSL_CLIENT_SUBJECT_CN), is("-"));
+        assertThat(getField(Fields.X_SSL_CLIENT_SUBJECT_DN), is(nullValue()));
+        assertThat(getField(Fields.X_SSL_CLIENT_SUBJECT_CN), is(nullValue()));
         assertThat(getField(Fields.X_SSL_CLIENT_ISSUER_DN), is(""));
         assertThat(getField(Fields.X_SSL_CLIENT_NOTBEFORE), is(nullValue()));
         assertThat(getField(Fields.X_SSL_CLIENT_NOTAFTER), is(nullValue()));

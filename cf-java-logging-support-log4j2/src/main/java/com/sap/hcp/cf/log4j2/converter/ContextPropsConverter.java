@@ -76,7 +76,7 @@ public class ContextPropsConverter extends LogEventPatternConverter {
                     result = new HashMap<>(contextData);
                     unchangedContextData = false;
                 }
-                result.put(field.getKey(), field.getValue());
+                result.put(field.getKey(), String.valueOf(field.getValue()));
             }
         }
         return result;
