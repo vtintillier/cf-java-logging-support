@@ -228,4 +228,9 @@ public final class JsonPatternLayout extends AbstractStringLayout {
         }
     }
 
+    @Override
+    public String getContentType() {
+        return "application/json";
+    }
+
 }
