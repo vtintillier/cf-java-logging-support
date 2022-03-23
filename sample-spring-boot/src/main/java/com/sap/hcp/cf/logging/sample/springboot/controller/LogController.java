@@ -1,5 +1,7 @@
 package com.sap.hcp.cf.logging.sample.springboot.controller;
 
+import javax.annotation.PostConstruct;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class LogController {
 
 	private static final String DEFAULT_LOG_MESSAGE = "This is the default log message!";
+
+	@PostConstruct
+	public void logFramework() {
+		Logger logger = LoggerFactory.getLogger(LogController.class);
+		logger.info("Logger implementation class: {}", logger.getClass());
+	}
 
 	/**
 	 * Generate a log event with the given parameters.

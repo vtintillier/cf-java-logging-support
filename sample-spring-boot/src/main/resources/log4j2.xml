@@ -8,7 +8,8 @@
 	<Appenders>
 		<Console name="STDOUT-JSON" target="SYSTEM_OUT" follow="true">
 			<JsonPatternLayout charset="utf-8">
-				<contextFieldSupplier class="com.sap.hcp.cf.logging.sample.springboot.statistics.StatisticsContextFieldSupplier" />
+				<contextFieldSupplier
+					class="com.sap.hcp.cf.logging.sample.springboot.statistics.StatisticsContextFieldSupplier" />
 				<!-- Uncomment to send message count as nested custom field: -->
 				<!-- <customField mdcKeyName="message_count" /> -->
 			</JsonPatternLayout>
@@ -17,10 +18,18 @@
 			<PatternLayout
 				pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} [%mdc] - %msg%n" />
 		</Console>
+		<Http name="HTTP" url="http://localhost:9880">
+			<JsonPatternLayout charset="utf-8">
+				<contextFieldSupplier
+					class="com.sap.hcp.cf.logging.sample.springboot.statistics.StatisticsContextFieldSupplier" />
+				<!-- Uncomment to send message count as nested custom field: -->
+				<!-- <customField mdcKeyName="message_count" /> -->
+			</JsonPatternLayout>
+		</Http>
 	</Appenders>
 	<Loggers>
 		<Root level="${LOG_ROOT_LEVEL:-INFO}">
-			<AppenderRef ref="STDOUT-JSON" />
+			<AppenderRef ref="HTTP" />
 		</Root>
 		<Logger name="com.sap.hcp.cf" level="${LOG_HCP_CF_LEVEL:-INFO}" />
 	</Loggers>
