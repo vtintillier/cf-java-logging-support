@@ -150,7 +150,7 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
      * {@code <maxStacktraceSize>} in the logback.xml configuration file.
      * </p>
      * 
-     * @param name
+     * @param maxStacktraceSize
      *            the maximum number of characters to be allowed for stacktraces
      */
     public void setMaxStacktraceSize(int maxStacktraceSize) {
@@ -168,7 +168,7 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
      * {@code <sendDefaultValues>} in the logback.xml configuration file.
      * </p>
      * 
-     * @param name
+     * @param sendDefaultValues
      *            the maximum number of characters to be allowed for stacktraces
      */
     public void setSendDefaultValues(boolean sendDefaultValues) {
@@ -185,7 +185,7 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
      * the logback.xml configuration file.
      * </p>
      * 
-     * @param name
+     * @param className
      *            the maximum number of characters to be allowed for stacktraces
      */
     public void setJsonBuilder(String className) {
@@ -221,7 +221,7 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
      * file.
      * </p>
      * 
-     * @param name
+     * @param className
      *            the maximum number of characters to be allowed for stacktraces
      */
     public void addLogbackContextFieldSupplier(String className) {
@@ -246,7 +246,7 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
      * {@code <contextFieldSupplier>} in the logback.xml configuration file.
      * </p>
      * 
-     * @param name
+     * @param className
      *            the maximum number of characters to be allowed for stacktraces
      */
     public void addContextFieldSupplier(String className) {
