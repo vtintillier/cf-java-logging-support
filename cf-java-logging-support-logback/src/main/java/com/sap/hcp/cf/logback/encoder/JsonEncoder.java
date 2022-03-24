@@ -26,11 +26,11 @@ import com.fasterxml.jackson.jr.ob.comp.ArrayComposer;
 import com.fasterxml.jackson.jr.ob.comp.ComposerBase;
 import com.fasterxml.jackson.jr.ob.comp.ObjectComposer;
 import com.sap.hcp.cf.logback.converter.api.LogbackContextFieldSupplier;
-import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
-import com.sap.hcp.cf.logging.common.LogContext;
 import com.sap.hcp.cf.logging.common.converter.StacktraceLines;
+import com.sap.hcp.cf.logging.common.serialization.ContextFieldConverter;
 import com.sap.hcp.cf.logging.common.serialization.ContextFieldSupplier;
+import com.sap.hcp.cf.logging.common.serialization.JsonSerializationException;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
@@ -65,6 +65,8 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
     private int maxStacktraceSize = 55 * 1024;
     private JSON.Builder jsonBuilder = JSON.builder();
     private JSON json;
+    private ContextFieldConverter contextFieldConverter;
+
 
     public JsonEncoder() {
         logbackContextFieldSuppliers.add(new BaseFieldSupplier());
@@ -260,6 +262,8 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
     @Override
     public void start() {
         this.json = new JSON(jsonBuilder);
+        this.contextFieldConverter = new ContextFieldConverter(sendDefaultValues, customFieldMdcKeyNames,
+                                                               retainFieldMdcKeyNames);
         super.start();
     }
 
@@ -283,8 +287,8 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
             ObjectComposer<JSONComposer<OutputStream>> oc = json.composeTo(writer).startObject();
             addMarkers(oc, event);
             Map<String, Object> contextFields = collectContextFields(event);
-            addContextFields(oc, contextFields);
-            addCustomFields(oc, contextFields);
+            contextFieldConverter.addContextFields(oc, contextFields);
+            contextFieldConverter.addCustomFields(oc, contextFields);
             addStacktrace(oc, event);
             oc.end().finish();
             return writer.append(NEWLINE).toString();
@@ -322,77 +326,6 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
         contextFieldSuppliers.forEach(s -> contextFields.putAll(s.get()));
         logbackContextFieldSuppliers.forEach(s -> contextFields.putAll(s.map(event)));
         return contextFields;
-    }
-
-    private <P extends ComposerBase> void addContextFields(ObjectComposer<P> oc, Map<String, Object> contextFields) {
-        contextFields.keySet().stream().filter(this::isContextField).forEach(n -> addContextField(oc, n, contextFields
-                                                                                                                      .get(n)));
-    }
-
-    private boolean isContextField(String name) {
-        return retainFieldMdcKeyNames.contains(name) || !customFieldMdcKeyNames.contains(name);
-    }
-
-    private <P extends ComposerBase> void addContextField(ObjectComposer<P> oc, String name, Object value) {
-        try {
-            if (sendDefaultValues) {
-                put(oc, name, value);
-            } else {
-                String defaultValue = getDefaultValue(name);
-                if (!defaultValue.equals(value)) {
-                    put(oc, name, value);
-                }
-            }
-        } catch (IOException ignored) {
-            try {
-                oc.put(name, "invalid value");
-            } catch (IOException cause) {
-                throw new JsonSerializationException("Cannot create field \"" + name + "\".", cause);
-            }
-        }
-    }
-
-    private <P extends ComposerBase> void put(ObjectComposer<P> oc, String name, Object value) throws IOException,
-                                                                                               JsonProcessingException {
-        if (value instanceof String) {
-            oc.put(name, (String) value);
-        } else if (value instanceof Long) {
-            oc.put(name, ((Long) value).longValue());
-        } else if (value instanceof Double) {
-            oc.put(name, ((Double) value).doubleValue());
-        } else if (value instanceof Boolean) {
-            oc.put(name, ((Boolean) value).booleanValue());
-        } else if (value instanceof Integer) {
-            oc.put(name, ((Integer) value).intValue());
-        } else if (value instanceof Float) {
-            oc.put(name, ((Float) value).floatValue());
-        } else {
-            oc.put(name, String.valueOf(value));
-        }
-    }
-
-    private String getDefaultValue(String key) {
-        String defaultValue = LogContext.getDefault(key);
-        return defaultValue == null ? Defaults.UNKNOWN : defaultValue;
-    }
-
-    private <P extends ComposerBase> void addCustomFields(ObjectComposer<P> oc, Map<String, Object> contextFields)
-                                                                                                                   throws IOException,
-                                                                                                                   JsonProcessingException {
-        ArrayComposer<ObjectComposer<ObjectComposer<P>>> customFieldComposer = null;
-        for (int i = 0; i < customFieldMdcKeyNames.size(); i++) {
-            String key = customFieldMdcKeyNames.get(i);
-            Object value = contextFields.get(key);
-            if (value != null) {
-                if (customFieldComposer == null) {
-                    customFieldComposer = oc.startObjectField(Fields.CUSTOM_FIELDS).startArrayField("string");
-                }
-                customFieldComposer.startObject().put("k", key).put("v", String.valueOf(value)).put("i", i).end();
-            }
-        }
-        if (customFieldComposer != null) {
-            customFieldComposer.end().end();
-        }
     }
 
     private <P extends ComposerBase> void addStacktrace(ObjectComposer<P> oc, ILoggingEvent event) throws IOException,

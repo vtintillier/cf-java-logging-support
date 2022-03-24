@@ -23,7 +23,7 @@ import com.sap.hcp.cf.logging.common.customfields.CustomField;
 import com.sap.hcp.cf.logging.common.request.RequestRecord;
 
 @Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 5, timeUnit = TimeUnit.SECONDS)
+@Measurement(iterations = 5, time = 10, timeUnit = TimeUnit.SECONDS)
 public class EncodingBenchmarks {
 
     public static Logger LOG = LoggerFactory.getLogger(EncodingBenchmarks.class);
@@ -72,7 +72,7 @@ public class EncodingBenchmarks {
                                                                                       state.componentId).build();
         requestRecord.start();
         requestRecord.stop();
-        LOG.info(Markers.REQUEST_MARKER, "{}", requestRecord);
+        LOG.info(Markers.REQUEST_MARKER, "", requestRecord);
     }
 
 }
