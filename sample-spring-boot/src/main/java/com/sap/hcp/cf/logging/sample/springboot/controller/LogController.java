@@ -38,25 +38,36 @@ public class LogController {
 	@PostMapping("/log/{logger}/{logLevel}")
 	public ResponseEntity<String> generateLog(@PathVariable("logger") String loggerName,
 			@PathVariable("logLevel") String logLevel,
-			@RequestParam(name = "m", required = false, defaultValue = DEFAULT_LOG_MESSAGE) String message) {
+			@RequestParam(name = "m", required = false, defaultValue = DEFAULT_LOG_MESSAGE) String message,
+			@RequestParam(name = "n", required = false, defaultValue = "1") int number) {
 		Logger logger = LoggerFactory.getLogger(loggerName);
 		switch (logLevel.toLowerCase()) {
 		case "error":
-			logger.error(message);
+			for (int i = 0; i < number; i++) {
+				logger.error(message);
+			}
 			return ResponseEntity.ok().body("Generated error log with message: \"" + message + "\".");
 		case "warn":
 		case "warning":
-			logger.warn(message);
+			for (int i = 0; i < number; i++) {
+				logger.warn(message);
+			}
 			return ResponseEntity.ok().body("Generated warn log with message: \"" + message + "\".");
 		case "info":
 		case "informational":
-			logger.info(message);
+			for (int i = 0; i < number; i++) {
+				logger.info(message);
+			}
 			return ResponseEntity.ok().body("Generated info log with message: \"" + message + "\".");
 		case "debug":
-			logger.debug(message);
+			for (int i = 0; i < number; i++) {
+				logger.debug(message);
+			}
 			return ResponseEntity.ok().body("Generated debug log with message: \"" + message + "\".");
 		case "trace":
-			logger.trace(message);
+			for (int i = 0; i < number; i++) {
+				logger.trace(message);
+			}
 			return ResponseEntity.ok().body("Generated trace log with message: \"" + message + "\".");
 		}
 		return ResponseEntity.badRequest().body("Unknows log level \"" + logLevel + "\".");
