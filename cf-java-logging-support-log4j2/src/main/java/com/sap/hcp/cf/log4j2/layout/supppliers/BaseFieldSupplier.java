@@ -20,6 +20,7 @@ public class BaseFieldSupplier implements Log4jContextFieldSupplier {
         fields.put(Fields.TYPE, LogEventUtilities.isRequestLog(event) ? Defaults.TYPE_REQUEST : Defaults.TYPE_LOG);
         fields.put(Fields.LEVEL, String.valueOf(event.getLevel()));
         fields.put(Fields.LOGGER, event.getLoggerName());
+        fields.put(Fields.THREAD, event.getThreadName());
         if (!LogEventUtilities.isRequestLog(event) && event.getMessage() != null) {
             fields.put(Fields.MSG, LogEventUtilities.getFormattedMessage(event));
         }

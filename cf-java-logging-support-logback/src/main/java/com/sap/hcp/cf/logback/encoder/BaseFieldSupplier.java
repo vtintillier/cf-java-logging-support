@@ -21,6 +21,7 @@ public class BaseFieldSupplier implements LogbackContextFieldSupplier {
         fields.put(Fields.TYPE, isRequestLog(event) ? Defaults.TYPE_REQUEST : Defaults.TYPE_LOG);
         fields.put(Fields.LEVEL, String.valueOf(event.getLevel()));
         fields.put(Fields.LOGGER, event.getLoggerName());
+        fields.put(Fields.THREAD, event.getThreadName());
         if (!isRequestLog(event)) {
             fields.put(Fields.MSG, event.getFormattedMessage());
         }

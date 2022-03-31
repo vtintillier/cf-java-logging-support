@@ -34,6 +34,8 @@ public class TestAppLog extends AbstractTest {
         assertThat(getField(Fields.COMPONENT_NAME), is(nullValue()));
         assertThat(getField(Fields.COMPONENT_INSTANCE), is(nullValue()));
         assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
+        assertThat(getField(Fields.LOGGER), is(TestAppLog.class.getName()));
+        assertThat(getField(Fields.THREAD), is(Thread.currentThread().getName()));
     }
 
     @Test
