@@ -8,9 +8,11 @@
 		class="ch.qos.logback.core.ConsoleAppender">
 		<!-- encode and enrich full message with the required fields/tags -->
 		<encoder class="com.sap.hcp.cf.logback.encoder.JsonEncoder">
+			<logbackContextFieldSupplier>com.sap.hcp.cf.logging.sample.springboot.logging.LineNumberFieldSupplier</logbackContextFieldSupplier>
 			<contextFieldSupplier>com.sap.hcp.cf.logging.sample.springboot.statistics.StatisticsContextFieldSupplier</contextFieldSupplier>
 			<!-- Uncomment to send message count as nested custom field: -->
-			<!-- <customFieldMdcKeyName>message_count</customFieldMdcKeyName> -->
+			<customFieldMdcKeyName>line_number</customFieldMdcKeyName>
+			<customFieldMdcKeyName>method</customFieldMdcKeyName>
 		</encoder>
 	</appender>
 	<appender name="STDOUT"
