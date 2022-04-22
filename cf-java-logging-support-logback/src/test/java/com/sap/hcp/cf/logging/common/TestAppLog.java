@@ -1,10 +1,9 @@
 package com.sap.hcp.cf.logging.common;
 
 import static com.sap.hcp.cf.logging.common.converter.CustomFieldMatchers.hasCustomField;
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 
@@ -122,20 +121,17 @@ public class TestAppLog extends AbstractTest {
 		assertThat(getField(SOME_KEY), is(SOME_OTHER_VALUE));
 	}
 
-	@Test
+    @Test
     public void testStacktrace() {
-        try {
-            Double.parseDouble(null);
-        } catch (Exception ex) {
-            logMsg = "Running testStacktrace()";
-            LOGGER.error(logMsg, ex);
-            assertThat(getMessage(), is(logMsg));
-            assertThat(getField(Fields.COMPONENT_ID), is("-"));
-            assertThat(getField(Fields.COMPONENT_NAME), is("-"));
-            assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
-            assertThat(getField(Fields.STACKTRACE), is(notNullValue()));
-            assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
-        }
+        logMsg = "Running testStacktrace()";
+        Exception testEx = new Exception("Test-case for Stacktraces.");
+        LOGGER.error(logMsg, testEx);
+        assertThat(getMessage(), is(logMsg));
+        assertThat(getField(Fields.COMPONENT_ID), is("-"));
+        assertThat(getField(Fields.COMPONENT_NAME), is("-"));
+        assertThat(getField(Fields.COMPONENT_INSTANCE), is("0"));
+        assertThat(getField(Fields.STACKTRACE), stringContainsInOrder(asList("java.lang.Exception", "Test-case for Stacktraces.")));
+        assertThat(getField(Fields.WRITTEN_TS), is(notNullValue()));
     }
 
     @Test
