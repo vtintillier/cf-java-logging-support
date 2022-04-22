@@ -2,6 +2,7 @@ package com.sap.hcp.cf.logback.encoder;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.nio.charset.Charset;
@@ -14,6 +15,9 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import ch.qos.logback.classic.spi.IThrowableProxy;
+import ch.qos.logback.classic.spi.ThrowableProxy;
+import com.sap.hcp.cf.logging.common.converter.LineWriter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Marker;
@@ -330,10 +334,12 @@ public class JsonEncoder extends EncoderBase<ILoggingEvent> {
 
     private <P extends ComposerBase> void addStacktrace(ObjectComposer<P> oc, ILoggingEvent event) throws IOException,
                                                                                                    JsonProcessingException {
-        if (event.getThrowableProxy() != null) {
-            List<String> lines = Stream.of(event.getThrowableProxy().getStackTraceElementProxyArray()).map(
-                                                                                                           StackTraceElementProxy::getSTEAsString)
-                                       .collect(Collectors.toList());
+        IThrowableProxy proxy = event.getThrowableProxy();
+        if (proxy != null && ThrowableProxy.class.isAssignableFrom(proxy.getClass())) {
+            Throwable throwable = ((ThrowableProxy) proxy).getThrowable();
+            LineWriter lw = new LineWriter();
+            throwable.printStackTrace(new PrintWriter(lw));
+            List<String> lines = lw.getLines();
             StacktraceLines stacktraceLines = new StacktraceLines(lines);
             ArrayComposer<ObjectComposer<P>> ac = oc.startArrayField(Fields.STACKTRACE);
             if (stacktraceLines.getTotalLineLength() <= maxStacktraceSize) {
