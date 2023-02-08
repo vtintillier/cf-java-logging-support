@@ -3,6 +3,16 @@
 [![Build Status](https://travis-ci.com/SAP/cf-java-logging-support.svg?branch=master)](https://travis-ci.com/SAP/cf-java-logging-support)
 [![REUSE status](https://api.reuse.software/badge/github.com/SAP/cf-java-logging-support)](https://api.reuse.software/info/github.com/SAP/cf-java-logging-support)
 
+**Note: The default branch has been renamed from master to main.**
+Please execute on your local repository:
+
+```
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
+```
+
 ## Summary
 
 This is a collection of support libraries for Java applications (Java 8 and above) that serves three main purposes: 
