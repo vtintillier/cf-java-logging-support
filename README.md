@@ -71,6 +71,12 @@ Let's say you want to make use of the *servlet filter* feature, then you need to
 ```
 
 This feature only depends on the servlet API which you have included in your POM anyhow. You can find more information about the *servlet filter* feature (like e.g. how to adjust the web.xml) in the [Wiki](https://github.com/SAP/cf-java-logging-support/wiki/Instrumenting-Servlets).
+Note, that we provide two different servlet instrumentations:
+
+* cf-java-logging-support-servlet linked against `javax.servlet`
+* cf-java-logging-support-servlet-jakarta linked against `jakarta.servlet`
+
+Both modules build on the same code but use the respective API.
 
 If you want to use the `custom metrics`, just define the following dependency:
 
