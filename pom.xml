@@ -166,26 +166,26 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jackson-jr.version>2.13.2</jackson-jr.version>
-        <slf4j.version>1.7.35</slf4j.version>
+        <jackson-jr.version>2.14.2</jackson-jr.version>
+        <slf4j.version>1.7.36</slf4j.version>
         <logback.version>1.2.11</logback.version>
-        <log4j2.version>2.17.2</log4j2.version>
+        <log4j2.version>2.20.0</log4j2.version>
         <buildnumber.plugin.version>1.4</buildnumber.plugin.version>
         <source.plugin.version>3.2.1</source.plugin.version>
-        <jar.plugin.version>3.1.0</jar.plugin.version>
+        <jar.plugin.version>3.3.0</jar.plugin.version>
         <hamcrest.version>1.3</hamcrest.version>
         <junit.version>4.13.2</junit.version>
         <mockito.version>1.10.19</mockito.version>
-        <jmh.version>1.34</jmh.version>
-        <surefire.plugin.version>2.18.1</surefire.plugin.version>
-        <animal.sniffer.version>1.19</animal.sniffer.version>
-        <exec.plugin.version>1.4.0</exec.plugin.version>
-        <javadoc.plugin.version>3.1.1</javadoc.plugin.version>
+        <jmh.version>1.36</jmh.version>
+        <surefire.plugin.version>2.22.2</surefire.plugin.version>
+        <animal.sniffer.version>1.22</animal.sniffer.version>
+        <exec.plugin.version>1.6.0</exec.plugin.version>
+        <javadoc.plugin.version>3.5.0</javadoc.plugin.version>
         <gpg.plugin.version>1.6</gpg.plugin.version>
         <maven.compiler.release>8</maven.compiler.release>
-        <java-jwt.version>3.18.2</java-jwt.version>
+        <java-jwt.version>3.19.4</java-jwt.version>
         <jackson-databind.version>2.13.4.1</jackson-databind.version>
-        <httpclient.version>4.5.13</httpclient.version>
+        <httpclient.version>4.5.14</httpclient.version>
     </properties>
 
     <modules>
