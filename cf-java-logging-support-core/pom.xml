@@ -25,14 +25,14 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.6</version>
+            <version>3.12.0</version>
         </dependency>
     </dependencies>
 
     <parent>
         <groupId>com.sap.hcp.cf.logging</groupId>
         <artifactId>cf-java-logging-support-parent</artifactId>
-        <version>3.6.3</version>
+        <version>3.7.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <build>
@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>${jar.plugin.version}</version>
                 <executions>
                     <execution>
                         <goals>
