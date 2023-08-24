@@ -5,6 +5,8 @@ applications:
 #
 - name: logging-sample-app
   instances: 1
+  memory: 592M
+  disk_quota: 140M
   path: target/logging-sample-app-3.7.0.war
   env:
     RANDOM_SLEEP: true
