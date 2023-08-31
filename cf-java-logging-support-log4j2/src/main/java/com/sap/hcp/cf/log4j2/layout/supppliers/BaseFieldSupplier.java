@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.core.LogEvent;
 
 import com.sap.hcp.cf.log4j2.converter.api.Log4jContextFieldSupplier;
@@ -23,6 +24,13 @@ public class BaseFieldSupplier implements Log4jContextFieldSupplier {
         fields.put(Fields.THREAD, event.getThreadName());
         if (!LogEventUtilities.isRequestLog(event) && event.getMessage() != null) {
             fields.put(Fields.MSG, LogEventUtilities.getFormattedMessage(event));
+        }
+        if (event.getThrown() != null) {
+            Throwable throwable = event.getThrown();
+            fields.put(Fields.EXCEPTION_TYPE, throwable.getClass().getName());
+            if (StringUtils.isNotBlank(throwable.getMessage())) {
+                fields.put(Fields.EXCEPTION_MESSAGE, throwable.getMessage());
+            }
         }
         return fields;
     }
