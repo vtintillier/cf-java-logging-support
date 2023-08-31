@@ -44,6 +44,8 @@ public interface Fields {
   public String THREAD = "thread";
   public String LEVEL = "level";
   public String MSG = "msg";
+  public String EXCEPTION_TYPE = "exception_type";
+  public String EXCEPTION_MESSAGE = "exception_message";
   public String STACKTRACE = "stacktrace";
   public String CATEGORIES = "categories";
   public String CUSTOM_FIELDS = "#cf";

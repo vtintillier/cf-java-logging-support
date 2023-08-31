@@ -63,6 +63,16 @@
           "index": "not_analyzed",
           "type": "string"
         },
+        "exception_message": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
+        "exception_type": {
+          "doc_values": true,
+          "index": "not_analyzed",
+          "type": "string"
+        },
         "layer": {
           "doc_values": true,
           "index": "not_analyzed",

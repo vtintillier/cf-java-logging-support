@@ -22,7 +22,7 @@ def fields_to_es_template(input, output, index):
     """
 
     # Custom properties
-    docs = yaml.load(input)
+    docs = yaml.load(input, Loader=yaml.Loader)
 
     # No fields defined, can't generate template
     if docs is None:
