@@ -4,12 +4,14 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import ch.qos.logback.classic.spi.ThrowableProxy;
 import com.sap.hcp.cf.logback.converter.api.LogbackContextFieldSupplier;
 import com.sap.hcp.cf.logging.common.Defaults;
 import com.sap.hcp.cf.logging.common.Fields;
 import com.sap.hcp.cf.logging.common.Markers;
 
 import ch.qos.logback.classic.spi.ILoggingEvent;
+import org.apache.commons.lang3.StringUtils;
 
 public class BaseFieldSupplier implements LogbackContextFieldSupplier {
 
@@ -24,6 +26,13 @@ public class BaseFieldSupplier implements LogbackContextFieldSupplier {
         fields.put(Fields.THREAD, event.getThreadName());
         if (!isRequestLog(event)) {
             fields.put(Fields.MSG, event.getFormattedMessage());
+        }
+        if (event.getThrowableProxy() != null && event.getThrowableProxy() instanceof ThrowableProxy) {
+            Throwable throwable = ((ThrowableProxy) event.getThrowableProxy()).getThrowable();
+            fields.put(Fields.EXCEPTION_TYPE, throwable.getClass().getName());
+            if (StringUtils.isNotBlank(throwable.getMessage())) {
+                fields.put(Fields.EXCEPTION_MESSAGE, throwable.getMessage());
+            }
         }
         return fields;
     }

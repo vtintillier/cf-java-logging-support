@@ -448,6 +448,28 @@ required: True
 The original log message that has been written by the application.
 
 
+==== exception_type
+
+type: string
+
+example: java.lang.NullPointerException
+
+required: False
+
+The Java class name of the logged exception when available.
+
+
+==== exception_message
+
+type: string
+
+example: Something went wrong
+
+required: False
+
+The message of the logged exception when available.
+
+
 ==== stacktrace
 
 type: array

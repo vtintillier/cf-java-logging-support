@@ -312,6 +312,20 @@ app-logs:
       description: |
         The original log message that has been written by the application.
 
+    - name: "exception_type"
+      type: string
+      required: false
+      example: "java.lang.NullPointerException"
+      description: |
+        The Java class name of the logged exception when available.
+
+    - name: "exception_message"
+      type: string
+      required: false
+      example: "Something went wrong"
+      description: |
+        The message of the logged exception when available.
+
     - name: "stacktrace"
       type: array
       required: false
