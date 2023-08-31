@@ -16,5 +16,5 @@ applications:
     LOG_REFERER: false
     # Some defaults in the SAP Java buildpack much higher than what this app needs.
     # The values below have been devised empirically
-    JAVA_OPTS: '-XX:ReservedCodeCacheSize=40M -XX:MaxMetaspaceSize=28M -Xss256K'
     # Default: '-XX:ReservedCodeCacheSize=240M -XX:MaxMetaspaceSize=141152K -Xss1M'
+    JAVA_OPTS: '-XX:ReservedCodeCacheSize=40M -XX:MaxMetaspaceSize=28M -Xss256K'
