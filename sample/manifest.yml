@@ -7,7 +7,6 @@ applications:
   instances: 1
   buildpack: sap_java_buildpack
   memory: 256M
-  disk_quota: 256M
   path: target/logging-sample-app-3.7.0.war
   env:
     RANDOM_SLEEP: true
