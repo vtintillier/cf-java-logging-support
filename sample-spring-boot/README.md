@@ -1,14 +1,16 @@
 # Spring Boot Sample Application
 
-This sample application shows how cf-java-logging-support can be used in an application.
-It features a small Spring Boot application to showcase various features provided by the library.
-The application provides a Rest API to trigger several actions.
-See section [Features](#features) for details.
+This sample application shows how cf-java-logging-support can be used in an application. 
+It features a small Spring Boot application to showcase various features provided by the library. The application provides a REST API to trigger several actions.
+See section [Features](#features) for details. 
+You can deploy the sample application just with the library implementation using the default [manifest.yml](manifest.yml).
+Alternatively, you can choose to add instrumentation with the OpenTelemetry Java Agent and the [Java Agent Extension](../cf-java-logging-support-opentelemetry-agent-extension) provided by this library. 
+See the section [Adding the OpenTelemetry Java Agent](#adding-the-opentelemetry-java-agent) for details.
 
 ## Getting Started
 
-This sample application is contained in the Maven module sample-spring-boot.
-It can be built with a simple `mvn install`. 
+This sample application is contained in the Maven module sample-spring-boot. 
+It can be built with a simple `mvn install`.
 A minimal CF application manifest is provided in [manifest.yml.](manifest.yml)
 This allows to deploy the newly built app with `cf push`, provided a login to a CF instance.
 
@@ -239,3 +241,12 @@ MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAk/a5ZKvQ0voLi29klo5GCtN40JpscGud5diz
 
 **Note:** If this application is used this way you may want to fix the keystore and not accidentally delete it with `mvn clean`. 
 You can add your keystore as `src/main/resoures/token_keystore.jks`, which will override the automatically created keystore.
+
+## Adding the OpenTelemetry Java Agent
+
+The sample application comes bundled with the [OpenTelemetry Java Agent](https://opentelemetry.io/docs/instrumentation/java/automatic/) and the [agent extension](../cf-java-logging-support-opentelemetry-agent-extension/README.md) provided by this library. 
+The Java agent allows additional auto-instrumentation for traces and metrics.
+It can also tap into logback or log4j to forward the logs via OpenTelemetry.
+The example [manifest-otel-javaagent.yml](./manifest-otel-javaagent.yml) shows, how to deploy this sample application with OpenTelemetry support enabled.
+Note, that the extension scans the application bindings for SAP Cloud Logging as the OpenTelemetry sink.
+The application needs to be bound to such a service instance.
