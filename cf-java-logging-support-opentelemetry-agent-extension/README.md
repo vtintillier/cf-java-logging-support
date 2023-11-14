@@ -33,6 +33,8 @@ java -javaagent:BOOT-INF/lib/opentelemetry-javaagent-<version>.jar \
      # your Java application command
 ```
 
+> You need to use OpenTelemetry Java Agent 1.29.0+, so it provides jackson-databind to the extension.
+
 See the [example manifest](../sample-spring-boot/manifest-otel-javaagent.yml), how this translates into a deployment description.
 
 For the instrumentation to send observability data to SAP Cloud Logging, the application needs to be bound to a corresponding service instance.
