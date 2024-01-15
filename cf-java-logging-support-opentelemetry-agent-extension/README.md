@@ -38,7 +38,7 @@ java -javaagent:BOOT-INF/lib/opentelemetry-javaagent-<version>.jar \
 
 See the [example manifest](../sample-spring-boot/manifest-otel-javaagent.yml), how this translates into a deployment description.
 
-Once the agent is attached to the JVM with the ectension in place, there are two ways, which can be used to send data to [SAP Cloud Logging](https://discovery-center.cloud.sap/serviceCatalog/cloud-logging):
+Once the agent is attached to the JVM with the extension in place, there are two ways, which can be used to send data to [SAP Cloud Logging](https://discovery-center.cloud.sap/serviceCatalog/cloud-logging):
 
 1. Use the `cloud-logging` exporters explicitly as provided by the extension.
 This can be achieved via system properties or environment variables:
@@ -72,7 +72,7 @@ java #...
 
 Note, that the OpenTelemetry Java Agent currently sends traces and metrics by default using the `otlp` exporter.
 That means, without any configuration the agent with the extension will forward metrics and traces to [SAP Cloud Logging](https://discovery-center.cloud.sap/serviceCatalog/cloud-logging).
-See TODO for the difference between `cloud-logging` and `otlp` exporters.
+The difference between `cloud-logging` and `otlp` exporters are explained in an own [section](#implementation-differences-between-cloud-logging-and-otlp-exporter).
 The benefit of the `cloud-logging` exporter is, that it can be combined with a different configuration of the `otlp` exporter.
 
 For the instrumentation to send observability data to [SAP Cloud Logging](https://discovery-center.cloud.sap/serviceCatalog/cloud-logging), the application needs to be bound to a corresponding service instance.
