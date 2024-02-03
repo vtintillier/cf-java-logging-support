@@ -102,7 +102,6 @@ public class DynatraceMetricsExporterProvider implements ConfigurableMetricExpor
         }
 
         OtlpHttpMetricExporterBuilder builder = OtlpHttpMetricExporter.builder();
-        System.out.println(apiToken);
         builder.setEndpoint(apiUrl + DT_APIURL_METRICS_SUFFIX)
                 .setCompression(getCompression(config))
                 .addHeader("Authorization", "Api-Token " + apiToken)
